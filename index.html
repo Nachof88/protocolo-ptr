@@ -170,7 +170,7 @@ const KEYS = {users:"ptr_users_v1", patients:"ptr_db_v4", config:"ptr_config_v1"
 
 // ── Firebase config — REPLACE with your project values ───────────────────────
 const FIREBASE_CONFIG = {
-   apiKey: "AIzaSyDq4sZsyuDTAoD7X5jASrevHwQfDCcDrvA",
+    apiKey: "AIzaSyDq4sZsyuDTAoD7X5jASrevHwQfDCcDrvA",
     authDomain: "protocolo-ptr.firebaseapp.com",
     projectId: "protocolo-ptr",
     storageBucket: "protocolo-ptr.firebasestorage.app",
@@ -985,6 +985,549 @@ function deleteControl(idx){
   STATE.currentControles=STATE.currentControles.filter((_,i)=>i!==idx);
   render();
 }
+
+
+// ── Controles storage ─────────────────────────────────────────────────────────
+function saveControles(arr){ lsSet("ptr_controles_v1",arr); }
+function getControles(){ return lsGet("ptr_controles_v1",[]); }
+function getControlesPaciente(pid){
+  const npid=Number(pid);
+  return getControles().filter(c=>Number(c.pacienteId)===npid)
+    .sort((a,b)=>{
+      const order=["preop","6m","12m","24m","3-5a","5-9a","10a+"];
+      return order.indexOf(a.periodo)-order.indexOf(b.periodo);
+    });
+}
+
+// ── Score modal ───────────────────────────────────────────────────────────────
+function openScoreModal(scoreKey, controlIdx){
+  const ctrl = STATE.currentControles[controlIdx]||{};
+  const existing = ctrl[scoreKey];
+  const scoreDefKey = scoreKey.replace(/_\d+m$|_preop$|_\d+-\d+a$|_\d+a\+$/,'')
+    .replace(/^(kss_knee|kss_func|oxford|womac)_.*/,'$1');
+  const sd = scoreKey.startsWith('kss_knee')?'kss_knee':
+             scoreKey.startsWith('kss_func')?'kss_func':
+             scoreKey.startsWith('oxford')?'oxford':
+             scoreKey.startsWith('womac')?'womac':scoreKey;
+  const scoreDef = sd;
+  let initValues = {};
+  if(existing && SCORES[scoreDef]){
+    SCORES[scoreDef].secciones.forEach(sec=>{ initValues[sec.key]=ctrl[sec.key]||""; });
+  }
+  STATE.modal={ scoreKey, controlIdx, values:initValues, scoreDef };
+  render();
+}
+
+function closeModal(){ STATE.modal=null; render(); }
+
+function modalSetVal(key,val){
+  if(!STATE.modal) return;
+  STATE.modal.values[key]=val;
+  const el=document.getElementById("score-modal-body");
+  if(el){ el.scrollTop=el._savedScroll||0; }
+  render();
+  const el2=document.getElementById("score-modal-body");
+  if(el2 && el2._savedScroll!==undefined) el2.scrollTop=el2._savedScroll;
+}
+
+function saveScoreModal(){
+  if(!STATE.modal) return;
+  const {scoreKey,controlIdx,values,scoreDef}=STATE.modal;
+  const ctrl=STATE.currentControles[controlIdx];
+  if(!ctrl) return;
+  const all=getControles();
+  const idx=all.findIndex(c=>Number(c.id)===Number(ctrl.id));
+  if(idx===-1) return;
+
+  if(scoreDef==='kss_knee'||scoreDef==='kss_func'){
+    const hasAnyKSS=SCORES[scoreDef].secciones.some(sec=>values[sec.key]!==""&&values[sec.key]!==undefined);
+    let total=0;
+    SCORES[scoreDef].secciones.forEach(sec=>{
+      const v=values[sec.key];
+      all[idx][sec.key]=v;
+      if(sec.tipo==="slider"){ total+=sec.calc(Number(v||0)); }
+      else if(v!==""&&v!==undefined){ total+=Number(String(v).split(":")[0]); }
+    });
+    all[idx][scoreKey]=hasAnyKSS?total:"";
+  } else if(scoreDef==='oxford'){
+    const complete=OXFORD_ITEMS.every((_,i)=>values["ox_"+i]!==""&&values["ox_"+i]!==undefined);
+    const allFilled=Object.keys(values).length===OXFORD_ITEMS.length;
+    if(complete&&allFilled){
+      const total=OXFORD_ITEMS.reduce((s,_,i)=>s+Number(values["ox_"+i]),0);
+      all[idx][scoreKey]=total;
+      all[idx][scoreKey+"_vals"]=JSON.stringify(values);
+    } else { all[idx][scoreKey]=""; }
+  } else if(scoreDef==='womac'){
+    const allDone=WOMAC_ITEMS.every((_,i)=>values["wom_"+i]!==""&&values["wom_"+i]!==undefined);
+    if(allDone){
+      const total=WOMAC_ITEMS.reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
+      const dolor=WOMAC_ITEMS.slice(0,5).reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
+      const rigidez=WOMAC_ITEMS.slice(5,7).reduce((s,_,i)=>s+Number(values["wom_"+(5+i)]),0);
+      const func=WOMAC_ITEMS.slice(7).reduce((s,_,i)=>s+Number(values["wom_"+(7+i)]),0);
+      all[idx][scoreKey]=total;
+      all[idx][scoreKey+"_dolor"]=dolor;
+      all[idx][scoreKey+"_rigidez"]=rigidez;
+      all[idx][scoreKey+"_func"]=func;
+    } else { all[idx][scoreKey]=""; }
+  }
+
+  saveControles(all);
+  setSyncStatus("syncing"); fsSetControl({...all[idx]}).then(()=>setSyncStatus("synced"));
+  STATE.currentControles=getControlesPaciente(ctrl.pacienteId);
+  closeModal();
+}
+
+// ── Preop score modal ─────────────────────────────────────────────────────────
+function openPreopScoreModal(scoreKey){
+  const scoreDef = scoreKey.replace('_pre','');
+  let initValues={};
+  const stored=STATE.form["_"+scoreDef+"_pre_vals"];
+  if(stored){ try{ initValues=JSON.parse(stored); }catch{} }
+  STATE.modal={ scoreKey, controlIdx:null, values:initValues, isPreop:true, scoreDef };
+  render();
+}
+
+function savePreopScoreModal(){
+  if(!STATE.modal) return;
+  const {scoreKey,values,scoreDef}=STATE.modal;
+  const effectiveKey=STATE.modal.scoreDef||scoreKey;
+
+  if(effectiveKey==='kss_knee'||effectiveKey==='kss_func'){
+    const hasAnyKSS=SCORES[effectiveKey].secciones.some(sec=>values[sec.key]!==""&&values[sec.key]!==undefined);
+    let total=0;
+    SCORES[effectiveKey].secciones.forEach(sec=>{
+      const v=values[sec.key];
+      if(sec.tipo==="slider") total+=sec.calc(Number(v||0));
+      else if(v!==""&&v!==undefined) total+=Number(String(v).split(":")[0]);
+    });
+    setFormField(scoreKey, hasAnyKSS?total:"");
+  } else if(effectiveKey==='oxford'){
+    const complete=OXFORD_ITEMS.every((_,i)=>values["ox_"+i]!==""&&values["ox_"+i]!==undefined);
+    const allFilled=Object.keys(values).length===OXFORD_ITEMS.length;
+    if(complete&&allFilled){
+      const total=OXFORD_ITEMS.reduce((s,_,i)=>s+Number(values["ox_"+i]),0);
+      setFormField(scoreKey,total);
+      setFormField("_oxford_pre_vals",JSON.stringify(values));
+    } else { setFormField(scoreKey,""); }
+  } else if(effectiveKey==='womac'){
+    const allDone=WOMAC_ITEMS.every((_,i)=>values["wom_"+i]!==""&&values["wom_"+i]!==undefined);
+    if(allDone){
+      const total=WOMAC_ITEMS.reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
+      const dolor=WOMAC_ITEMS.slice(0,5).reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
+      const rigidez=WOMAC_ITEMS.slice(5,7).reduce((s,_,i)=>s+Number(values["wom_"+(5+i)]),0);
+      const func=WOMAC_ITEMS.slice(7).reduce((s,_,i)=>s+Number(values["wom_"+(7+i)]),0);
+      setFormField(scoreKey,total);
+      setFormField("_womac_pre_vals",JSON.stringify(values));
+      setFormField(scoreKey+"_dolor",dolor);
+      setFormField(scoreKey+"_rigidez",rigidez);
+      setFormField(scoreKey+"_func",func);
+    } else { setFormField(scoreKey,""); }
+  }
+  closeModal();
+}
+
+// ── filterList / sortList ─────────────────────────────────────────────────────
+function filterList(){ STATE.listFilter=document.getElementById("list-search")?.value||""; render(); }
+function sortList(col){
+  if(STATE.sortCol===col) STATE.sortDir=STATE.sortDir==="asc"?"desc":"asc";
+  else { STATE.sortCol=col; STATE.sortDir="asc"; }
+  render();
+}
+
+// ── renderConfig ──────────────────────────────────────────────────────────────
+function renderList(){
+  const demo = STATE.user.role==="demo";
+  const q = (STATE.listFilter||"").toLowerCase();
+
+  let pts = STATE.patients.filter(p=>{
+    if(!q) return true;
+    return Object.values(p).some(v=>String(v||"").toLowerCase().includes(q));
+  });
+
+  // Sort
+  if(STATE.sortCol){
+    pts=pts.slice().sort((a,b)=>{
+      let va=a[STATE.sortCol]??"", vb=b[STATE.sortCol]??"";
+      if(!isNaN(Number(va))&&!isNaN(Number(vb))&&va!==""&&vb!==""){va=Number(va);vb=Number(vb);}
+      if(va<vb) return STATE.sortDir==="asc"?-1:1;
+      if(va>vb) return STATE.sortDir==="asc"?1:-1;
+      return 0;
+    });
+  }
+
+  // Detect duplicate RUTs
+  const rutGroups={};
+  STATE.patients.forEach(p=>{
+    if(!p.rut) return;
+    if(!rutGroups[p.rut]) rutGroups[p.rut]=[];
+    rutGroups[p.rut].push(p.fechaCx||"");
+  });
+
+  const PERIODOS=[
+    {period:"preop",label:"Pre-op"},
+    {period:"6m",label:"6m"},
+    {period:"12m",label:"12m"},
+    {period:"24m",label:"24m"},
+    {period:"3-5a",label:"3-5a"},
+    {period:"5-9a",label:"5-9a"},
+    {period:"10a+",label:"10a+"},
+  ];
+
+  const COLS=[
+    {key:"nombre",         label:"Paciente"},
+    {key:"cirujano",       label:"Cirujano"},
+    {key:"lado",           label:"Lado"},
+    {key:"fechaCx",        label:"Fecha Cx"},
+    {key:"implante",       label:"Implante"},
+    {key:"sexo",           label:"Sexo"},
+    {key:"edad",           label:"Edad"},
+    {key:"kellgren",       label:"K-L"},
+    {key:"ejeMecanico",    label:"HKA Pre"},
+    {key:"mad",            label:"MAD Pre"},
+    {key:"ejeMecanico_post",label:"HKA Post"},
+    {key:"mad_post",       label:"MAD Post"},
+    {key:"tecnica",        label:"Técnica"},
+  ];
+
+  const ctrlCols=[];
+  PERIODOS.forEach(pg=>{
+    ctrlCols.push({period:pg.period, label:pg.label+" KSS",   scoreField:"kss_knee"});
+    ctrlCols.push({period:pg.period, label:pg.label+" Oxford", scoreField:"oxford"});
+    ctrlCols.push({period:pg.period, label:pg.label+" VAS",    scoreField:"vas"});
+  });
+
+  const allControles=getControles();
+
+  const thStyle=(key)=>`padding:10px 10px;white-space:nowrap;cursor:pointer;user-select:none;font-size:11px;
+    text-transform:uppercase;letter-spacing:.05em;color:#64748b;font-weight:700;
+    background:#f8fafc;border-bottom:2px solid #e2e8f0;`;
+
+  const sortArrow=(key)=>STATE.sortCol===key?(STATE.sortDir==="asc"?" ↑":" ↓"):" ↕";
+
+  const headers=[
+    `<th style="${thStyle("n")}">#</th>`,
+    ...COLS.map(col=>`<th onclick="sortList('${col.key}')" style="${thStyle(col.key)}">${col.label}${sortArrow(col.key)}</th>`),
+    ...ctrlCols.map(cc=>`<th style="${thStyle("")}">${cc.label}</th>`),
+    `<th style="${thStyle("")}">Acciones</th>`,
+  ].join("");
+
+  const rows=pts.map((p,pi)=>{
+    const hkaPre=Number(p.ejeMecanico);
+    const hkaPost=Number(p.ejeMecanico_post);
+    const hkaBad=Math.abs(hkaPre)>3;
+    const hkaPostBad=p.ejeMecanico_post!==""&&Math.abs(hkaPost)>3;
+
+    let badge="";
+    if(p.rut && rutGroups[p.rut] && rutGroups[p.rut].length>1){
+      const dates=rutGroups[p.rut];
+      const sameDate=dates.every(d=>d===dates[0]&&d!=="");
+      if(sameDate)
+        badge=` <span title="Cirugía bilateral — mismo acto quirúrgico" style="background:#fef9c3;color:#854d0e;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">bilateral</span>`;
+      else
+        badge=` <span title="Este paciente tiene otro registro en la base de datos" style="background:#e0f2fe;color:#0369a1;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">2 registros</span>`;
+    }
+
+    const ptControles=allControles.filter(ct=>Number(ct.pacienteId)===Number(p.id));
+
+    const tdStyle="padding:8px 10px;white-space:nowrap;border-bottom:1px solid #f1f5f9;font-size:13px;";
+
+    const baseCells=COLS.map(col=>{
+      if(col.key==="nombre")
+        return `<td style="${tdStyle}"><strong>${p.nombre||"—"}</strong>${badge}</td>`;
+      if(col.key==="ejeMecanico")
+        return `<td style="${tdStyle}color:${hkaBad?"#dc2626":"#15803d"};font-weight:${hkaBad?"700":"400"}">${p.ejeMecanico!==""?p.ejeMecanico+"°":"—"}</td>`;
+      if(col.key==="ejeMecanico_post")
+        return `<td style="${tdStyle}color:${hkaPostBad?"#dc2626":"#15803d"};font-weight:${hkaPostBad?"700":"400"}">${p.ejeMecanico_post!==""?p.ejeMecanico_post+"°":"—"}</td>`;
+      const val=p[col.key]??"";
+      return `<td style="${tdStyle}">${val||"—"}</td>`;
+    }).join("");
+
+    const ctrlCells=ctrlCols.map(cc=>{
+      const ctrl=ptControles.find(ct=>ct.periodo===cc.period);
+      let val="";
+      if(ctrl){
+        const sf=cc.scoreField;
+        const v=ctrl[sf];
+        val=(v!==""&&v!==undefined)?v:"";
+      }
+      // Preop fallback from form
+      if(!val && cc.period==="preop"){
+        if(cc.scoreField==="kss_knee") val=p.kssKnee_pre||"";
+        if(cc.scoreField==="oxford") val=p.oxford_pre||"";
+        if(cc.scoreField==="vas") val=p.vas_pre||"";
+      }
+      return `<td style="${tdStyle}text-align:center">${val||"—"}</td>`;
+    }).join("");
+
+    const actions=`<td style="${tdStyle}">
+      <div style="display:flex;gap:6px">
+        <button onclick="editPatient(${p.id})" style="padding:5px 10px;background:#dbeafe;color:#1e40af;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600">✏️ Editar</button>
+        ${!demo?`<button onclick="delPatient(${p.id})" style="padding:5px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:5px;cursor:pointer;font-size:12px">✕</button>`:""}
+        <button onclick="exportPDF(${p.id})" style="padding:5px 10px;background:#f0fdf4;color:#15803d;border:none;border-radius:5px;cursor:pointer;font-size:12px">📄 PDF</button>
+      </div>
+    </td>`;
+
+    const rowBg=pi%2===0?"#fff":"#fafafa";
+    return `<tr style="background:${rowBg}">
+      <td style="${tdStyle}color:#94a3b8">${String(pi+1).padStart(3,"0")}</td>
+      ${baseCells}${ctrlCells}${actions}
+    </tr>`;
+  }).join("");
+
+  return `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <h2 style="margin:0;font-size:18px;color:#0f4c81">📋 Pacientes (${pts.length})</h2>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div id="sync-status" style="padding:4px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px"></div>
+        <button class="btn-gray" onclick="syncFromFirebase()" title="Sincronizar" style="padding:6px 10px">☁️</button>
+        <input id="list-search" type="text" placeholder="🔍 Buscar..." value="${STATE.listFilter||""}"
+          oninput="filterList()"
+          style="padding:7px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;outline:none;width:180px">
+        ${!demo?`<button onclick="newPatient()" class="btn-primary" style="padding:8px 16px">+ Nuevo paciente</button>`:""}
+        <button onclick="doExport()" class="btn-gray">📥 Excel</button>
+      </div>
+    </div>
+    ${pts.length===0?`<div style="text-align:center;padding:40px;color:#94a3b8">
+      ${STATE.patients.length===0?"No hay pacientes registrados aún.":"No se encontraron resultados."}
+    </div>`:`
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;min-width:900px">
+        <thead><tr>${headers}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`}
+  </div>`;
+}
+
+function renderConfig(){
+  const u=STATE.user;
+  const sections=[
+    {id:"listas",label:"📋 Listas"},
+    {id:"usuarios",label:"👥 Usuarios"},
+    {id:"campos",label:"➕ Campos extra"},
+  ];
+  const nav=sections.map(s=>`<button onclick="setCfgSec('${s.id}')"
+    style="padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;
+    background:${STATE.configSec===s.id?"#0f4c81":"#f1f5f9"};
+    color:${STATE.configSec===s.id?"#fff":"#334155"}">${s.label}</button>`).join("");
+
+  let body="";
+
+  if(STATE.configSec==="listas"){
+    const lists=[
+      {key:"cirujanos",label:"Cirujanos"},
+      {key:"implantes",label:"Implantes"},
+      {key:"tecnicas",label:"Técnicas quirúrgicas"},
+      {key:"indicaciones",label:"Indicaciones"},
+      {key:"comorbilidades",label:"Comorbilidades"},
+    ];
+    body=lists.map(l=>{
+      const items=STATE.config[l.key]||[];
+      const editing=STATE.editListKey===l.key;
+      const draft=STATE.editListDraft;
+      if(editing){
+        return `<div class="card" style="margin-bottom:12px">
+          <div style="font-weight:700;margin-bottom:10px">${l.label}</div>
+          ${draft.map((item,i)=>`<div style="display:flex;gap:8px;margin-bottom:6px">
+            <input value="${item}" oninput="STATE.editListDraft[${i}]=this.value"
+              style="flex:1;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
+            <button onclick="removeListItem(${i})" style="padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;cursor:pointer">✕</button>
+            <button onclick="moveListItem(${i},-1)" style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:6px;cursor:pointer">↑</button>
+            <button onclick="moveListItem(${i},1)" style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:6px;cursor:pointer">↓</button>
+          </div>`).join("")}
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button onclick="addListItem()" class="btn-gray">+ Agregar</button>
+            <button onclick="saveList('${l.key}')" class="btn-primary" style="padding:7px 14px">Guardar</button>
+            <button onclick="cancelEditList()" class="btn-gray">Cancelar</button>
+          </div>
+        </div>`;
+      }
+      return `<div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-weight:700">${l.label}</div>
+          <button onclick="startEditList('${l.key}')" class="btn-gray" style="padding:5px 12px;font-size:12px">✏️ Editar</button>
+        </div>
+        <div style="font-size:13px;color:#64748b">${items.length===0?"(vacía)":items.join(", ")}</div>
+      </div>`;
+    }).join("");
+  }
+
+  if(STATE.configSec==="usuarios"){
+    const rows=STATE.users.map(usr=>{
+      const showPwd=STATE.pwdVisible&&STATE.pwdVisible[usr.id];
+      return `<tr style="border-bottom:1px solid #f1f5f9">
+        <td style="padding:10px 8px">${usr.name}</td>
+        <td style="padding:10px 8px;color:#64748b">${usr.username}</td>
+        <td style="padding:10px 8px">
+          <span style="display:inline-flex;align-items:center;gap:6px">
+            <span style="font-family:monospace;font-size:13px">${showPwd?usr.password:"••••••••"}</span>
+            <button onclick="togglePwdVisible(${usr.id},'${usr.password}')"
+              style="background:none;border:none;cursor:pointer;font-size:14px;padding:0">👁️</button>
+          </span>
+        </td>
+        <td style="padding:10px 8px">
+          <span style="background:${usr.role==="admin"?"#dbeafe":"#f0fdf4"};color:${usr.role==="admin"?"#1e40af":"#15803d"};
+            padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">${usr.role}</span>
+        </td>
+        <td style="padding:10px 8px">
+          <span style="background:${usr.active?"#dcfce7":"#fee2e2"};color:${usr.active?"#15803d":"#dc2626"};
+            padding:2px 8px;border-radius:10px;font-size:11px">${usr.active?"Activo":"Inactivo"}</span>
+        </td>
+        <td style="padding:10px 8px">
+          <div style="display:flex;gap:6px">
+            ${STATE.pwdTarget===usr.id?`
+              <input id="pwd-new-${usr.id}" type="text" placeholder="Nueva clave"
+                style="width:120px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:5px;font-size:12px;outline:none">
+              <button onclick="savePwd(${usr.id})" class="btn-primary" style="padding:5px 10px;font-size:12px">OK</button>
+              <button onclick="cancelPwd()" class="btn-gray" style="padding:5px 10px;font-size:12px">✕</button>
+            `:`<button onclick="startPwd(${usr.id})" class="btn-gray" style="padding:5px 10px;font-size:12px">🔑 Clave</button>`}
+            <button onclick="toggleUser(${usr.id})" class="btn-gray" style="padding:5px 10px;font-size:12px">
+              ${usr.active?"Desactivar":"Activar"}
+            </button>
+            ${usr.role!=="admin"?`<button onclick="deleteUser(${usr.id})" style="padding:5px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:12px;cursor:pointer">✕</button>`:""}
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+
+    body=`<div class="card">
+      <div style="font-weight:700;margin-bottom:14px">Usuarios del sistema</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:#f8fafc;font-size:11px;text-transform:uppercase;color:#64748b">
+          <th style="padding:8px;text-align:left">Nombre</th>
+          <th style="padding:8px;text-align:left">Usuario</th>
+          <th style="padding:8px;text-align:left">Contraseña</th>
+          <th style="padding:8px;text-align:left">Rol</th>
+          <th style="padding:8px;text-align:left">Estado</th>
+          <th style="padding:8px;text-align:left">Acciones</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      ${STATE.configFlash?`<div style="color:#15803d;font-size:13px;margin-top:10px;font-weight:600">${STATE.configFlash}</div>`:""}
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0">
+        <div style="font-weight:700;margin-bottom:10px;font-size:13px">Agregar usuario</div>
+        <div class="grid-3">
+          <div class="field"><label>Nombre completo</label>
+            <input id="nu-name" placeholder="Dr. Apellido" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
+          <div class="field"><label>Usuario</label>
+            <input id="nu-user" placeholder="apellido" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
+          <div class="field"><label>Contraseña</label>
+            <input id="nu-pwd" placeholder="Clave inicial" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
+          <div class="field"><label>Rol</label>
+            <select id="nu-role" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
+              <option value="user">Usuario</option><option value="admin">Admin</option><option value="demo">Demo</option>
+            </select></div>
+        </div>
+        <button onclick="addUser()" class="btn-primary" style="margin-top:8px;padding:8px 20px">Agregar usuario</button>
+      </div>
+    </div>`;
+  }
+
+  if(STATE.configSec==="campos"){
+    const cfs=STATE.customFields||[];
+    const sections=["demografico","preop_rx","preop_scores","quirurgico","mako","postop_rx","seguimiento"];
+    body=`<div class="card">
+      <div style="font-weight:700;margin-bottom:14px">Campos personalizados</div>
+      ${cfs.length===0?`<div style="color:#94a3b8;font-size:13px;margin-bottom:16px">No hay campos personalizados</div>`:`
+        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
+          <thead><tr style="background:#f8fafc;font-size:11px;text-transform:uppercase;color:#64748b">
+            <th style="padding:8px;text-align:left">Etiqueta</th>
+            <th style="padding:8px;text-align:left">Tipo</th>
+            <th style="padding:8px;text-align:left">Sección</th>
+            <th style="padding:8px"></th>
+          </tr></thead>
+          <tbody>${cfs.map((cf,i)=>`<tr style="border-bottom:1px solid #f1f5f9">
+            <td style="padding:8px">${cf.label}</td>
+            <td style="padding:8px;color:#64748b">${cf.type}</td>
+            <td style="padding:8px;color:#64748b">${cf.section}</td>
+            <td style="padding:8px"><button onclick="delCustomField(${i})"
+              style="padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:5px;cursor:pointer;font-size:12px">✕</button></td>
+          </tr>`).join("")}</tbody>
+        </table>`}
+      <div style="font-weight:600;font-size:13px;margin-bottom:8px">Nuevo campo</div>
+      <div class="grid-3">
+        <div class="field"><label>Etiqueta</label>
+          <input value="${STATE.cfNew.label}" oninput="setCfNew('label',this.value)"
+            style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
+        <div class="field"><label>Tipo</label>
+          <select onchange="setCfNew('type',this.value)" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
+            ${["text","number","textarea"].map(t=>`<option value="${t}" ${STATE.cfNew.type===t?"selected":""}>${t}</option>`).join("")}
+          </select></div>
+        <div class="field"><label>Sección</label>
+          <select onchange="setCfNew('section',this.value)" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
+            ${sections.map(s=>`<option value="${s}" ${STATE.cfNew.section===s?"selected":""}>${s}</option>`).join("")}
+          </select></div>
+      </div>
+      <button onclick="addCustomField()" class="btn-primary" style="margin-top:8px;padding:8px 20px">Agregar campo</button>
+      ${STATE.configFlash?`<div style="color:#15803d;font-size:13px;margin-top:10px;font-weight:600">${STATE.configFlash}</div>`:""}
+    </div>`;
+  }
+
+  return `<div class="card">
+    <h2 style="margin:0 0 16px;font-size:18px;color:#0f4c81">⚙️ Configuración</h2>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">${nav}</div>
+    ${body}
+  </div>`;
+}
+
+// ── renderForm ────────────────────────────────────────────────────────────────
+function renderForm(){
+  const demo = STATE.user.role==="demo";
+  const ro = demo;
+  let content = "";
+  switch(STATE.tab){
+    case "demografico":   content=tabDemografico(ro); break;
+    case "preop_rx":      content=tabPreopRx(ro); break;
+    case "preop_scores":  content=tabPreopScores(ro); break;
+    case "quirurgico":    content=tabQuirurgico(ro); break;
+    case "mako":          content=tabMako(ro); break;
+    case "postop_rx":     content=tabPostopRx(ro); break;
+    case "controles": {
+      const allC = getControles();
+      const eid2 = Number(STATE.editId);
+      STATE.currentControles = allC.filter(x=>Number(x.pacienteId)===eid2);
+      content=tabControles(STATE.editId, STATE.user.role==="demo");
+      break;
+    }
+    case "seguimiento":   content=tabSeguimiento(ro); break;
+    default: content=tabDemografico(ro);
+  }
+
+  const TABS=[
+    {id:"demografico",   label:"👤 Paciente"},
+    {id:"preop_rx",      label:"🦴 RX Pre-op"},
+    {id:"preop_scores",  label:"📊 Scores Pre"},
+    {id:"quirurgico",    label:"🔧 Quirúrgico"},
+    {id:"mako",          label:"🤖 Mako"},
+    {id:"postop_rx",     label:"📐 RX Post-op"},
+    {id:"controles",     label:"📅 Controles"},
+    {id:"seguimiento",   label:"📋 Seguimiento"},
+  ];
+
+  const tabBar=TABS.map(t=>`<button onclick="switchTab('${t.id}')"
+    style="padding:8px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;
+    background:${STATE.tab===t.id?"#0f4c81":"#f1f5f9"};
+    color:${STATE.tab===t.id?"#fff":"#334155"}">${t.label}</button>`).join("");
+
+  const modalHTML = STATE.modal ? renderScoreModal() : "";
+
+  return `
+    ${demo?`<div class="demo-banner">👁 Modo solo lectura — los cambios no se guardan</div>`:""}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">${tabBar}</div>
+    ${content}
+    <div style="display:flex;justify-content:space-between;margin-top:16px;gap:8px;flex-wrap:wrap">
+      <button onclick="prevTab()" class="btn-gray">← Anterior</button>
+      <div style="display:flex;gap:8px">
+        ${!demo?`<button onclick="savePatient()" class="btn-primary">💾 Guardar</button>`:""}
+        <button onclick="goList()" class="btn-gray">✕ Cerrar</button>
+      </div>
+      <button onclick="nextTab()" class="btn-gray">Siguiente →</button>
+    </div>
+    ${STATE.savedFlash?`<div style="color:#15803d;text-align:center;font-weight:700;margin-top:8px;font-size:13px">✓ Guardado</div>`:""}
+    ${modalHTML}
+  `;
+}
+
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function renderDashboard(){
