@@ -1218,6 +1218,11 @@ const WOMAC_OPTS = ["Ninguno (0)","Poco (1)","Bastante (2)","Mucho (3)","Muchís
 // ── Modal state ──────────────────────────────────────────────────────────────
 STATE.modal = null; // { scoreKey, controlIdx, values:{} }
 
+function openScoreModalById(scoreKey, ctrlId){
+  const idx = STATE.currentControles.findIndex(c=>Number(c.id)===Number(ctrlId));
+  if(idx===-1) return;
+  openScoreModal(scoreKey, idx);
+}
 function openScoreModal(scoreKey, controlIdx){
   const ctrl = STATE.currentControles[controlIdx];
   // Pre-fill existing values
@@ -1515,20 +1520,20 @@ function tabControles(pacienteId, ro){
 
   // ── Score button ──────────────────────────────────────────────────────────
   const sBtn=(label,scoreKey,ctrlIdx,val,color)=>`
-    <button onclick="${ro?'':`openScoreModal('${scoreKey}',${ctrlIdx})`}"
+    <button onclick="${ro?'':`openScoreModalById('${scoreKey}',${ctrlIdx})`}"
       style="width:${COL_W-20}px;padding:6px 8px;border-radius:6px;border:2px solid ${val?color:"#e2e8f0"};background:${val?color+"18":"#f8fafc"};cursor:${ro?"default":"pointer"};text-align:center;display:block">
       <div style="font-size:16px;font-weight:800;color:${val?color:"#cbd5e1"}">${val||"—"}</div>
       <div style="font-size:9px;color:#94a3b8">${val?"calculado":ro?"":"completar"}</div>
     </button>`;
 
   // ── Input ─────────────────────────────────────────────────────────────────
-  const inp=(ci,key,val,type="number",step="1",ph="")=>`
+  const inp=(ctrlId,key,val,type="number",step="1",ph="")=>`
     <input type="${type}" value="${val||""}" step="${step}" placeholder="${ph}" ${ro?"disabled":""}
-      oninput="updateControl(${ci},'${key}',this.value)"
+      oninput="updateControlById(${ctrlId},'${key}',this.value)"
       style="width:${COL_W-20}px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;background:#f8fafc;outline:none;display:block">`;
 
-  const sel=(ci,key,val,opts)=>`
-    <select ${ro?"disabled":""} onchange="updateControl(${ci},'${key}',this.value)"
+  const sel=(ctrlId,key,val,opts)=>`
+    <select ${ro?"disabled":""} onchange="updateControlById(${ctrlId},'${key}',this.value)"
       style="width:${COL_W-20}px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;background:#f8fafc;outline:none;cursor:pointer;display:block">
       <option value="">—</option>
       ${opts.map(o=>`<option value="${o}"${val===o?" selected":""}>${o}</option>`).join("")}
@@ -1546,9 +1551,9 @@ function tabControles(pacienteId, ro){
           style="font-size:10px;padding:2px 4px;border-radius:4px;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;max-width:90px">
           ${PERIODOS.map(p=>`<option value="${p.id}"${ctrl.periodo===p.id?" selected":""}>${p.label}</option>`).join("")}
         </select>
-        <button onclick="deleteControl(${i})" style="background:rgba(220,38,38,.8);color:#fff;border:none;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer">✕</button>
+        <button onclick="deleteControlById(${ctrl.id})" style="background:rgba(220,38,38,.8);color:#fff;border:none;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer">✕</button>
       </div>
-      <input type="date" value="${ctrl.fecha||""}" onchange="updateControlById(\${ctrl.id},'fecha',this.value)"
+      <input type="date" value="${ctrl.fecha||""}" onchange="updateControlById(${ctrl.id},'fecha',this.value)"
         style="margin-top:5px;font-size:10px;padding:2px 4px;border-radius:4px;border:none;background:rgba(255,255,255,.2);color:#fff;outline:none;width:${COL_W-24}px">
       `:""}
     </th>`;
@@ -1564,21 +1569,21 @@ function tabControles(pacienteId, ro){
   </tr>`;
 
   const rows = [
-    row("KSS Knee","médico · /100",     (ctrl,i)=>sBtn("KSS Knee","kss_knee",i,ctrl.kss_knee,"#0f4c81")),
-    row("KSS Function","médico · /100", (ctrl,i)=>sBtn("KSS Function","kss_func",i,ctrl.kss_func,"#1e6fb5")),
-    row("Oxford","paciente · /48",      (ctrl,i)=>sBtn("Oxford","oxford",i,ctrl.oxford,"#7c3aed")),
-    row("WOMAC","paciente · /96",       (ctrl,i)=>sBtn("WOMAC","womac",i,ctrl.womac_total,"#0891b2")),
-    row("VAS","paciente · 0–10",        (ctrl,i)=>inp(i,"vas",ctrl.vas,"number","0.5","0–10")),
-    row("TUG Test","segundos",          (ctrl,i)=>inp(i,"tug",ctrl.tug,"number","0.1","seg")),
-    row("Extensión","°",                (ctrl,i)=>inp(i,"extension",ctrl.extension,"number","1","0°")),
-    row("Flexión","°",                  (ctrl,i)=>inp(i,"flexion",ctrl.flexion,"number","1","120°")),
+    row("KSS Knee","médico · /100",     (ctrl,i)=>sBtn("KSS Knee","kss_knee",ctrl.id,ctrl.kss_knee,"#0f4c81")),
+    row("KSS Function","médico · /100", (ctrl,i)=>sBtn("KSS Function","kss_func",ctrl.id,ctrl.kss_func,"#1e6fb5")),
+    row("Oxford","paciente · /48",      (ctrl,i)=>sBtn("Oxford","oxford",ctrl.id,ctrl.oxford,"#7c3aed")),
+    row("WOMAC","paciente · /96",       (ctrl,i)=>sBtn("WOMAC","womac",ctrl.id,ctrl.womac_total,"#0891b2")),
+    row("VAS","paciente · 0–10",        (ctrl,i)=>inp(ctrl.id,"vas",ctrl.vas,"number","0.5","0–10")),
+    row("TUG Test","segundos",          (ctrl,i)=>inp(ctrl.id,"tug",ctrl.tug,"number","0.1","seg")),
+    row("Extensión","°",                (ctrl,i)=>inp(ctrl.id,"extension",ctrl.extension,"number","1","0°")),
+    row("Flexión","°",                  (ctrl,i)=>inp(ctrl.id,"flexion",ctrl.flexion,"number","1","120°")),
     row("Arco","°",                     (ctrl,i)=>{
       const f=Number(ctrl.flexion||0),e=Number(ctrl.extension||0);
       return `<div id="arco-${i}" style="padding:5px 8px;background:#f0fdf4;border-radius:6px;font-weight:700;color:#15803d;text-align:center;font-size:14px">${f>0&&f>e?f-e+"°":"—"}</div>`;
     }),
-    row("Dolor palp.","palpación",      (ctrl,i)=>sel(i,"dolor_palp",ctrl.dolor_palp,["No","Leve","Moderado","Severo"])),
-    row("Derrame","articular",          (ctrl,i)=>sel(i,"derrame",ctrl.derrame,["No","Leve","Moderado","Severo"])),
-    row("Notas","",                     (ctrl,i)=>`<textarea ${ro?"disabled":""} oninput="updateControlById(\${ctrl.id},'notas',this.value)"
+    row("Dolor palp.","palpación",      (ctrl,i)=>sel(ctrl.id,"dolor_palp",ctrl.dolor_palp,["No","Leve","Moderado","Severo"])),
+    row("Derrame","articular",          (ctrl,i)=>sel(ctrl.id,"derrame",ctrl.derrame,["No","Leve","Moderado","Severo"])),
+    row("Notas","",                     (ctrl,i)=>`<textarea ${ro?"disabled":""} oninput="updateControlById(${ctrl.id},'notas',this.value)"
       style="width:${COL_W-20}px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;background:#f8fafc;outline:none;min-height:50px;resize:vertical;display:block">${(ctrl.notas||"").replace(/</g,"&lt;")}</textarea>`),
   ].join("");
 
@@ -1632,6 +1637,11 @@ function updateControl(idx,key,val){
   }
 }
 
+function deleteControlById(ctrlId){
+  const idx = STATE.currentControles.findIndex(c=>Number(c.id)===Number(ctrlId));
+  if(idx===-1) return;
+  deleteControl(idx);
+}
 function deleteControl(idx){
   if(!confirm("¿Eliminar este control?")) return;
   const ctrl=STATE.currentControles[idx];
