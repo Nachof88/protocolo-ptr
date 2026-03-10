@@ -168,12 +168,12 @@ const KEYS = {users:"ptr_users_v1", patients:"ptr_db_v4", config:"ptr_config_v1"
 
 // ── Firebase config — REPLACE with your project values ───────────────────────
 const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyDq4sZsyuDTAoD7X5jASrevHwQfDCcDrvA",
-    authDomain: "protocolo-ptr.firebaseapp.com",
-    projectId: "protocolo-ptr",
-    storageBucket: "protocolo-ptr.firebasestorage.app",
-    messagingSenderId: "435551180251",
-    appId: "1:435551180251:web:5e500f7e8347ca522e03fe"
+  apiKey:            "AIzaSyDq4sZsyuDTAoD7X5jASrevHwQfDCcDrvA",
+  authDomain:        "protocolo-ptr.firebaseapp.com",
+  projectId:         "protocolo-ptr",
+  storageBucket:     "protocolo-ptr.firebasestorage.app",
+  messagingSenderId: "435551180251",
+  appId:             "1:435551180251:web:5e500f7e8347ca522e03fe"
 };
 
 // ── Firebase init ─────────────────────────────────────────────────────────────
@@ -1333,20 +1333,14 @@ function renderScoreModal(){
           <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8"><span>${sec.min}°</span><span>${sec.max}°</span></div>
         </div>`;
       } else {
-        const selectedVal = v!==""&&v!==undefined ? v : null;
-        // selectedVal stored as "pts:idx" to distinguish items with same pts
-        const selectedPts = selectedVal!==null ? Number(String(selectedVal).split(":")[0]) : null;
-        const selectedIdx = selectedVal!==null && String(selectedVal).includes(":") ? Number(String(selectedVal).split(":")[1]) : null;
+        const selectedPts = v!==""&&v!==undefined ? Number(v) : null;
         if(selectedPts!==null) runningTotal+=selectedPts;
-        const opts = sec.items.map((item,ii)=>{
-          const isSelected = selectedIdx!==null ? selectedIdx===ii : selectedPts===item.pts;
-          const radioVal = `${item.pts}:${ii}`;
-          return `<label style="display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;background:${isSelected?"#dbeafe":"transparent"};border:1.5px solid ${isSelected?"#0f4c81":"transparent"}">
-            <input type="radio" name="kss_${sec.key}" value="${radioVal}" ${isSelected?"checked":""} onchange="modalSetVal('${sec.key}','${radioVal}')" style="margin-top:2px;accent-color:#0f4c81">
+        const opts = sec.items.map(item=>`
+          <label style="display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;background:${selectedPts===item.pts?"#dbeafe":"transparent"};border:1.5px solid ${selectedPts===item.pts?"#0f4c81":"transparent"}">
+            <input type="radio" name="kss_${sec.key}" value="${item.pts}" ${selectedPts===item.pts?"checked":""} onchange="modalSetVal('${sec.key}',${item.pts})" style="margin-top:2px;accent-color:#0f4c81">
             <span style="flex:1;font-size:13px;color:#334155">${item.label}</span>
             <span style="font-size:12px;font-weight:700;color:${item.pts<0?"#dc2626":"#0f4c81"}">${item.pts>=0?"+":""}${item.pts}</span>
-          </label>`;
-        }).join("");
+          </label>`).join("");
         content+=`<div style="margin-bottom:12px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0">
           <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px">${isDeduccion?"⚠️ ":""}${sec.titulo}</div>
           ${opts}
@@ -1430,7 +1424,7 @@ function savePreopScoreModal(){
     SCORES[scoreDef].secciones.forEach(sec=>{
       const v=values[sec.key];
       if(sec.tipo==="slider") total+=sec.calc(Number(v||0));
-      else if(v!==""&&v!==undefined) total+=Number(String(v).split(":")[0]);
+      else if(v!==""&&v!==undefined) total+=Number(v);
     });
     const clamp = Math.max(0,Math.min(100,total));
     if(scoreDef==="kss_knee") STATE.form.kssKnee_pre = String(clamp);
@@ -1463,10 +1457,7 @@ function saveScoreModal(){
       const v=values[sec.key];
       ctrl[sec.key]=v;
       if(sec.tipo==="slider"){ total+=sec.calc(Number(v||0)); }
-      else if(v!==""&&v!==undefined){
-        // value stored as "pts:idx" — extract pts
-        total+=Number(String(v).split(":")[0]);
-      }
+      else if(v!==""&&v!==undefined){ total+=Number(v); }
     });
     // Only save if at least one section was answered
     const hasAnyKSS = SCORES[scoreKey].secciones.some(sec=>values[sec.key]!==""&&values[sec.key]!==undefined);
