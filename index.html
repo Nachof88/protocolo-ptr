@@ -1542,13 +1542,13 @@ function tabControles(pacienteId, ro){
       <div style="font-size:13px;font-weight:800">${pLabel}</div>
       <div style="font-size:11px;opacity:.8;margin:3px 0">${fechaStr}</div>
       ${!ro?`<div style="display:flex;gap:4px;justify-content:center;margin-top:6px">
-        <select onchange="updateControl(${i},'periodo',this.value)"
+        <select onchange="updateControlById(${ctrl.id},'periodo',this.value)"
           style="font-size:10px;padding:2px 4px;border-radius:4px;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;max-width:90px">
           ${PERIODOS.map(p=>`<option value="${p.id}"${ctrl.periodo===p.id?" selected":""}>${p.label}</option>`).join("")}
         </select>
         <button onclick="deleteControl(${i})" style="background:rgba(220,38,38,.8);color:#fff;border:none;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer">✕</button>
       </div>
-      <input type="date" value="${ctrl.fecha||""}" onchange="updateControl(${i},'fecha',this.value)"
+      <input type="date" value="${ctrl.fecha||""}" onchange="updateControlById(\${ctrl.id},'fecha',this.value)"
         style="margin-top:5px;font-size:10px;padding:2px 4px;border-radius:4px;border:none;background:rgba(255,255,255,.2);color:#fff;outline:none;width:${COL_W-24}px">
       `:""}
     </th>`;
@@ -1578,7 +1578,7 @@ function tabControles(pacienteId, ro){
     }),
     row("Dolor palp.","palpación",      (ctrl,i)=>sel(i,"dolor_palp",ctrl.dolor_palp,["No","Leve","Moderado","Severo"])),
     row("Derrame","articular",          (ctrl,i)=>sel(i,"derrame",ctrl.derrame,["No","Leve","Moderado","Severo"])),
-    row("Notas","",                     (ctrl,i)=>`<textarea ${ro?"disabled":""} oninput="updateControl(${i},'notas',this.value)"
+    row("Notas","",                     (ctrl,i)=>`<textarea ${ro?"disabled":""} oninput="updateControlById(\${ctrl.id},'notas',this.value)"
       style="width:${COL_W-20}px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;background:#f8fafc;outline:none;min-height:50px;resize:vertical;display:block">${(ctrl.notas||"").replace(/</g,"&lt;")}</textarea>`),
   ].join("");
 
@@ -1611,6 +1611,11 @@ function addControl(pacienteId){
   render();
 }
 
+function updateControlById(ctrlId,key,val){
+  const idx = STATE.currentControles.findIndex(c=>Number(c.id)===Number(ctrlId));
+  if(idx===-1) return;
+  updateControl(idx,key,val);
+}
 function updateControl(idx,key,val){
   STATE.currentControles[idx][key]=val;
   const all=getControles();
