@@ -94,6 +94,8 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9}
 .login-box .logo h1{font-size:20px;font-weight:800;color:#0f4c81;margin-bottom:4px}
 .login-box .logo p{font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em}
 .login-box .field{margin-bottom:16px}
+.btn-primary{background:linear-gradient(135deg,#0f4c81,#1e6fb5);color:#fff;border:none;border-radius:8px;padding:12px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-primary:hover{opacity:.9}
 .login-err{background:#fee2e2;color:#b91c1c;border-radius:7px;padding:9px 13px;font-size:13px;margin-bottom:16px}
 .login-note{text-align:center;font-size:11px;color:#cbd5e1;margin-top:20px}
 
@@ -168,7 +170,7 @@ const KEYS = {users:"ptr_users_v1", patients:"ptr_db_v4", config:"ptr_config_v1"
 
 // ── Firebase config — REPLACE with your project values ───────────────────────
 const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyDq4sZsyuDTAoD7X5jASrevHwQfDCcDrvA",
+   apiKey: "AIzaSyDq4sZsyuDTAoD7X5jASrevHwQfDCcDrvA",
     authDomain: "protocolo-ptr.firebaseapp.com",
     projectId: "protocolo-ptr",
     storageBucket: "protocolo-ptr.firebasestorage.app",
@@ -1265,18 +1267,20 @@ function renderLogin(){
         <h1>Protocolo PTR</h1>
         <p>Prótesis Total de Rodilla</p>
       </div>
-      <div class="field"><label>Usuario</label>
+      <div class="field">
+        <label>Usuario</label>
         <input type="text" id="login-u" placeholder="Ej: fernandez" autocomplete="username"
-          style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"
+          style="width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none"
           onkeydown="if(event.key==='Enter')doLogin()">
       </div>
-      <div class="field"><label>Contraseña</label>
-        <input type="password" id="login-p" placeholder="Contraseña"
-          style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="login-p" placeholder="••••••••" autocomplete="current-password"
+          style="width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none"
           onkeydown="if(event.key==='Enter')doLogin()">
       </div>
-      <button onclick="doLogin()" class="btn-primary" style="width:100%;margin-top:8px">Iniciar sesión</button>
-      <div id="login-err" style="color:#dc2626;font-size:12px;margin-top:10px;display:none;text-align:center">
+      <button onclick="doLogin()" class="btn-primary" style="width:100%;margin-top:4px">Iniciar sesión</button>
+      <div id="login-err" class="login-err" style="display:none;margin-top:12px">
         Usuario o contraseña incorrectos
       </div>
     </div>
