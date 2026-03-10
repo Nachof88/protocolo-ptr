@@ -397,34 +397,7 @@ function emptyForm(){
     // post-op scores now stored in controles system (not in patient form)
     infeccion:"",tvp_tep:"",rigidez:"",aflojamiento:"",fractura_periprotesica:"",
     revision:"",otras_complicaciones:"",notas:"",
-    mako_usado:"",
-    // Plan vs Real
-    mako_hka_plan:"",mako_hka_real:"",mako_dffa_plan:"",mako_dffa_real:"",
-    mako_atfa_plan:"",mako_atfa_real:"",mako_slope_plan:"",mako_slope_real:"",
-    // Laxitud pre-implantación
-    mako_lax_pre_ext_med:"",mako_lax_pre_ext_lat:"",mako_lax_pre_flex_med:"",mako_lax_pre_flex_lat:"",
-    // Laxitud post-implantación
-    mako_lax_post_ext_med:"",mako_lax_post_ext_lat:"",mako_lax_post_flex_med:"",mako_lax_post_flex_lat:"",
-    // Gaps
-    mako_flex_gap_med:"",mako_flex_gap_lat:"",mako_ext_gap_med:"",mako_ext_gap_lat:"",
-    mako_balance_flex:"",mako_balance_ext:"",
-    // Rotaciones femorales
-    mako_rot_fem_coronal:"",mako_rot_fem_transverso:"",mako_rot_fem_sagital:"",
-    // Resecciones femorales
-    mako_res_fem_distal_med:"",mako_res_fem_distal_lat:"",
-    mako_res_fem_post_med:"",mako_res_fem_post_lat:"",
-    // Rotaciones tibiales
-    mako_rot_tib_coronal:"",mako_rot_tib_transverso:"",mako_rot_tib_sagital:"",
-    // Resecciones tibiales
-    mako_res_tib_prox_med:"",mako_res_tib_prox_lat:"",
-    // Joint Line
-    mako_jl_ldfa:"",mako_jl_mpta:"",mako_jl_ahka:"",mako_jl_jlo:"",
-    mako_jl_fem_jla:"",mako_jl_tib_jla:"",mako_jl_mec_bone:"",mako_jl_mec_implant:"",
-    // Anatomía
-    mako_anat_coronal:"",mako_anat_transverso:"",mako_anat_sagital:"",
-    mako_anat_aa_ma_cor:"",mako_anat_aa_ma_sag:"",mako_anat_pca_tea:"",
-    mako_slope_med:"",mako_slope_lat:"",
-    mako_notas:"",
+    mako_usado:"",mako_hka_plan:"",mako_hka_real:"",mako_dffa_plan:"",mako_dffa_real:"",mako_atfa_plan:"",mako_atfa_real:"",mako_slope_plan:"",mako_slope_real:"",mako_flex_gap:"",mako_ext_gap:"",mako_balance_flex:"",mako_balance_ext:"",mako_reseccion_femoral:"",mako_reseccion_tibial:"",mako_notas:"",
   };
 }
 
@@ -701,144 +674,57 @@ function tabSeguimiento(ro){
 
 // ── Views ─────────────────────────────────────────────────────────────────────
 function tabMako(ro){
-  const makoSel = `<select ${ro?"disabled":""} onchange="setFormField('mako_usado',this.value);render()" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;background:#f8fafc;outline:none;cursor:pointer">
-    <option value="">— Seleccionar —</option>
-    ${["No","Sí"].map(o=>`<option value="${o}"${STATE.form.mako_usado===o?" selected":""}>${o}</option>`).join("")}
-  </select>`;
-
-  const sub = (label) => `<div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin:14px 0 8px">${label}</div>`;
-
-  const planReal = (labelPlan, keyPlan, labelReal, keyReal) =>
-    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      ${field(labelPlan, numInp(keyPlan,"","0.5","","",ro))}
-      ${field(labelReal, numInp(keyReal,"","0.5","","",ro))}
-    </div>`;
-
   return `<div class="card">
     ${secTitle("🤖","Cirugía Robótica MAKO (Stryker)","Datos del sistema de planificación y ejecución robótica")}
 
     <div class="grid-3" style="margin-bottom:14px">
-      ${field("Cirugía con MAKO", makoSel)}
+      ${field("Cirugía con MAKO", selInp("mako_usado",["No","Sí"],ro))}
     </div>
 
     ${STATE.form.mako_usado==="Sí" ? `
-
-    <!-- ── ALINEAMIENTO PLAN VS REAL ─────────────────────────────── -->
-    ${sub("📐 Plan vs Real — Alineamiento")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${planReal("HKA Planificado (°)","mako_hka_plan","HKA Real (°)","mako_hka_real")}
-      ${planReal("DFFA Planificado (°)","mako_dffa_plan","DFFA Real (°)","mako_dffa_real")}
-      ${planReal("aTFA Planificado (°)","mako_atfa_plan","aTFA Real (°)","mako_atfa_real")}
-      ${planReal("Slope Planificado (°)","mako_slope_plan","Slope Real (°)","mako_slope_real")}
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plan vs Real — Eje Mecánico</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("HKA Planificado (°)", numInp("mako_hka_plan","","0.5","","",ro))}
+      ${field("HKA Real ejecutado (°)", numInp("mako_hka_real","","0.5","","",ro))}
     </div>
 
-    <!-- ── LAXITUD PRE-IMPLANTACIÓN ──────────────────────────────── -->
-    ${sub("📏 Laxitud Pre-implantación (mm)")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Extensión Medial",  numInp("mako_lax_pre_ext_med","","0.5","","",ro))}
-      ${field("Extensión Lateral", numInp("mako_lax_pre_ext_lat","","0.5","","",ro))}
-      ${field("Flexión Medial",    numInp("mako_lax_pre_flex_med","","0.5","","",ro))}
-      ${field("Flexión Lateral",   numInp("mako_lax_pre_flex_lat","","0.5","","",ro))}
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plan vs Real — Componente Femoral</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("DFFA Planificado (°)", numInp("mako_dffa_plan","","0.5","","",ro))}
+      ${field("DFFA Real (°)", numInp("mako_dffa_real","","0.5","","",ro))}
     </div>
 
-    <!-- ── LAXITUD POST-IMPLANTACIÓN ─────────────────────────────── -->
-    ${sub("📏 Laxitud Post-implantación (mm)")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Extensión Medial",  numInp("mako_lax_post_ext_med","","0.5","","",ro))}
-      ${field("Extensión Lateral", numInp("mako_lax_post_ext_lat","","0.5","","",ro))}
-      ${field("Flexión Medial",    numInp("mako_lax_post_flex_med","","0.5","","",ro))}
-      ${field("Flexión Lateral",   numInp("mako_lax_post_flex_lat","","0.5","","",ro))}
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plan vs Real — Componente Tibial</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("aTFA Planificado (°)", numInp("mako_atfa_plan","","0.5","","",ro))}
+      ${field("aTFA Real (°)", numInp("mako_atfa_real","","0.5","","",ro))}
+      ${field("Slope Planificado (°)", numInp("mako_slope_plan","","0.5","","",ro))}
+      ${field("Slope Real (°)", numInp("mako_slope_real","","0.5","","",ro))}
     </div>
 
-    <!-- ── GAPS ──────────────────────────────────────────────────── -->
-    ${sub("🔲 Gaps (mm)")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Flex Gap Medial",  numInp("mako_flex_gap_med","","0.5","","",ro))}
-      ${field("Flex Gap Lateral", numInp("mako_flex_gap_lat","","0.5","","",ro))}
-      ${field("Ext Gap Medial",   numInp("mako_ext_gap_med","","0.5","","",ro))}
-      ${field("Ext Gap Lateral",  numInp("mako_ext_gap_lat","","0.5","","",ro))}
-      ${field("Balance Flex",     numInp("mako_balance_flex","","0.5","","",ro))}
-      ${field("Balance Ext",      numInp("mako_balance_ext","","0.5","","",ro))}
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Balance Ligamentario (Gaps)</div>
+    ${infoBox("Gaps medidos con el sistema MAKO en la mesa quirúrgica, con implantes de prueba","info-blue")}
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("Flexion Gap (mm)", numInp("mako_flex_gap","","0.5","","",ro))}
+      ${field("Extension Gap (mm)", numInp("mako_ext_gap","","0.5","","",ro))}
+      ${field("Balance en Flexión (mm)", numInp("mako_balance_flex","medial vs lateral","0.5","","",ro))}
+      ${field("Balance en Extensión (mm)", numInp("mako_balance_ext","medial vs lateral","0.5","","",ro))}
     </div>
 
-    <!-- ── ROTACIONES FEMORALES ──────────────────────────────────── -->
-    ${sub("🦴 Rotaciones Femorales")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Coronal (°)",    numInp("mako_rot_fem_coronal","","0.5","","",ro))}
-      ${field("Transverso (°)", numInp("mako_rot_fem_transverso","","0.5","","",ro))}
-      ${field("Sagital (°)",    numInp("mako_rot_fem_sagital","","0.5","","",ro))}
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Resecciones Óseas</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("Resección Femoral Distal (mm)", numInp("mako_reseccion_femoral","","0.5","","",ro))}
+      ${field("Resección Tibial (mm)", numInp("mako_reseccion_tibial","","0.5","","",ro))}
     </div>
 
-    <!-- ── RESECCIONES FEMORALES ─────────────────────────────────── -->
-    ${sub("✂️ Resecciones Femorales (mm)")}
-    <div style="font-size:11px;color:#64748b;margin-bottom:6px;font-style:italic">Distal</div>
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Distal Medial",    numInp("mako_res_fem_distal_med","","0.5","","",ro))}
-      ${field("Distal Lateral",   numInp("mako_res_fem_distal_lat","","0.5","","",ro))}
+    <div class="field" style="margin-bottom:0">
+      <label>Notas MAKO</label>
+      <textarea ${ro?"disabled":""} oninput="setFormField('mako_notas',this.value)" style="min-height:60px">${(STATE.form.mako_notas||"").replace(/</g,"&lt;")}</textarea>
     </div>
-    <div style="font-size:11px;color:#64748b;margin-bottom:6px;font-style:italic">Posterior</div>
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Posterior Medial", numInp("mako_res_fem_post_med","","0.5","","",ro))}
-      ${field("Posterior Lateral",numInp("mako_res_fem_post_lat","","0.5","","",ro))}
-    </div>
+    ` : `<div class="info-box info-yellow">Seleccioná "Sí" en el campo de arriba para registrar los datos del sistema MAKO.</div>`}
 
-    <!-- ── ROTACIONES TIBIALES ───────────────────────────────────── -->
-    ${sub("🦴 Rotaciones Tibiales")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Coronal (°)",    numInp("mako_rot_tib_coronal","","0.5","","",ro))}
-      ${field("Transverso (°)", numInp("mako_rot_tib_transverso","","0.5","","",ro))}
-      ${field("Sagital (°)",    numInp("mako_rot_tib_sagital","","0.5","","",ro))}
-    </div>
-
-    <!-- ── RESECCIONES TIBIALES ──────────────────────────────────── -->
-    ${sub("✂️ Resecciones Tibiales (mm)")}
-    <div style="font-size:11px;color:#64748b;margin-bottom:6px;font-style:italic">Proximal</div>
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Proximal Medial",  numInp("mako_res_tib_prox_med","","0.5","","",ro))}
-      ${field("Proximal Lateral", numInp("mako_res_tib_prox_lat","","0.5","","",ro))}
-    </div>
-
-    <!-- ── JOINT LINE ────────────────────────────────────────────── -->
-    ${sub("📏 Joint Line (planificación)")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("LDFA (°)",         numInp("mako_jl_ldfa","","0.5","","",ro))}
-      ${field("MPTA (°)",         numInp("mako_jl_mpta","","0.5","","",ro))}
-      ${field("aHKA (°)",         numInp("mako_jl_ahka","","0.5","","",ro))}
-      ${field("JLO (mm)",         numInp("mako_jl_jlo","","0.5","","",ro))}
-      ${field("Fémur JLA (°)",    numInp("mako_jl_fem_jla","","0.5","","",ro))}
-      ${field("Tibia JLA (°)",    numInp("mako_jl_tib_jla","","0.5","","",ro))}
-      ${field("MEC to Bone (mm)", numInp("mako_jl_mec_bone","","0.5","","",ro))}
-      ${field("MEC to Implant (mm)",numInp("mako_jl_mec_implant","","0.5","","",ro))}
-    </div>
-
-    <!-- ── INFORMACIÓN ANATÓMICA ─────────────────────────────────── -->
-    ${sub("🧬 Información Anatómica (As Scanned)")}
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Alineamiento Coronal (°)",    numInp("mako_anat_coronal","","0.5","","",ro))}
-      ${field("Alineamiento Transverso (°)", numInp("mako_anat_transverso","","0.5","","",ro))}
-      ${field("Alineamiento Sagital (°)",    numInp("mako_anat_sagital","","0.5","","",ro))}
-    </div>
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("AA to MA Coronal (°)",  numInp("mako_anat_aa_ma_cor","","0.5","","",ro))}
-      ${field("AA to MA Sagital (°)",  numInp("mako_anat_aa_ma_sag","","0.5","","",ro))}
-      ${field("PCA to TEA (°)",        numInp("mako_anat_pca_tea","","0.5","","",ro))}
-    </div>
-    <div class="grid-3" style="margin-bottom:8px">
-      ${field("Posterior Slope Medial (°)",  numInp("mako_slope_med","","0.5","","",ro))}
-      ${field("Posterior Slope Lateral (°)", numInp("mako_slope_lat","","0.5","","",ro))}
-    </div>
-
-    <!-- ── NOTAS ─────────────────────────────────────────────────── -->
-    ${sub("📝 Notas")}
-    <div style="margin-bottom:8px">
-      ${field("Observaciones", `<textarea ${ro?"disabled":""} oninput="setFormField('mako_notas',this.value)"
-        style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none;min-height:80px;resize:vertical">${STATE.form.mako_notas||""}</textarea>`)}
-    </div>
-
-    ` : `<div style="padding:20px;text-align:center;color:#94a3b8;font-size:13px">Seleccionar "Sí" para activar los campos MAKO</div>`}
-  </div>`;
+    ${customFieldsHTML('mako',ro)}</div>`;
 }
-
 
 function tabControles(pacienteId, ro){
   // Sort controls chronologically by periodo then fecha
