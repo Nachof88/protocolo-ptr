@@ -94,8 +94,6 @@ td{padding:8px 10px;border-bottom:1px solid #f1f5f9}
 .login-box .logo h1{font-size:20px;font-weight:800;color:#0f4c81;margin-bottom:4px}
 .login-box .logo p{font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em}
 .login-box .field{margin-bottom:16px}
-.btn-primary{background:linear-gradient(135deg,#0f4c81,#1e6fb5);color:#fff;border:none;border-radius:8px;padding:12px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
-.btn-primary:hover{opacity:.9}
 .login-err{background:#fee2e2;color:#b91c1c;border-radius:7px;padding:9px 13px;font-size:13px;margin-bottom:16px}
 .login-note{text-align:center;font-size:11px;color:#cbd5e1;margin-top:20px}
 
@@ -245,9 +243,6 @@ async function syncFromFirebase(){
       const users = uSnap.docs.map(d=>d.data());
       STATE.users = users;
       lsSet(KEYS.users, users);
-    } else {
-      // No users in Firestore yet — seed with defaults
-      await fsSaveUsers(STATE.users);
     }
     // Config
     const cfSnap = await db.collection(FS_COL.config).doc("main").get();
@@ -678,7 +673,7 @@ function tabMako(ro){
     ${secTitle("🤖","Cirugía Robótica MAKO (Stryker)","Datos del sistema de planificación y ejecución robótica")}
 
     <div class="grid-3" style="margin-bottom:14px">
-      ${field("Cirugía con MAKO", selInp("mako_usado",["No","Sí"],ro))}
+      ${field("Cirugía con MAKO", `<select ${ro?"disabled":""} onchange="setFormField('mako_usado',this.value);render()" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;background:#f8fafc;outline:none;cursor:pointer"><option value="">— Seleccionar —</option>${["No","Sí"].map(o=>`<option value="${o}"${STATE.form.mako_usado===o?" selected":""}>${o}</option>`).join("")}</select>`)}
     </div>
 
     ${STATE.form.mako_usado==="Sí" ? `
@@ -721,11 +716,774 @@ function tabMako(ro){
       <label>Notas MAKO</label>
       <textarea ${ro?"disabled":""} oninput="setFormField('mako_notas',this.value)" style="min-height:60px">${(STATE.form.mako_notas||"").replace(/</g,"&lt;")}</textarea>
     </div>
-    ` : `<div class="info-box info-yellow">Seleccioná "Sí" en el campo de arriba para registrar los datos del sistema MAKO.</div>`}
+    ` : `<div class="info-box info-yellow">Seleccione "Sí" en el campo anterior para registrar los datos del sistema MAKO.</div>`}
 
     ${customFieldsHTML('mako',ro)}</div>`;
 }
 
+function renderLogin(){
+  return `<div id="login-screen">
+    <div class="login-box">
+      <div class="logo">
+        <div class="emoji">🦴</div>
+        <h1>Protocolo PTR</h1>
+        <p>Prótesis Total de Rodilla</p>
+      </div>
+      <div class="field"><label>Usuario</label>
+        <input type="text" id="login-u" placeholder="Ej: fernandez" autocomplete="username" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="field" style="margin-bottom:20px"><label>Contraseña</label>
+        <input type="password" id="login-p" placeholder="••••••••" autocomplete="current-password" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="login-err" style="display:none" class="login-err">Usuario o contraseña incorrectos.</div>
+      <button class="btn-blue" style="width:100%;padding:12px" onclick="doLogin()">Ingresar</button>
+      <p class="login-note">Acceso restringido — solo personal autorizado</p>
+    </div>
+  </div>`;
+}
+
+function renderList(){
+  const demo = STATE.user.role==="demo";
+  const COLS = [
+    {key:"rut",             label:"RUT"},
+    {key:"nombre",          label:"Paciente"},
+    {key:"cirujano",        label:"Cirujano"},
+    {key:"lado",            label:"Lado"},
+    {key:"fechaCx",         label:"Fecha Cx"},
+    {key:"implante",        label:"Implante"},
+    {key:"sexo",            label:"Sexo"},
+    {key:"edad",            label:"Edad"},
+    {key:"kellgren",        label:"K-L"},
+    {key:"ejeMecanico",     label:"HKA Pre"},
+    {key:"mad",             label:"MAD Pre"},
+    {key:"ejeMecanico_post",label:"HKA Post"},
+    {key:"mad_post",        label:"MAD Post"},
+    // Pre-op
+    {key:"kssKnee_pre",  label:"KSS Pre"},
+    {key:"oxford_pre",   label:"Ox. Pre"},
+    {key:"vas_pre",      label:"VAS Pre"},
+    // 6 meses
+    {key:"_kss_6m",  label:"KSS 6m",   ctrl:true, periodo:"6m",  field:"kss_knee"},
+    {key:"_ox_6m",   label:"Ox. 6m",   ctrl:true, periodo:"6m",  field:"oxford"},
+    {key:"_vas_6m",  label:"VAS 6m",   ctrl:true, periodo:"6m",  field:"vas"},
+    // 12 meses
+    {key:"_kss_12m", label:"KSS 12m",  ctrl:true, periodo:"12m", field:"kss_knee"},
+    {key:"_ox_12m",  label:"Ox. 12m",  ctrl:true, periodo:"12m", field:"oxford"},
+    {key:"_vas_12m", label:"VAS 12m",  ctrl:true, periodo:"12m", field:"vas"},
+    // 24 meses
+    {key:"_kss_24m", label:"KSS 24m",  ctrl:true, periodo:"24m", field:"kss_knee"},
+    {key:"_ox_24m",  label:"Ox. 24m",  ctrl:true, periodo:"24m", field:"oxford"},
+    {key:"_vas_24m", label:"VAS 24m",  ctrl:true, periodo:"24m", field:"vas"},
+    {key:"tecnica",  label:"Técnica"},
+  ];
+  const q = (STATE.listFilter||"").toLowerCase();
+  let pts = STATE.patients.filter(p=>{
+    if(!q) return true;
+    return Object.values(p).some(v=>String(v||"").toLowerCase().includes(q));
+  });
+  if(STATE.sortCol){
+    const k=STATE.sortCol, dir=STATE.sortDir;
+    pts=[...pts].sort((a,b)=>{
+      const av=a[k]||"",bv=b[k]||"";
+      const an=Number(av),bn=Number(bv);
+      if(!isNaN(an)&&!isNaN(bn)&&av!==""&&bv!=="") return (an-bn)*dir;
+      return String(av).localeCompare(String(bv))*dir;
+    });
+  }
+  const thBase="padding:9px 10px;text-align:left;font-weight:700;color:#64748b;font-size:10px;text-transform:uppercase;border-bottom:2px solid #e2e8f0;white-space:nowrap;cursor:pointer;user-select:none;background:#f8fafc;position:sticky;top:0;z-index:1";
+  const arrow=k=>STATE.sortCol===k?(STATE.sortDir===1?" \u25b2":" \u25bc"):" \u25bd";
+  const ths=COLS.map(c=>`<th style="${thBase}" onclick="sortList('${c.key}')">${c.label}${arrow(c.key)}</th>`).join("");
+  // Detect duplicate RUTs — same date = bilateral, different date = second surgery
+  const rutGroups={};
+  STATE.patients.forEach(p=>{
+    if(!p.rut) return;
+    if(!rutGroups[p.rut]) rutGroups[p.rut]=[];
+    rutGroups[p.rut].push(p.fechaCx||"");
+  });
+
+  const rows=pts.map(p=>{
+    const hkaPre=p.ejeMecanico!==""?`<span class="${Math.abs(Number(p.ejeMecanico))>3?"val-bad":"val-ok"}">${p.ejeMecanico}&deg;</span>`:"&mdash;";
+    const madPre=p.mad!==""?`<span class="${Math.abs(Number(p.mad))>10?"val-bad":"val-ok"}">${p.mad}mm</span>`:"&mdash;";
+    const hkaPost=p.ejeMecanico_post!==""?`<span class="${Math.abs(Number(p.ejeMecanico_post))>3?"val-bad":"val-ok"}">${p.ejeMecanico_post}&deg;</span>`:"&mdash;";
+    const madPost=p.mad_post!==""?`<span class="${Math.abs(Number(p.mad_post))>10?"val-bad":"val-ok"}">${p.mad_post}mm</span>`:"&mdash;";
+    const pControles = getControlesPaciente(p.id);
+    const ctrlByPeriodo = {};
+    pControles.forEach(ctrl=>{ ctrlByPeriodo[ctrl.periodo]=ctrl; });
+    const cells=COLS.map(c=>{
+      if(c.key==="ejeMecanico")     return `<td style="padding:8px 10px;white-space:nowrap">${hkaPre}</td>`;
+      if(c.key==="mad")             return `<td style="padding:8px 10px;white-space:nowrap">${madPre}</td>`;
+      if(c.key==="ejeMecanico_post")return `<td style="padding:8px 10px;white-space:nowrap">${hkaPost}</td>`;
+      if(c.key==="mad_post")        return `<td style="padding:8px 10px;white-space:nowrap">${madPost}</td>`;
+      if(c.key==="nombre"){
+        let badge = "";
+        if(p.rut && rutGroups[p.rut] && rutGroups[p.rut].length > 1){
+          const dates = rutGroups[p.rut];
+          const sameDate = dates.every(d=>d===dates[0] && d!=="");
+          if(sameDate)
+            badge = ` <span title="Cirugía bilateral — mismo acto quirúrgico" style="background:#fef9c3;color:#854d0e;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">bilateral</span>`;
+          else
+            badge = ` <span title="Este paciente tiene otro registro en la base de datos" style="background:#e0f2fe;color:#0369a1;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">2 registros</span>`;
+        }
+        return `<td style="padding:8px 10px;white-space:nowrap"><strong>${p.nombre||"&mdash;"}</strong>${badge}</td>`;
+      }
+      if(c.ctrl){
+        const ctrl = ctrlByPeriodo[c.periodo];
+        const val = ctrl ? (ctrl[c.field]||"") : "";
+        return `<td style="padding:8px 10px;white-space:nowrap;text-align:center">${val||"&mdash;"}</td>`;
+      }
+      return `<td style="padding:8px 10px;white-space:nowrap">${p[c.key]||"&mdash;"}</td>`;
+    }).join("");
+    return `<tr style="border-bottom:1px solid #f1f5f9">${cells}<td style="padding:8px 10px;white-space:nowrap"><div style="display:flex;gap:4px"><button class="btn-gray btn-sm" onclick="editPatient(${p.id})">${demo?"&#128065; Ver":"&#9998; Editar"}</button><button class="btn-gray btn-sm" onclick="exportPDF(${p.id})">&#128196; PDF</button>${!demo?`<button class="btn-red" onclick="delPatient(${p.id})">&#128465;</button>`:""}</div></td></tr>`;
+  }).join("");
+  const filterVal=(STATE.listFilter||"").replace(/"/g,"&quot;");
+  const searchBar=`<div style="padding:12px 16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><input type="text" value="${filterVal}" placeholder="Buscar por nombre, cirujano, implante..." oninput="filterList(this.value)" style="flex:1;min-width:200px;padding:7px 12px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">${STATE.listFilter?'<button class="btn-gray btn-sm" onclick="filterList(\'\')">&times; Limpiar</button>':""}<span style="font-size:12px;color:#94a3b8">${pts.length} de ${STATE.patients.length} pacientes</span></div>`;
+  const tableHTML=pts.length===0?`<div style="padding:40px;text-align:center;color:#94a3b8;font-size:13px">${q?`Sin resultados para &ldquo;${q}&rdquo;`:"Sin pacientes registrados"}</div>`:`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr>${ths}<th style="${thBase};cursor:default"></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  const mainContent=STATE.patients.length===0?`<div class="empty-state"><div class="big">&#129460;</div><strong style="font-size:15px;color:#64748b">Sin pacientes registrados</strong><p style="margin-top:6px;font-size:13px">${demo?"Modo demo &mdash; los datos no se guardan.":'Clic en &quot;+ Nuevo Paciente&quot; para comenzar'}</p></div>`:`<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0">${searchBar}${tableHTML}</div>`;
+  return `<div class="list-header"><div><div style="font-weight:800;font-size:16px;color:#1e293b">${STATE.patients.length} ${STATE.patients.length===1?"paciente registrado":"pacientes registrados"}</div><div style="font-size:12px;color:#94a3b8">Base de datos &middot; Pr&oacute;tesis Total de Rodilla</div></div><div style="display:flex;align-items:center;gap:8px"><div id="sync-status" style="padding:4px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px"></div><button class="btn-gray" onclick="syncFromFirebase()" title="Forzar sincronización" style="padding:6px 10px">☁️</button><button class="btn-gray" onclick="doExport()">&#128229; Exportar Excel (.xlsx)</button>${!demo?`<button class="btn-blue" onclick="newPatient()">+ Nuevo Paciente</button>`:""}</div></div>${mainContent}`;
+}
+
+function filterList(q){ STATE.listFilter=q; render(); }
+function sortList(col){
+  if(STATE.sortCol===col){ STATE.sortDir*=-1; }
+  else { STATE.sortCol=col; STATE.sortDir=1; }
+  render();
+}
+
+
+function renderForm(){
+  const demo = STATE.user.role==="demo";
+  const ro = demo;
+  let content = "";
+  switch(STATE.tab){
+    case "demografico":   content=tabDemografico(ro); break;
+    case "preop_rx":      content=tabPreopRx(ro); break;
+    case "preop_scores":  content=tabPreopScores(ro); break;
+    case "quirurgico":    content=tabQuirurgico(ro); break;
+    case "postop_rx":     content=tabPostopRx(ro); break;
+    case "controles": {
+      const allC = getControles();
+      const eid2 = Number(STATE.editId);
+      STATE.currentControles = allC.filter(x=>Number(x.pacienteId)===eid2);
+      content=tabControles(STATE.editId, STATE.user.role==="demo");
+      break;
+    }
+    case "seguimiento":   content=tabSeguimiento(ro); break;
+    case "mako":          content=tabMako(ro); break;
+  }
+  const tabs = TABS.map(t=>`<button class="tab-btn${STATE.tab===t.id?" active":""}" onclick="switchTab('${t.id}')">${t.label}</button>`).join("");
+  return `
+    ${demo?`<div class="demo-banner">👁️ Modo demo — puede navegar pero los cambios no se guardan.</div>`:""}
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+      <div class="tabs" style="margin-bottom:0">${tabs}</div>
+      ${!demo&&STATE.editId?`<span style="font-size:11px;color:#15803d;font-weight:600">&#10003; Borrador guardado</span>`:(!demo?`<span style="font-size:11px;color:#94a3b8">Se guardará al avanzar</span>`:"")}
+    </div>
+    ${content}
+    <div class="form-footer" style="align-items:center">
+      <button class="btn-gray" onclick="goList()" style="margin-right:auto">← Volver a lista</button>
+      ${(()=>{
+        const ids=TABS.map(t=>t.id), idx=ids.indexOf(STATE.tab), isFirst=idx===0, isLast=idx===ids.length-1;
+        const prevBtn = !isFirst ? `<button class="btn-gray" onclick="prevTab()">← Anterior</button>` : "";
+        const nextBtn = !isLast  ? `<button class="btn-blue" onclick="nextTab()">Siguiente →</button>` : "";
+        const saveBtn = !demo    ? `<button class="btn-blue" style="background:#15803d" onclick="savePatient()">💾 Guardar</button>` : "";
+        return prevBtn + nextBtn + (isLast ? saveBtn : (!demo ? `<button class="btn-gray" onclick="autoSave()" style="font-size:12px">💾 Guardar borrador</button>` + saveBtn : ""));
+      })()}
+    </div>
+    ${STATE.savedFlash?`<div class="save-ok">✓ Guardado correctamente</div>`:""}
+  `;
+}
+
+function renderConfig(){
+  const sec = STATE.configSec;
+  const flash = STATE.configFlash ? `<div class="flash-ok">${STATE.configFlash}</div>` : "";
+
+  const secBtns = `<div style="display:flex;gap:8px;margin-bottom:20px">
+    <button class="btn-${sec==="listas"?"blue":"gray"}" onclick="setCfgSec('listas')" style="font-size:13px;padding:8px 18px">📋 Listas desplegables</button>
+    <button class="btn-${sec==="usuarios"?"blue":"gray"}" onclick="setCfgSec('usuarios')" style="font-size:13px;padding:8px 18px">👥 Usuarios</button>
+    <button class="btn-${sec==="campos"?"blue":"gray"}" onclick="setCfgSec('campos')" style="font-size:13px;padding:8px 18px">&#10133; Campos extra</button>
+  </div>`;
+
+  let body = "";
+  if(sec==="listas"){
+    if(STATE.editListKey){
+      const key = STATE.editListKey;
+      const items = STATE.editListDraft.map((item,i)=>`
+        <div class="cfg-list-item">
+          <span>${item.replace(/</g,"&lt;")}</span>
+          <button class="btn-gray btn-sm" onclick="moveListItem(${i},-1)" ${i===0?"disabled":""}>↑</button>
+          <button class="btn-gray btn-sm" onclick="moveListItem(${i},1)" ${i===STATE.editListDraft.length-1?"disabled":""}>↓</button>
+          <button class="btn-red" onclick="removeListItem(${i})">✕</button>
+        </div>`).join("");
+      body = `<div class="card">
+        ${secTitle("✏️",`Editando: ${CONFIG_LABELS[key]}`)}
+        <div style="margin-bottom:14px">${items}</div>
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <input type="text" id="new-list-item" placeholder="Nuevo elemento..." style="flex:1;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none" onkeydown="if(event.key==='Enter')addListItem()">
+          <button class="btn-green" onclick="addListItem()">+ Agregar</button>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn-gray" onclick="cancelEditList()">Cancelar</button>
+          <button class="btn-blue" onclick="saveList()">💾 Guardar lista</button>
+        </div>
+      </div>`;
+    } else {
+      const cards = Object.entries(CONFIG_LABELS).map(([k,label])=>`
+        <div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px">${label}</div>
+            <div style="font-size:11px;color:#94a3b8">${(STATE.config[k]||[]).length} opciones</div>
+          </div>
+          <button class="btn-gray" style="padding:6px 14px;font-size:12px" onclick="startEditList('${k}')">✏️ Editar</button>
+        </div>`).join("");
+      body = `<div class="card">
+        ${secTitle("📋","Listas desplegables","Modifica las opciones de cada campo")}
+        <div class="grid-2">${cards}</div>
+      </div>`;
+    }
+  } else {
+    const rows = STATE.users.map((u,i)=>{
+      const roleBg = u.role==="admin"?"#dbeafe":u.role==="demo"?"#fef9c3":"#f0fdf4";
+      const roleColor = u.role==="admin"?"#1d4ed8":u.role==="demo"?"#854d0e":"#15803d";
+      const roleLabel = u.role==="admin"?"Admin":u.role==="demo"?"Demo":"Usuario";
+      return `<tr>
+        <td><strong>${u.name}</strong></td>
+        <td style="font-family:monospace;color:#64748b">${u.username}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span id="pwd-display-${u.id}" style="font-family:monospace;font-size:13px;color:#64748b;letter-spacing:.05em">••••••••</span>
+            <button onclick="togglePwdVisible(${u.id},'${u.password}')" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 4px" title="Mostrar/ocultar">👁️</button>
+          </div>
+        </td>
+        <td><span class="role-badge" style="background:${roleBg};color:${roleColor}">${roleLabel}</span></td>
+        <td><span class="status-badge" style="background:${u.active?"#f0fdf4":"#fef2f2"};color:${u.active?"#15803d":"#b91c1c"}">${u.active?"Activo":"Inactivo"}</span></td>
+        <td>
+          <div style="display:flex;gap:5px">
+            <button class="btn-gray btn-sm" onclick="startPwd(${u.id})">🔑 Cambiar</button>
+            <button class="btn-gray btn-sm" onclick="toggleUser(${u.id})">${u.active?"🚫 Desact.":"✅ Activar"}</button>
+            <button class="btn-red" onclick="deleteUser(${u.id})">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+
+    const pwdForm = STATE.pwdTarget ? `
+      <div style="margin-top:16px;padding:14px;background:#f0f9ff;border-radius:8px;border:1px solid #bae6fd">
+        <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:10px">Cambiar contraseña de <strong>${STATE.users.find(u=>u.id===STATE.pwdTarget)?.name}</strong></div>
+        <div style="display:flex;gap:8px">
+          <input type="password" id="new-pwd" placeholder="Nueva contraseña (mín. 4 caracteres)" style="flex:1;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none">
+          <button class="btn-blue" onclick="savePwd()">Guardar</button>
+          <button class="btn-gray" onclick="cancelPwd()">Cancelar</button>
+        </div>
+      </div>` : "";
+
+    body = `
+      <div class="card">
+        ${secTitle("👥","Usuarios del sistema")}
+        <div style="overflow-x:auto">
+          <table><thead><tr><th>Nombre</th><th>Usuario</th><th>Contraseña</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody>${rows}</tbody></table>
+        </div>
+        ${pwdForm}
+      </div>
+      <div class="card">
+        ${secTitle("➕","Crear nuevo usuario")}
+        <div class="grid-4">
+          <div class="field"><label>Nombre completo</label><input type="text" id="nu-name" placeholder="Dr. García" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"></div>
+          <div class="field"><label>Usuario</label><input type="text" id="nu-user" placeholder="garcia" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"></div>
+          <div class="field"><label>Contraseña inicial</label><input type="text" id="nu-pass" placeholder="mín. 4 caracteres" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"></div>
+          <div class="field"><label>Rol</label>
+            <select id="nu-role" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none;cursor:pointer">
+              <option value="user">Usuario</option>
+              <option value="admin">Admin</option>
+              <option value="demo">Demo (solo lectura)</option>
+            </select>
+          </div>
+        </div>
+        <div style="text-align:right;margin-top:12px"><button class="btn-blue" onclick="addUser()">+ Crear usuario</button></div>
+      </div>`;
+  }
+
+
+  if(sec==="campos"){
+    const SECS = [{id:"demografico",l:"Paciente"},{id:"preop_rx",l:"RX Pre-op"},{id:"preop_scores",l:"Scores Pre"},{id:"quirurgico",l:"Quirúrgico"},{id:"postop_rx",l:"RX Post-op"},{id:"seguimiento",l:"Seguimiento"},{id:"mako",l:"Mako"},{id:"controles",l:"Controles"}];
+    const cf = STATE.customFields;
+    const rows = cf.length===0
+      ? `<p style="color:#94a3b8;font-size:13px;padding:12px 0">No hay campos extra aún.</p>`
+      : cf.map((f,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:${i%2===0?"#f8fafc":"#fff"};border-radius:6px;margin-bottom:4px">
+          <span style="flex:1;font-weight:600;font-size:13px">${f.label}</span>
+          <span style="font-size:11px;color:#94a3b8;background:#f1f5f9;border-radius:10px;padding:2px 10px">${SECS.find(s=>s.id===f.section)?.l||f.section}</span>
+          <span style="font-size:11px;color:#94a3b8;background:#f1f5f9;border-radius:10px;padding:2px 10px">${f.type==="number"?"Número":f.type==="select"?"Desplegable":"Texto"}</span>
+          ${f.type==="select"?`<span style="font-size:11px;color:#64748b">${(f.opts||[]).join(", ")}</span>`:""}
+          <button class="btn-red" onclick="delCustomField(${i})">&#128465;</button>
+        </div>`).join("");
+    const secOpts = SECS.map(s=>`<option value="${s.id}"${STATE.cfNew.section===s.id?" selected":""}>${s.l}</option>`).join("");
+    const typeOpts = ["text","number","select"].map(t=>`<option value="${t}"${STATE.cfNew.type===t?" selected":""}>${t==="number"?"Número":t==="select"?"Desplegable":"Texto"}</option>`).join("");
+    const optsRow = STATE.cfNew.type==="select"
+      ? `<div style="margin-top:10px"><label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">Opciones del desplegable (separadas por coma)</label><input type="text" id="cf-opts" placeholder="Ej: Opción A, Opción B, Opción C" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>`
+      : "";
+    body = `<div class="card">
+      <div style="border-bottom:2px solid #f1f5f9;padding-bottom:11px;margin-bottom:16px;display:flex;align-items:center;gap:9px"><span style="font-size:18px">&#10133;</span><div><h3 style="font-weight:800;font-size:14px;color:#0f4c81">Campos extra</h3><p style="font-size:11px;color:#94a3b8">Agrega variables personalizadas a cualquier sección del formulario</p></div></div>
+      <div style="margin-bottom:18px">${rows}</div>
+      <div style="background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;padding:16px">
+        <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:12px">&#8594; Agregar nuevo campo</div>
+        <div class="grid-3">
+          <div class="field"><label>Nombre del campo</label><input type="text" id="cf-label" placeholder="Ej: Rotación femoral" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
+          <div class="field"><label>Sección</label><select id="cf-sec" onchange="setCfNew('section',this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none;cursor:pointer"><option value="">— Elegir —</option>${secOpts}</select></div>
+          <div class="field"><label>Tipo de campo</label><select id="cf-type" onchange="setCfNew('type',this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none;cursor:pointer">${typeOpts}</select></div>
+        </div>
+        ${optsRow}
+        <div style="text-align:right;margin-top:12px"><button class="btn-blue" onclick="addCustomField()">&#10133; Agregar campo</button></div>
+      </div>
+    </div>`;
+  }
+
+  return secBtns + flash + body;
+}
+
+// ── Main render ───────────────────────────────────────────────────────────────
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SISTEMA DE CONTROLES DE SEGUIMIENTO
+// Cada control = { id, pacienteId, periodo, fecha, kss_knee, kss_func,
+//   womac, oxford, vas, tug, extension, flexion, dolor_palp, derrame,
+//   notas, completadoPor }
+// ═══════════════════════════════════════════════════════════════════════════
+
+const PERIODOS = [
+  {id:"preop",  label:"Pre-operatorio"},
+  {id:"6m",     label:"6 meses"},
+  {id:"12m",    label:"12 meses"},
+  {id:"24m",    label:"24 meses"},
+  {id:"3-5a",   label:"3 a 5 años"},
+  {id:"5-9a",   label:"5 a 9 años"},
+  {id:"10a+",   label:"10 años o más"},
+];
+
+function emptyControl(pacienteId){
+  return {
+    id: Date.now(),
+    pacienteId: Number(pacienteId),
+    periodo: "",
+    fecha: "",
+    // Scores médico
+    kss_knee: "", kss_func: "",
+    tug: "",
+    // Scores paciente (PRO)
+    womac_dolor:"",womac_rigidez:"",womac_func:"",womac_total:"",
+    oxford:"",
+    vas:"",
+    // Examen físico
+    extension:"", flexion:"", dolor_palp:"", derrame:"",
+    notas:"",
+  };
+}
+
+function getControles(){ return lsGet("ptr_controles_v1",[]); }
+function saveControles(arr){
+  lsSet("ptr_controles_v1",arr);
+  // Sync individual control changes handled in updateControl/addControl/deleteControl
+}
+function getControlesPaciente(pid){ const npid=Number(pid); return getControles().filter(c=>Number(c.pacienteId)===npid).sort((a,b)=>{
+  const order=PERIODOS.map(p=>p.id);
+  return order.indexOf(a.periodo)-order.indexOf(b.periodo)||a.fecha.localeCompare(b.fecha);
+}); }
+
+// ── Score definitions ────────────────────────────────────────────────────────
+
+const SCORES = {
+
+  kss_knee: {
+    label:"KSS Knee",
+    completadoPor:"medico",
+    max:100,
+    color:"#0f4c81",
+    secciones:[
+      { titulo:"Dolor", key:"dolor", items:[
+        {label:"Sin dolor",pts:50},{label:"Leve o al subir escaleras",pts:40},
+        {label:"Leve u ocasional",pts:30},{label:"Moderado ocasional",pts:20},
+        {label:"Moderado continuo",pts:10},{label:"Severo",pts:0},
+      ]},
+      { titulo:"Rango de movimiento", key:"rom", tipo:"slider", min:0, max:125, step:5,
+        calc: v=>Math.floor(v/5), label_unit:"°", nota:"1 punto cada 5°, máx 25pts" },
+      { titulo:"Estabilidad AP (mm)", key:"estab_ap", items:[
+        {label:"< 5 mm",pts:10},{label:"5-10 mm",pts:5},{label:"> 10 mm",pts:0},
+      ]},
+      { titulo:"Estabilidad ML (°)", key:"estab_ml", items:[
+        {label:"< 5°",pts:15},{label:"6-9°",pts:10},{label:"10-14°",pts:5},{label:"> 15°",pts:0},
+      ]},
+      { titulo:"Deducción — Flexum", key:"ded_flexum", tipo:"deduccion", items:[
+        {label:"Sin flexum",pts:0},{label:"5-10°",pts:-2},{label:"11-15°",pts:-5},
+        {label:"16-20°",pts:-10},{label:"> 20°",pts:-15},
+      ]},
+      { titulo:"Deducción — Alineación", key:"ded_alin", tipo:"deduccion", items:[
+        {label:"5-10° valgo (normal)",pts:0},{label:"0-4° valgo",pts:-3},
+        {label:"11-15° valgo",pts:-3},{label:"Cada grado adicional",pts:-3},
+        {label:"Varo (cada grado)",pts:-3},
+      ]},
+    ]
+  },
+
+  kss_func: {
+    label:"KSS Function",
+    completadoPor:"medico",
+    max:100,
+    color:"#1e6fb5",
+    secciones:[
+      { titulo:"Marcha (distancia)", key:"marcha", items:[
+        {label:"Ilimitada",pts:50},{label:"> 10 cuadras",pts:40},
+        {label:"5-10 cuadras",pts:30},{label:"< 5 cuadras",pts:20},
+        {label:"Solo en casa",pts:10},{label:"No puede caminar",pts:0},
+      ]},
+      { titulo:"Subir escaleras", key:"escaleras", items:[
+        {label:"Sube y baja normalmente",pts:50},{label:"Sube normalmente, baja con barandilla",pts:40},
+        {label:"Sube y baja con barandilla",pts:30},{label:"Sube con barandilla, no baja",pts:15},
+        {label:"No puede",pts:0},
+      ]},
+      { titulo:"Deducción — Ayuda para caminar", key:"ded_ayuda", tipo:"deduccion", items:[
+        {label:"Ninguna",pts:0},{label:"Un bastón",pts:-5},
+        {label:"Dos bastones",pts:-10},{label:"Muletas o andador",pts:-20},
+      ]},
+    ]
+  },
+
+  oxford: {
+    label:"Oxford Knee Score",
+    completadoPor:"paciente",
+    max:48,
+    min:12,
+    color:"#7c3aed",
+    nota:"12 ítems · 1-4 pts c/u · Mayor = peor (se invierte: 48=mejor, 12=peor)",
+    secciones:[
+      { titulo:"Oxford Knee Score — 12 ítems", key:"oxford_items", tipo:"oxford_12" }
+    ]
+  },
+
+  womac: {
+    label:"WOMAC",
+    completadoPor:"paciente",
+    color:"#0891b2",
+    nota:"Escala Likert 0-4 · Dolor (5 ítems) · Rigidez (2 ítems) · Función (17 ítems)",
+    secciones:[
+      { titulo:"Dolor (5 ítems × 4 = 20 máx)", key:"womac_dolor_items", tipo:"womac_dolor" },
+      { titulo:"Rigidez (2 ítems × 4 = 8 máx)", key:"womac_rigidez_items", tipo:"womac_rigidez" },
+      { titulo:"Función (17 ítems × 4 = 68 máx)", key:"womac_func_items", tipo:"womac_func" },
+    ]
+  },
+
+};
+
+// Oxford 12 preguntas
+const OXFORD_ITEMS = [
+  "¿Cómo describiría el dolor en su rodilla durante las últimas 4 semanas?",
+  "¿Ha tenido dificultad para lavarse y secarse (todo el cuerpo) durante las últimas 4 semanas?",
+  "¿Ha tenido dificultad para entrar o salir de un automóvil o para usar transporte público durante las últimas 4 semanas?",
+  "¿Cuánto tiempo puede caminar antes de que el dolor de rodilla sea severo?",
+  "¿Cuánto dolor de rodilla ha tenido al sentarse o estar acostado durante las últimas 4 semanas?",
+  "¿Ha cojido debido al dolor de rodilla?",
+  "¿Podría arrodillarse y levantarse nuevamente?",
+  "¿Ha tenido dificultad al realizar sus tareas habituales en el hogar?",
+  "¿Cuánto se ha preocupado por su rodilla?",
+  "¿Ha tenido dificultad para subir o bajar un tramo de escaleras?",
+  "¿Ha tenido dificultad al estar de pie por un tiempo prolongado?",
+  "¿Ha tenido dificultad para bajar de la cama?",
+];
+const OXFORD_OPTS = ["Ninguno/Sin dificultad","Muy poco/Poca dificultad","Moderado/Dificultad moderada","Severo/Mucha dificultad","Insoportable/Imposible"];
+
+// WOMAC preguntas
+const WOMAC_DOLOR = [
+  "Al caminar en superficie plana","Al subir o bajar escaleras",
+  "Por la noche en la cama","Al estar sentado o acostado","Al estar de pie",
+];
+const WOMAC_RIGIDEZ = [
+  "¿Cuánta rigidez siente en la mañana al despertar?",
+  "¿Cuánta rigidez siente después de estar sentado/acostado/descansando?",
+];
+const WOMAC_FUNC = [
+  "Bajar escaleras","Subir escaleras","Levantarse después de estar sentado",
+  "Estar de pie","Agacharse al suelo","Caminar en superficie plana",
+  "Entrar y salir del automóvil","Ir de compras","Ponerse medias/calcetines",
+  "Levantarse de la cama","Sacarse medias/calcetines","Estar acostado en cama",
+  "Entrar o salir de la bañera","Estar sentado","Sentarse y pararse del inodoro",
+  "Hacer tareas domésticas pesadas","Hacer tareas domésticas livianas",
+];
+const WOMAC_OPTS = ["Ninguno (0)","Poco (1)","Bastante (2)","Mucho (3)","Muchísimo (4)"];
+
+// ── Modal state ──────────────────────────────────────────────────────────────
+STATE.modal = null; // { scoreKey, controlIdx, values:{} }
+
+function openScoreModal(scoreKey, controlIdx){
+  const ctrl = STATE.currentControles[controlIdx];
+  // Pre-fill existing values
+  let values = {};
+  if(scoreKey==="oxford") values = ctrl._oxford_vals||{};
+  else if(scoreKey==="womac") values = ctrl._womac_vals||{};
+  else {
+    SCORES[scoreKey].secciones.forEach(s=>{ values[s.key]=ctrl[s.key]!==undefined?ctrl[s.key]:""; });
+  }
+  STATE.modal = {scoreKey, controlIdx, values};
+  renderModalOverlay();
+}
+
+function renderModalOverlay(){
+  let el = document.getElementById("score-modal-overlay");
+  if(!el){ el=document.createElement("div"); el.id="score-modal-overlay"; document.body.appendChild(el); }
+  el.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px";
+  el.innerHTML = renderScoreModal();
+}
+
+function closeModal(){
+  const el=document.getElementById("score-modal-overlay");
+  if(el) el.remove();
+  STATE.modal=null;
+}
+
+function renderScoreModal(){
+  const {scoreKey,controlIdx,values} = STATE.modal;
+  // For pre-op modals, scoreDef holds the actual SCORES key
+  const effectiveKey = STATE.modal.scoreDef || scoreKey;
+  const score = SCORES[effectiveKey];
+  let total = 0, maxPts = 0, content = "";
+
+  if(effectiveKey==="oxford"){
+    const vals = values;
+    let sum=0, complete=true;
+    const items = OXFORD_ITEMS.map((q,i)=>{
+      const v = vals[i]!==undefined ? Number(vals[i]) : -1;
+      if(v<0) complete=false; else sum+=v;
+      const opts = OXFORD_OPTS.map((o,j)=>`
+        <label style="display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-radius:6px;cursor:pointer;background:${v===j?"#ede9fe":"transparent"};border:1.5px solid ${v===j?"#7c3aed":"transparent"}">
+          <input type="radio" name="oxford_${i}" value="${j}" ${v===j?"checked":""} onchange="modalSetVal(${i},${j})" style="margin-top:2px;accent-color:#7c3aed">
+          <span style="font-size:13px;color:#334155">${o}</span>
+        </label>`).join("");
+      return `<div style="margin-bottom:14px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0">
+        <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px">${i+1}. ${q}</div>
+        <div>${opts}</div>
+      </div>`;
+    }).join("");
+    // Oxford score: invert (0=best response maps to 4pts, 4=worst maps to 0pts) → 48-sum
+    const rawScore = complete ? 48 - sum : null;
+    total = rawScore;
+    content = `<div style="margin-bottom:12px">${items}</div>`;
+    const badge = complete
+      ? `<div style="background:#7c3aed;color:#fff;border-radius:8px;padding:10px 18px;font-size:18px;font-weight:800;text-align:center">
+          Oxford: ${rawScore}/48 &nbsp;·&nbsp; ${rawScore>=41?"Excelente":rawScore>=34?"Bueno":rawScore>=27?"Regular":"Malo"}
+        </div>`
+      : `<div style="background:#f1f5f9;color:#64748b;border-radius:8px;padding:10px 18px;font-size:13px;text-align:center">Complete todos los ítems para calcular</div>`;
+    content = content + badge;
+
+  } else if(effectiveKey==="womac"){
+    const vals = values;
+    const renderBlock=(items,optList,prefix,title,maxScore)=>{
+      let sum=0, done=true;
+      const rows=items.map((q,i)=>{
+        const k=`${prefix}_${i}`, v=vals[k]!==undefined?Number(vals[k]):-1;
+        if(v<0) done=false; else sum+=v;
+        const opts=optList.map((o,j)=>`
+          <label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;cursor:pointer;background:${v===j?"#e0f2fe":"transparent"};border:1.5px solid ${v===j?"#0891b2":"transparent"}">
+            <input type="radio" name="${k}" value="${j}" ${v===j?"checked":""} onchange="modalSetVal('${k}',${j})" style="accent-color:#0891b2">
+            <span style="font-size:12px">${o}</span>
+          </label>`).join("");
+        return `<div style="margin-bottom:10px;padding:10px;background:#fafafa;border-radius:6px;border:1px solid #e2e8f0">
+          <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px">${i+1}. ${q}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${opts}</div>
+        </div>`;
+      }).join("");
+      const subTotal=done?sum:null;
+      return `<div style="margin-bottom:18px">
+        <div style="font-weight:700;font-size:13px;color:#0891b2;margin-bottom:8px">${title} ${subTotal!==null?`<span style="background:#0891b2;color:#fff;border-radius:10px;padding:2px 10px;font-size:12px">${subTotal}/${maxScore}</span>`:""}</div>
+        ${rows}
+      </div>`;
+    };
+    const d=renderBlock(WOMAC_DOLOR,WOMAC_OPTS,"wd","Dolor",20);
+    const r=renderBlock(WOMAC_RIGIDEZ,WOMAC_OPTS,"wr","Rigidez",8);
+    const f=renderBlock(WOMAC_FUNC,WOMAC_OPTS,"wf","Función",68);
+    // calc total
+    let dSum=0,rSum=0,fSum=0,allDone=true;
+    WOMAC_DOLOR.forEach((_,i)=>{ const v=vals[`wd_${i}`]; if(v===undefined||v==="") allDone=false; else dSum+=Number(v); });
+    WOMAC_RIGIDEZ.forEach((_,i)=>{ const v=vals[`wr_${i}`]; if(v===undefined||v==="") allDone=false; else rSum+=Number(v); });
+    WOMAC_FUNC.forEach((_,i)=>{ const v=vals[`wf_${i}`]; if(v===undefined||v==="") allDone=false; else fSum+=Number(v); });
+    const wTotal=allDone?dSum+rSum+fSum:null;
+    total=wTotal;
+    const badge=allDone
+      ?`<div style="background:#0891b2;color:#fff;border-radius:8px;padding:10px 18px;font-size:16px;font-weight:800;text-align:center">
+          WOMAC Total: ${wTotal}/96 &nbsp;·&nbsp; Dolor:${dSum}/20 &nbsp;·&nbsp; Rigidez:${rSum}/8 &nbsp;·&nbsp; Función:${fSum}/68
+        </div>`
+      :`<div style="background:#f1f5f9;color:#64748b;border-radius:8px;padding:10px 18px;font-size:13px;text-align:center">Complete todos los ítems</div>`;
+    content=d+r+f+badge;
+
+  } else {
+    // KSS knee o function
+    let runningTotal = 0;
+    score.secciones.forEach(sec=>{
+      const v = values[sec.key];
+      const isDeduccion = sec.tipo==="deduccion";
+      if(sec.tipo==="slider"){
+        const sv = v!==""&&v!==undefined ? Number(v) : 0;
+        const pts = sec.calc(sv);
+        runningTotal+=pts;
+        content+=`<div style="margin-bottom:14px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:12px;font-weight:700;color:#64748b">${sec.titulo}</span>
+            <span style="font-size:13px;font-weight:800;color:#0f4c81">${sv}${sec.label_unit||""} → ${pts} pts</span>
+          </div>
+          <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">${sec.nota}</div>
+          <input type="range" min="${sec.min}" max="${sec.max}" step="${sec.step}" value="${sv}"
+            oninput="modalSetVal('${sec.key}',this.value)"
+            style="width:100%;accent-color:#0f4c81">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8"><span>${sec.min}°</span><span>${sec.max}°</span></div>
+        </div>`;
+      } else {
+        const selectedVal = v!==""&&v!==undefined ? v : null;
+        // selectedVal stored as "pts:idx" to distinguish items with same pts
+        const selectedPts = selectedVal!==null ? Number(String(selectedVal).split(":")[0]) : null;
+        const selectedIdx = selectedVal!==null && String(selectedVal).includes(":") ? Number(String(selectedVal).split(":")[1]) : null;
+        if(selectedPts!==null) runningTotal+=selectedPts;
+        const opts = sec.items.map((item,ii)=>{
+          const isSelected = selectedIdx!==null ? selectedIdx===ii : selectedPts===item.pts;
+          const radioVal = `${item.pts}:${ii}`;
+          return `<label style="display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;background:${isSelected?"#dbeafe":"transparent"};border:1.5px solid ${isSelected?"#0f4c81":"transparent"}">
+            <input type="radio" name="kss_${sec.key}" value="${radioVal}" ${isSelected?"checked":""} onchange="modalSetVal('${sec.key}','${radioVal}')" style="margin-top:2px;accent-color:#0f4c81">
+            <span style="flex:1;font-size:13px;color:#334155">${item.label}</span>
+            <span style="font-size:12px;font-weight:700;color:${item.pts<0?"#dc2626":"#0f4c81"}">${item.pts>=0?"+":""}${item.pts}</span>
+          </label>`;
+        }).join("");
+        content+=`<div style="margin-bottom:12px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0">
+          <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px">${isDeduccion?"⚠️ ":""}${sec.titulo}</div>
+          ${opts}
+        </div>`;
+      }
+    });
+    total=runningTotal;
+    const clamp=Math.max(0,Math.min(100,total));
+    const badge=`<div style="background:#0f4c81;color:#fff;border-radius:8px;padding:10px 18px;font-size:18px;font-weight:800;text-align:center">
+      ${score.label}: ${clamp}/100 ${clamp>=85?"⭐ Excelente":clamp>=70?"✓ Bueno":clamp>=60?"Regular":"⚠ Malo"}
+    </div>`;
+    content=content+badge;
+  }
+
+  return `<div style="background:#fff;border-radius:14px;max-width:640px;width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 25px 60px rgba(0,0,0,.3)">
+    <div style="padding:18px 22px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div>
+        <div style="font-weight:800;font-size:16px;color:#0f4c81">${score.label}</div>
+        <div style="font-size:11px;color:#94a3b8">${score.completadoPor==="paciente"?"📱 Lo completa el paciente":"🩺 Lo completa el médico"}</div>
+      </div>
+      <button onclick="closeModal()" style="background:#f1f5f9;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:#64748b">×</button>
+    </div>
+    <div style="overflow-y:auto;padding:18px 22px;flex:1">${content}</div>
+    <div style="padding:14px 22px;border-top:1px solid #e2e8f0;display:flex;gap:8px;justify-content:flex-end;flex-shrink:0">
+      <button onclick="closeModal()" style="background:#e2e8f0;color:#334155;border:none;border-radius:7px;padding:9px 18px;font-weight:600;cursor:pointer">Cancelar</button>
+      <button onclick="STATE.modal.isPreop?savePreopScoreModal():saveScoreModal()" style="background:#0f4c81;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-weight:700;cursor:pointer">✓ Guardar score</button>
+    </div>
+  </div>`;
+}
+
+function modalSetVal(key,val){
+  STATE.modal.values[key]=val;
+  const scrollEl = document.querySelector("#score-modal-overlay > div > div:nth-child(2)");
+  const scrollPos = scrollEl ? scrollEl.scrollTop : 0;
+  renderModalOverlay();
+  const scrollElAfter = document.querySelector("#score-modal-overlay > div > div:nth-child(2)");
+  if(scrollElAfter) scrollElAfter.scrollTop = scrollPos;
+}
+
+
+// ── Pre-op score modal (saves to STATE.form, not a control) ──────────────────
+function openPreopScoreModal(scoreKey){
+  // Map pre-op keys to score definitions
+  const scoreDefMap = {
+    'kss_knee_pre':  'kss_knee',
+    'kss_func_pre':  'kss_func',
+    'oxford_pre':    'oxford',
+    'womac_pre':     'womac',
+  };
+  const scoreDef = scoreDefMap[scoreKey];
+  // Pre-fill from STATE.form
+  let values = {};
+  if(scoreDef==="oxford") values = STATE.form._oxford_pre_vals||{};
+  else if(scoreDef==="womac") values = STATE.form._womac_pre_vals||{};
+  else {
+    SCORES[scoreDef].secciones.forEach(s=>{ values[s.key]=STATE.form[s.key+"_pre"]||""; });
+  }
+  STATE.modal = {scoreKey, controlIdx:null, values, isPreop:true, scoreDef};
+  renderModalOverlay();
+}
+
+function savePreopScoreModal(){
+  const {scoreDef, values} = STATE.modal;
+  if(scoreDef==="oxford"){
+    STATE.form._oxford_pre_vals = {...values};
+    let sum=0, complete=true;
+    OXFORD_ITEMS.forEach((_,i)=>{ const v=values[i]; if(v===undefined||v==="") complete=false; else sum+=Number(v); });
+    STATE.form.oxford_pre = complete ? String(48-sum) : "";
+  } else if(scoreDef==="womac"){
+    STATE.form._womac_pre_vals = {...values};
+    let dSum=0,rSum=0,fSum=0,allDone=true;
+    WOMAC_DOLOR.forEach((_,i)=>{ const v=values[`wd_${i}`]; if(v===undefined||v==="") allDone=false; else dSum+=Number(v); });
+    WOMAC_RIGIDEZ.forEach((_,i)=>{ const v=values[`wr_${i}`]; if(v===undefined||v==="") allDone=false; else rSum+=Number(v); });
+    WOMAC_FUNC.forEach((_,i)=>{ const v=values[`wf_${i}`]; if(v===undefined||v==="") allDone=false; else fSum+=Number(v); });
+    STATE.form.womac_pre = allDone ? String(dSum+rSum+fSum) : "";
+    STATE.form.womac_dolor_pre = String(dSum);
+    STATE.form.womac_rigidez_pre = String(rSum);
+    STATE.form.womac_func_pre = String(fSum);
+  } else {
+    let total=0;
+    SCORES[scoreDef].secciones.forEach(sec=>{
+      const v=values[sec.key];
+      if(sec.tipo==="slider") total+=sec.calc(Number(v||0));
+      else if(v!==""&&v!==undefined) total+=Number(String(v).split(":")[0]);
+    });
+    const clamp = Math.max(0,Math.min(100,total));
+    if(scoreDef==="kss_knee") STATE.form.kssKnee_pre = String(clamp);
+    else STATE.form.kssFuncion_pre = String(clamp);
+  }
+  closeModal();
+  render();
+}
+
+function saveScoreModal(){
+  const {scoreKey,controlIdx,values}=STATE.modal;
+  const ctrl=STATE.currentControles[controlIdx];
+  if(scoreKey==="oxford"){
+    ctrl._oxford_vals={...values};
+    let sum=0,complete=true;
+    OXFORD_ITEMS.forEach((_,i)=>{ const v=values[i]; if(v===undefined||v==="") complete=false; else sum+=Number(v); });
+    ctrl.oxford=(complete&&Object.keys(values).length===OXFORD_ITEMS.length)?String(48-sum):"";
+  } else if(scoreKey==="womac"){
+    ctrl._womac_vals={...values};
+    let dSum=0,rSum=0,fSum=0,allDone=true;
+    WOMAC_DOLOR.forEach((_,i)=>{ const v=values[`wd_${i}`]; if(v===undefined||v==="") allDone=false; else dSum+=Number(v); });
+    WOMAC_RIGIDEZ.forEach((_,i)=>{ const v=values[`wr_${i}`]; if(v===undefined||v==="") allDone=false; else rSum+=Number(v); });
+    WOMAC_FUNC.forEach((_,i)=>{ const v=values[`wf_${i}`]; if(v===undefined||v==="") allDone=false; else fSum+=Number(v); });
+    ctrl.womac_dolor=String(dSum); ctrl.womac_rigidez=String(rSum); ctrl.womac_func=String(fSum);
+    ctrl.womac_total=allDone?String(dSum+rSum+fSum):"";
+  } else {
+    // KSS
+    let total=0;
+    SCORES[scoreKey].secciones.forEach(sec=>{
+      const v=values[sec.key];
+      ctrl[sec.key]=v;
+      if(sec.tipo==="slider"){ total+=sec.calc(Number(v||0)); }
+      else if(v!==""&&v!==undefined){
+        // value stored as "pts:idx" — extract pts
+        total+=Number(String(v).split(":")[0]);
+      }
+    });
+    // Only save if at least one section was answered
+    const hasAnyKSS = SCORES[scoreKey].secciones.some(sec=>values[sec.key]!==""&&values[sec.key]!==undefined);
+    if(scoreKey==="kss_knee") ctrl.kss_knee=hasAnyKSS?String(Math.max(0,Math.min(100,total))):"";
+    else ctrl.kss_func=hasAnyKSS?String(Math.max(0,Math.min(100,total))):"";
+  }
+  // persist
+  const all=getControles();
+  const idx=all.findIndex(c=>Number(c.id)===Number(ctrl.id));
+  if(idx>=0) all[idx]={...ctrl}; else all.push({...ctrl});
+  saveControles(all);
+  STATE.currentControles[controlIdx]={...ctrl};
+  closeModal();
+  render();
+}
+
+// ── Tab Controles ─────────────────────────────────────────────────────────────
 function tabControles(pacienteId, ro){
   // Sort controls chronologically by periodo then fecha
   const periodoOrder = PERIODOS.map(p=>p.id);
@@ -871,549 +1629,6 @@ function deleteControl(idx){
   STATE.currentControles=STATE.currentControles.filter((_,i)=>i!==idx);
   render();
 }
-
-
-// ── Controles storage ─────────────────────────────────────────────────────────
-function saveControles(arr){ lsSet("ptr_controles_v1",arr); }
-function getControles(){ return lsGet("ptr_controles_v1",[]); }
-function getControlesPaciente(pid){
-  const npid=Number(pid);
-  return getControles().filter(c=>Number(c.pacienteId)===npid)
-    .sort((a,b)=>{
-      const order=["preop","6m","12m","24m","3-5a","5-9a","10a+"];
-      return order.indexOf(a.periodo)-order.indexOf(b.periodo);
-    });
-}
-
-// ── Score modal ───────────────────────────────────────────────────────────────
-function openScoreModal(scoreKey, controlIdx){
-  const ctrl = STATE.currentControles[controlIdx]||{};
-  const existing = ctrl[scoreKey];
-  const scoreDefKey = scoreKey.replace(/_\d+m$|_preop$|_\d+-\d+a$|_\d+a\+$/,'')
-    .replace(/^(kss_knee|kss_func|oxford|womac)_.*/,'$1');
-  const sd = scoreKey.startsWith('kss_knee')?'kss_knee':
-             scoreKey.startsWith('kss_func')?'kss_func':
-             scoreKey.startsWith('oxford')?'oxford':
-             scoreKey.startsWith('womac')?'womac':scoreKey;
-  const scoreDef = sd;
-  let initValues = {};
-  if(existing && SCORES[scoreDef]){
-    SCORES[scoreDef].secciones.forEach(sec=>{ initValues[sec.key]=ctrl[sec.key]||""; });
-  }
-  STATE.modal={ scoreKey, controlIdx, values:initValues, scoreDef };
-  render();
-}
-
-function closeModal(){ STATE.modal=null; render(); }
-
-function modalSetVal(key,val){
-  if(!STATE.modal) return;
-  STATE.modal.values[key]=val;
-  const el=document.getElementById("score-modal-body");
-  if(el){ el.scrollTop=el._savedScroll||0; }
-  render();
-  const el2=document.getElementById("score-modal-body");
-  if(el2 && el2._savedScroll!==undefined) el2.scrollTop=el2._savedScroll;
-}
-
-function saveScoreModal(){
-  if(!STATE.modal) return;
-  const {scoreKey,controlIdx,values,scoreDef}=STATE.modal;
-  const ctrl=STATE.currentControles[controlIdx];
-  if(!ctrl) return;
-  const all=getControles();
-  const idx=all.findIndex(c=>Number(c.id)===Number(ctrl.id));
-  if(idx===-1) return;
-
-  if(scoreDef==='kss_knee'||scoreDef==='kss_func'){
-    const hasAnyKSS=SCORES[scoreDef].secciones.some(sec=>values[sec.key]!==""&&values[sec.key]!==undefined);
-    let total=0;
-    SCORES[scoreDef].secciones.forEach(sec=>{
-      const v=values[sec.key];
-      all[idx][sec.key]=v;
-      if(sec.tipo==="slider"){ total+=sec.calc(Number(v||0)); }
-      else if(v!==""&&v!==undefined){ total+=Number(String(v).split(":")[0]); }
-    });
-    all[idx][scoreKey]=hasAnyKSS?total:"";
-  } else if(scoreDef==='oxford'){
-    const complete=OXFORD_ITEMS.every((_,i)=>values["ox_"+i]!==""&&values["ox_"+i]!==undefined);
-    const allFilled=Object.keys(values).length===OXFORD_ITEMS.length;
-    if(complete&&allFilled){
-      const total=OXFORD_ITEMS.reduce((s,_,i)=>s+Number(values["ox_"+i]),0);
-      all[idx][scoreKey]=total;
-      all[idx][scoreKey+"_vals"]=JSON.stringify(values);
-    } else { all[idx][scoreKey]=""; }
-  } else if(scoreDef==='womac'){
-    const allDone=WOMAC_ITEMS.every((_,i)=>values["wom_"+i]!==""&&values["wom_"+i]!==undefined);
-    if(allDone){
-      const total=WOMAC_ITEMS.reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
-      const dolor=WOMAC_ITEMS.slice(0,5).reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
-      const rigidez=WOMAC_ITEMS.slice(5,7).reduce((s,_,i)=>s+Number(values["wom_"+(5+i)]),0);
-      const func=WOMAC_ITEMS.slice(7).reduce((s,_,i)=>s+Number(values["wom_"+(7+i)]),0);
-      all[idx][scoreKey]=total;
-      all[idx][scoreKey+"_dolor"]=dolor;
-      all[idx][scoreKey+"_rigidez"]=rigidez;
-      all[idx][scoreKey+"_func"]=func;
-    } else { all[idx][scoreKey]=""; }
-  }
-
-  saveControles(all);
-  setSyncStatus("syncing"); fsSetControl({...all[idx]}).then(()=>setSyncStatus("synced"));
-  STATE.currentControles=getControlesPaciente(ctrl.pacienteId);
-  closeModal();
-}
-
-// ── Preop score modal ─────────────────────────────────────────────────────────
-function openPreopScoreModal(scoreKey){
-  const scoreDef = scoreKey.replace('_pre','');
-  let initValues={};
-  const stored=STATE.form["_"+scoreDef+"_pre_vals"];
-  if(stored){ try{ initValues=JSON.parse(stored); }catch{} }
-  STATE.modal={ scoreKey, controlIdx:null, values:initValues, isPreop:true, scoreDef };
-  render();
-}
-
-function savePreopScoreModal(){
-  if(!STATE.modal) return;
-  const {scoreKey,values,scoreDef}=STATE.modal;
-  const effectiveKey=STATE.modal.scoreDef||scoreKey;
-
-  if(effectiveKey==='kss_knee'||effectiveKey==='kss_func'){
-    const hasAnyKSS=SCORES[effectiveKey].secciones.some(sec=>values[sec.key]!==""&&values[sec.key]!==undefined);
-    let total=0;
-    SCORES[effectiveKey].secciones.forEach(sec=>{
-      const v=values[sec.key];
-      if(sec.tipo==="slider") total+=sec.calc(Number(v||0));
-      else if(v!==""&&v!==undefined) total+=Number(String(v).split(":")[0]);
-    });
-    setFormField(scoreKey, hasAnyKSS?total:"");
-  } else if(effectiveKey==='oxford'){
-    const complete=OXFORD_ITEMS.every((_,i)=>values["ox_"+i]!==""&&values["ox_"+i]!==undefined);
-    const allFilled=Object.keys(values).length===OXFORD_ITEMS.length;
-    if(complete&&allFilled){
-      const total=OXFORD_ITEMS.reduce((s,_,i)=>s+Number(values["ox_"+i]),0);
-      setFormField(scoreKey,total);
-      setFormField("_oxford_pre_vals",JSON.stringify(values));
-    } else { setFormField(scoreKey,""); }
-  } else if(effectiveKey==='womac'){
-    const allDone=WOMAC_ITEMS.every((_,i)=>values["wom_"+i]!==""&&values["wom_"+i]!==undefined);
-    if(allDone){
-      const total=WOMAC_ITEMS.reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
-      const dolor=WOMAC_ITEMS.slice(0,5).reduce((s,_,i)=>s+Number(values["wom_"+i]),0);
-      const rigidez=WOMAC_ITEMS.slice(5,7).reduce((s,_,i)=>s+Number(values["wom_"+(5+i)]),0);
-      const func=WOMAC_ITEMS.slice(7).reduce((s,_,i)=>s+Number(values["wom_"+(7+i)]),0);
-      setFormField(scoreKey,total);
-      setFormField("_womac_pre_vals",JSON.stringify(values));
-      setFormField(scoreKey+"_dolor",dolor);
-      setFormField(scoreKey+"_rigidez",rigidez);
-      setFormField(scoreKey+"_func",func);
-    } else { setFormField(scoreKey,""); }
-  }
-  closeModal();
-}
-
-// ── filterList / sortList ─────────────────────────────────────────────────────
-function filterList(){ STATE.listFilter=document.getElementById("list-search")?.value||""; render(); }
-function sortList(col){
-  if(STATE.sortCol===col) STATE.sortDir=STATE.sortDir==="asc"?"desc":"asc";
-  else { STATE.sortCol=col; STATE.sortDir="asc"; }
-  render();
-}
-
-// ── renderConfig ──────────────────────────────────────────────────────────────
-function renderList(){
-  const demo = STATE.user.role==="demo";
-  const q = (STATE.listFilter||"").toLowerCase();
-
-  let pts = STATE.patients.filter(p=>{
-    if(!q) return true;
-    return Object.values(p).some(v=>String(v||"").toLowerCase().includes(q));
-  });
-
-  // Sort
-  if(STATE.sortCol){
-    pts=pts.slice().sort((a,b)=>{
-      let va=a[STATE.sortCol]??"", vb=b[STATE.sortCol]??"";
-      if(!isNaN(Number(va))&&!isNaN(Number(vb))&&va!==""&&vb!==""){va=Number(va);vb=Number(vb);}
-      if(va<vb) return STATE.sortDir==="asc"?-1:1;
-      if(va>vb) return STATE.sortDir==="asc"?1:-1;
-      return 0;
-    });
-  }
-
-  // Detect duplicate RUTs
-  const rutGroups={};
-  STATE.patients.forEach(p=>{
-    if(!p.rut) return;
-    if(!rutGroups[p.rut]) rutGroups[p.rut]=[];
-    rutGroups[p.rut].push(p.fechaCx||"");
-  });
-
-  const PERIODOS=[
-    {period:"preop",label:"Pre-op"},
-    {period:"6m",label:"6m"},
-    {period:"12m",label:"12m"},
-    {period:"24m",label:"24m"},
-    {period:"3-5a",label:"3-5a"},
-    {period:"5-9a",label:"5-9a"},
-    {period:"10a+",label:"10a+"},
-  ];
-
-  const COLS=[
-    {key:"nombre",         label:"Paciente"},
-    {key:"cirujano",       label:"Cirujano"},
-    {key:"lado",           label:"Lado"},
-    {key:"fechaCx",        label:"Fecha Cx"},
-    {key:"implante",       label:"Implante"},
-    {key:"sexo",           label:"Sexo"},
-    {key:"edad",           label:"Edad"},
-    {key:"kellgren",       label:"K-L"},
-    {key:"ejeMecanico",    label:"HKA Pre"},
-    {key:"mad",            label:"MAD Pre"},
-    {key:"ejeMecanico_post",label:"HKA Post"},
-    {key:"mad_post",       label:"MAD Post"},
-    {key:"tecnica",        label:"Técnica"},
-  ];
-
-  const ctrlCols=[];
-  PERIODOS.forEach(pg=>{
-    ctrlCols.push({period:pg.period, label:pg.label+" KSS",   scoreField:"kss_knee"});
-    ctrlCols.push({period:pg.period, label:pg.label+" Oxford", scoreField:"oxford"});
-    ctrlCols.push({period:pg.period, label:pg.label+" VAS",    scoreField:"vas"});
-  });
-
-  const allControles=getControles();
-
-  const thStyle=(key)=>`padding:10px 10px;white-space:nowrap;cursor:pointer;user-select:none;font-size:11px;
-    text-transform:uppercase;letter-spacing:.05em;color:#64748b;font-weight:700;
-    background:#f8fafc;border-bottom:2px solid #e2e8f0;`;
-
-  const sortArrow=(key)=>STATE.sortCol===key?(STATE.sortDir==="asc"?" ↑":" ↓"):" ↕";
-
-  const headers=[
-    `<th style="${thStyle("n")}">#</th>`,
-    ...COLS.map(col=>`<th onclick="sortList('${col.key}')" style="${thStyle(col.key)}">${col.label}${sortArrow(col.key)}</th>`),
-    ...ctrlCols.map(cc=>`<th style="${thStyle("")}">${cc.label}</th>`),
-    `<th style="${thStyle("")}">Acciones</th>`,
-  ].join("");
-
-  const rows=pts.map((p,pi)=>{
-    const hkaPre=Number(p.ejeMecanico);
-    const hkaPost=Number(p.ejeMecanico_post);
-    const hkaBad=Math.abs(hkaPre)>3;
-    const hkaPostBad=p.ejeMecanico_post!==""&&Math.abs(hkaPost)>3;
-
-    let badge="";
-    if(p.rut && rutGroups[p.rut] && rutGroups[p.rut].length>1){
-      const dates=rutGroups[p.rut];
-      const sameDate=dates.every(d=>d===dates[0]&&d!=="");
-      if(sameDate)
-        badge=` <span title="Cirugía bilateral — mismo acto quirúrgico" style="background:#fef9c3;color:#854d0e;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">bilateral</span>`;
-      else
-        badge=` <span title="Este paciente tiene otro registro en la base de datos" style="background:#e0f2fe;color:#0369a1;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">2 registros</span>`;
-    }
-
-    const ptControles=allControles.filter(ct=>Number(ct.pacienteId)===Number(p.id));
-
-    const tdStyle="padding:8px 10px;white-space:nowrap;border-bottom:1px solid #f1f5f9;font-size:13px;";
-
-    const baseCells=COLS.map(col=>{
-      if(col.key==="nombre")
-        return `<td style="${tdStyle}"><strong>${p.nombre||"—"}</strong>${badge}</td>`;
-      if(col.key==="ejeMecanico")
-        return `<td style="${tdStyle}color:${hkaBad?"#dc2626":"#15803d"};font-weight:${hkaBad?"700":"400"}">${p.ejeMecanico!==""?p.ejeMecanico+"°":"—"}</td>`;
-      if(col.key==="ejeMecanico_post")
-        return `<td style="${tdStyle}color:${hkaPostBad?"#dc2626":"#15803d"};font-weight:${hkaPostBad?"700":"400"}">${p.ejeMecanico_post!==""?p.ejeMecanico_post+"°":"—"}</td>`;
-      const val=p[col.key]??"";
-      return `<td style="${tdStyle}">${val||"—"}</td>`;
-    }).join("");
-
-    const ctrlCells=ctrlCols.map(cc=>{
-      const ctrl=ptControles.find(ct=>ct.periodo===cc.period);
-      let val="";
-      if(ctrl){
-        const sf=cc.scoreField;
-        const v=ctrl[sf];
-        val=(v!==""&&v!==undefined)?v:"";
-      }
-      // Preop fallback from form
-      if(!val && cc.period==="preop"){
-        if(cc.scoreField==="kss_knee") val=p.kssKnee_pre||"";
-        if(cc.scoreField==="oxford") val=p.oxford_pre||"";
-        if(cc.scoreField==="vas") val=p.vas_pre||"";
-      }
-      return `<td style="${tdStyle}text-align:center">${val||"—"}</td>`;
-    }).join("");
-
-    const actions=`<td style="${tdStyle}">
-      <div style="display:flex;gap:6px">
-        <button onclick="editPatient(${p.id})" style="padding:5px 10px;background:#dbeafe;color:#1e40af;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600">✏️ Editar</button>
-        ${!demo?`<button onclick="delPatient(${p.id})" style="padding:5px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:5px;cursor:pointer;font-size:12px">✕</button>`:""}
-        <button onclick="exportPDF(${p.id})" style="padding:5px 10px;background:#f0fdf4;color:#15803d;border:none;border-radius:5px;cursor:pointer;font-size:12px">📄 PDF</button>
-      </div>
-    </td>`;
-
-    const rowBg=pi%2===0?"#fff":"#fafafa";
-    return `<tr style="background:${rowBg}">
-      <td style="${tdStyle}color:#94a3b8">${String(pi+1).padStart(3,"0")}</td>
-      ${baseCells}${ctrlCells}${actions}
-    </tr>`;
-  }).join("");
-
-  return `<div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-      <h2 style="margin:0;font-size:18px;color:#0f4c81">📋 Pacientes (${pts.length})</h2>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <div id="sync-status" style="padding:4px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px"></div>
-        <button class="btn-gray" onclick="syncFromFirebase()" title="Sincronizar" style="padding:6px 10px">☁️</button>
-        <input id="list-search" type="text" placeholder="🔍 Buscar..." value="${STATE.listFilter||""}"
-          oninput="filterList()"
-          style="padding:7px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;outline:none;width:180px">
-        ${!demo?`<button onclick="newPatient()" class="btn-primary" style="padding:8px 16px">+ Nuevo paciente</button>`:""}
-        <button onclick="doExport()" class="btn-gray">📥 Excel</button>
-      </div>
-    </div>
-    ${pts.length===0?`<div style="text-align:center;padding:40px;color:#94a3b8">
-      ${STATE.patients.length===0?"No hay pacientes registrados aún.":"No se encontraron resultados."}
-    </div>`:`
-    <div style="overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;min-width:900px">
-        <thead><tr>${headers}</tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>`}
-  </div>`;
-}
-
-function renderConfig(){
-  const u=STATE.user;
-  const sections=[
-    {id:"listas",label:"📋 Listas"},
-    {id:"usuarios",label:"👥 Usuarios"},
-    {id:"campos",label:"➕ Campos extra"},
-  ];
-  const nav=sections.map(s=>`<button onclick="setCfgSec('${s.id}')"
-    style="padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;
-    background:${STATE.configSec===s.id?"#0f4c81":"#f1f5f9"};
-    color:${STATE.configSec===s.id?"#fff":"#334155"}">${s.label}</button>`).join("");
-
-  let body="";
-
-  if(STATE.configSec==="listas"){
-    const lists=[
-      {key:"cirujanos",label:"Cirujanos"},
-      {key:"implantes",label:"Implantes"},
-      {key:"tecnicas",label:"Técnicas quirúrgicas"},
-      {key:"indicaciones",label:"Indicaciones"},
-      {key:"comorbilidades",label:"Comorbilidades"},
-    ];
-    body=lists.map(l=>{
-      const items=STATE.config[l.key]||[];
-      const editing=STATE.editListKey===l.key;
-      const draft=STATE.editListDraft;
-      if(editing){
-        return `<div class="card" style="margin-bottom:12px">
-          <div style="font-weight:700;margin-bottom:10px">${l.label}</div>
-          ${draft.map((item,i)=>`<div style="display:flex;gap:8px;margin-bottom:6px">
-            <input value="${item}" oninput="STATE.editListDraft[${i}]=this.value"
-              style="flex:1;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
-            <button onclick="removeListItem(${i})" style="padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;cursor:pointer">✕</button>
-            <button onclick="moveListItem(${i},-1)" style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:6px;cursor:pointer">↑</button>
-            <button onclick="moveListItem(${i},1)" style="padding:4px 8px;background:#f1f5f9;border:none;border-radius:6px;cursor:pointer">↓</button>
-          </div>`).join("")}
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button onclick="addListItem()" class="btn-gray">+ Agregar</button>
-            <button onclick="saveList('${l.key}')" class="btn-primary" style="padding:7px 14px">Guardar</button>
-            <button onclick="cancelEditList()" class="btn-gray">Cancelar</button>
-          </div>
-        </div>`;
-      }
-      return `<div class="card" style="margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div style="font-weight:700">${l.label}</div>
-          <button onclick="startEditList('${l.key}')" class="btn-gray" style="padding:5px 12px;font-size:12px">✏️ Editar</button>
-        </div>
-        <div style="font-size:13px;color:#64748b">${items.length===0?"(vacía)":items.join(", ")}</div>
-      </div>`;
-    }).join("");
-  }
-
-  if(STATE.configSec==="usuarios"){
-    const rows=STATE.users.map(usr=>{
-      const showPwd=STATE.pwdVisible&&STATE.pwdVisible[usr.id];
-      return `<tr style="border-bottom:1px solid #f1f5f9">
-        <td style="padding:10px 8px">${usr.name}</td>
-        <td style="padding:10px 8px;color:#64748b">${usr.username}</td>
-        <td style="padding:10px 8px">
-          <span style="display:inline-flex;align-items:center;gap:6px">
-            <span style="font-family:monospace;font-size:13px">${showPwd?usr.password:"••••••••"}</span>
-            <button onclick="togglePwdVisible(${usr.id},'${usr.password}')"
-              style="background:none;border:none;cursor:pointer;font-size:14px;padding:0">👁️</button>
-          </span>
-        </td>
-        <td style="padding:10px 8px">
-          <span style="background:${usr.role==="admin"?"#dbeafe":"#f0fdf4"};color:${usr.role==="admin"?"#1e40af":"#15803d"};
-            padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">${usr.role}</span>
-        </td>
-        <td style="padding:10px 8px">
-          <span style="background:${usr.active?"#dcfce7":"#fee2e2"};color:${usr.active?"#15803d":"#dc2626"};
-            padding:2px 8px;border-radius:10px;font-size:11px">${usr.active?"Activo":"Inactivo"}</span>
-        </td>
-        <td style="padding:10px 8px">
-          <div style="display:flex;gap:6px">
-            ${STATE.pwdTarget===usr.id?`
-              <input id="pwd-new-${usr.id}" type="text" placeholder="Nueva clave"
-                style="width:120px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:5px;font-size:12px;outline:none">
-              <button onclick="savePwd(${usr.id})" class="btn-primary" style="padding:5px 10px;font-size:12px">OK</button>
-              <button onclick="cancelPwd()" class="btn-gray" style="padding:5px 10px;font-size:12px">✕</button>
-            `:`<button onclick="startPwd(${usr.id})" class="btn-gray" style="padding:5px 10px;font-size:12px">🔑 Clave</button>`}
-            <button onclick="toggleUser(${usr.id})" class="btn-gray" style="padding:5px 10px;font-size:12px">
-              ${usr.active?"Desactivar":"Activar"}
-            </button>
-            ${usr.role!=="admin"?`<button onclick="deleteUser(${usr.id})" style="padding:5px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:12px;cursor:pointer">✕</button>`:""}
-          </div>
-        </td>
-      </tr>`;
-    }).join("");
-
-    body=`<div class="card">
-      <div style="font-weight:700;margin-bottom:14px">Usuarios del sistema</div>
-      <table style="width:100%;border-collapse:collapse;font-size:13px">
-        <thead><tr style="background:#f8fafc;font-size:11px;text-transform:uppercase;color:#64748b">
-          <th style="padding:8px;text-align:left">Nombre</th>
-          <th style="padding:8px;text-align:left">Usuario</th>
-          <th style="padding:8px;text-align:left">Contraseña</th>
-          <th style="padding:8px;text-align:left">Rol</th>
-          <th style="padding:8px;text-align:left">Estado</th>
-          <th style="padding:8px;text-align:left">Acciones</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      ${STATE.configFlash?`<div style="color:#15803d;font-size:13px;margin-top:10px;font-weight:600">${STATE.configFlash}</div>`:""}
-      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0">
-        <div style="font-weight:700;margin-bottom:10px;font-size:13px">Agregar usuario</div>
-        <div class="grid-3">
-          <div class="field"><label>Nombre completo</label>
-            <input id="nu-name" placeholder="Dr. Apellido" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
-          <div class="field"><label>Usuario</label>
-            <input id="nu-user" placeholder="apellido" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
-          <div class="field"><label>Contraseña</label>
-            <input id="nu-pwd" placeholder="Clave inicial" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
-          <div class="field"><label>Rol</label>
-            <select id="nu-role" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
-              <option value="user">Usuario</option><option value="admin">Admin</option><option value="demo">Demo</option>
-            </select></div>
-        </div>
-        <button onclick="addUser()" class="btn-primary" style="margin-top:8px;padding:8px 20px">Agregar usuario</button>
-      </div>
-    </div>`;
-  }
-
-  if(STATE.configSec==="campos"){
-    const cfs=STATE.customFields||[];
-    const sections=["demografico","preop_rx","preop_scores","quirurgico","mako","postop_rx","seguimiento"];
-    body=`<div class="card">
-      <div style="font-weight:700;margin-bottom:14px">Campos personalizados</div>
-      ${cfs.length===0?`<div style="color:#94a3b8;font-size:13px;margin-bottom:16px">No hay campos personalizados</div>`:`
-        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
-          <thead><tr style="background:#f8fafc;font-size:11px;text-transform:uppercase;color:#64748b">
-            <th style="padding:8px;text-align:left">Etiqueta</th>
-            <th style="padding:8px;text-align:left">Tipo</th>
-            <th style="padding:8px;text-align:left">Sección</th>
-            <th style="padding:8px"></th>
-          </tr></thead>
-          <tbody>${cfs.map((cf,i)=>`<tr style="border-bottom:1px solid #f1f5f9">
-            <td style="padding:8px">${cf.label}</td>
-            <td style="padding:8px;color:#64748b">${cf.type}</td>
-            <td style="padding:8px;color:#64748b">${cf.section}</td>
-            <td style="padding:8px"><button onclick="delCustomField(${i})"
-              style="padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:5px;cursor:pointer;font-size:12px">✕</button></td>
-          </tr>`).join("")}</tbody>
-        </table>`}
-      <div style="font-weight:600;font-size:13px;margin-bottom:8px">Nuevo campo</div>
-      <div class="grid-3">
-        <div class="field"><label>Etiqueta</label>
-          <input value="${STATE.cfNew.label}" oninput="setCfNew('label',this.value)"
-            style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
-        <div class="field"><label>Tipo</label>
-          <select onchange="setCfNew('type',this.value)" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
-            ${["text","number","textarea"].map(t=>`<option value="${t}" ${STATE.cfNew.type===t?"selected":""}>${t}</option>`).join("")}
-          </select></div>
-        <div class="field"><label>Sección</label>
-          <select onchange="setCfNew('section',this.value)" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">
-            ${sections.map(s=>`<option value="${s}" ${STATE.cfNew.section===s?"selected":""}>${s}</option>`).join("")}
-          </select></div>
-      </div>
-      <button onclick="addCustomField()" class="btn-primary" style="margin-top:8px;padding:8px 20px">Agregar campo</button>
-      ${STATE.configFlash?`<div style="color:#15803d;font-size:13px;margin-top:10px;font-weight:600">${STATE.configFlash}</div>`:""}
-    </div>`;
-  }
-
-  return `<div class="card">
-    <h2 style="margin:0 0 16px;font-size:18px;color:#0f4c81">⚙️ Configuración</h2>
-    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">${nav}</div>
-    ${body}
-  </div>`;
-}
-
-// ── renderForm ────────────────────────────────────────────────────────────────
-function renderForm(){
-  const demo = STATE.user.role==="demo";
-  const ro = demo;
-  let content = "";
-  switch(STATE.tab){
-    case "demografico":   content=tabDemografico(ro); break;
-    case "preop_rx":      content=tabPreopRx(ro); break;
-    case "preop_scores":  content=tabPreopScores(ro); break;
-    case "quirurgico":    content=tabQuirurgico(ro); break;
-    case "mako":          content=tabMako(ro); break;
-    case "postop_rx":     content=tabPostopRx(ro); break;
-    case "controles": {
-      const allC = getControles();
-      const eid2 = Number(STATE.editId);
-      STATE.currentControles = allC.filter(x=>Number(x.pacienteId)===eid2);
-      content=tabControles(STATE.editId, STATE.user.role==="demo");
-      break;
-    }
-    case "seguimiento":   content=tabSeguimiento(ro); break;
-    default: content=tabDemografico(ro);
-  }
-
-  const TABS=[
-    {id:"demografico",   label:"👤 Paciente"},
-    {id:"preop_rx",      label:"🦴 RX Pre-op"},
-    {id:"preop_scores",  label:"📊 Scores Pre"},
-    {id:"quirurgico",    label:"🔧 Quirúrgico"},
-    {id:"mako",          label:"🤖 Mako"},
-    {id:"postop_rx",     label:"📐 RX Post-op"},
-    {id:"controles",     label:"📅 Controles"},
-    {id:"seguimiento",   label:"📋 Seguimiento"},
-  ];
-
-  const tabBar=TABS.map(t=>`<button onclick="switchTab('${t.id}')"
-    style="padding:8px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;
-    background:${STATE.tab===t.id?"#0f4c81":"#f1f5f9"};
-    color:${STATE.tab===t.id?"#fff":"#334155"}">${t.label}</button>`).join("");
-
-  const modalHTML = STATE.modal ? renderScoreModal() : "";
-
-  return `
-    ${demo?`<div class="demo-banner">👁 Modo solo lectura — los cambios no se guardan</div>`:""}
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">${tabBar}</div>
-    ${content}
-    <div style="display:flex;justify-content:space-between;margin-top:16px;gap:8px;flex-wrap:wrap">
-      <button onclick="prevTab()" class="btn-gray">← Anterior</button>
-      <div style="display:flex;gap:8px">
-        ${!demo?`<button onclick="savePatient()" class="btn-primary">💾 Guardar</button>`:""}
-        <button onclick="goList()" class="btn-gray">✕ Cerrar</button>
-      </div>
-      <button onclick="nextTab()" class="btn-gray">Siguiente →</button>
-    </div>
-    ${STATE.savedFlash?`<div style="color:#15803d;text-align:center;font-weight:700;margin-top:8px;font-size:13px">✓ Guardado</div>`:""}
-    ${modalHTML}
-  `;
-}
-
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function renderDashboard(){
@@ -1688,33 +1903,6 @@ function renderDashboard(){
 
 function setCustomChart(k,v){ STATE.customChart[k]=v; render(); }
 
-function renderLogin(){
-  return `<div id="login-screen">
-    <div class="login-box">
-      <div class="logo">
-        <div class="emoji">🦴</div>
-        <h1>Protocolo PTR</h1>
-        <p>Prótesis Total de Rodilla</p>
-      </div>
-      <div class="field">
-        <label>Usuario</label>
-        <input type="text" id="login-u" placeholder="Ej: fernandez" autocomplete="username"
-          style="width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none"
-          onkeydown="if(event.key==='Enter')doLogin()">
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input type="password" id="login-p" placeholder="••••••••" autocomplete="current-password"
-          style="width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none"
-          onkeydown="if(event.key==='Enter')doLogin()">
-      </div>
-      <button onclick="doLogin()" class="btn-primary" style="width:100%;margin-top:4px">Iniciar sesión</button>
-      <div id="login-err" class="login-err" style="display:none;margin-top:12px">
-        Usuario o contraseña incorrectos
-      </div>
-    </div>
-  </div>`;
-}
 
 function render(){
   const app = document.getElementById("app");
@@ -2082,40 +2270,13 @@ function exportPDF(id){
   )}
 
   ${p.mako_usado==="Sí" ? sec("🤖","Cirugía MAKO",
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Plan vs Real — Alineamiento</div>"+
     row("HKA Plan/Real", s(p.mako_hka_plan,"°")+" / "+s(p.mako_hka_real,"°"))+
     row("DFFA Plan/Real", s(p.mako_dffa_plan,"°")+" / "+s(p.mako_dffa_real,"°"))+
     row("aTFA Plan/Real", s(p.mako_atfa_plan,"°")+" / "+s(p.mako_atfa_real,"°"))+
     row("Slope Plan/Real", s(p.mako_slope_plan,"°")+" / "+s(p.mako_slope_real,"°"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Laxitud Pre-implantación</div>"+
-    row("Extensión Med/Lat", s(p.mako_lax_pre_ext_med,"mm")+" / "+s(p.mako_lax_pre_ext_lat,"mm"))+
-    row("Flexión Med/Lat",   s(p.mako_lax_pre_flex_med,"mm")+" / "+s(p.mako_lax_pre_flex_lat,"mm"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Laxitud Post-implantación</div>"+
-    row("Extensión Med/Lat", s(p.mako_lax_post_ext_med,"mm")+" / "+s(p.mako_lax_post_ext_lat,"mm"))+
-    row("Flexión Med/Lat",   s(p.mako_lax_post_flex_med,"mm")+" / "+s(p.mako_lax_post_flex_lat,"mm"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Gaps</div>"+
-    row("Flex Gap Med/Lat", s(p.mako_flex_gap_med,"mm")+" / "+s(p.mako_flex_gap_lat,"mm"))+
-    row("Ext Gap Med/Lat",  s(p.mako_ext_gap_med,"mm")+" / "+s(p.mako_ext_gap_lat,"mm"))+
+    row("Flexion Gap", s(p.mako_flex_gap,"mm")+" &nbsp; Extension Gap: "+s(p.mako_ext_gap,"mm"))+
     row("Balance Flex/Ext", s(p.mako_balance_flex,"mm")+" / "+s(p.mako_balance_ext,"mm"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Rotaciones Femorales</div>"+
-    row("Coronal/Transverso/Sagital", s(p.mako_rot_fem_coronal,"°")+" / "+s(p.mako_rot_fem_transverso,"°")+" / "+s(p.mako_rot_fem_sagital,"°"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Resecciones Femorales</div>"+
-    row("Distal Med/Lat",    s(p.mako_res_fem_distal_med,"mm")+" / "+s(p.mako_res_fem_distal_lat,"mm"))+
-    row("Posterior Med/Lat", s(p.mako_res_fem_post_med,"mm")+" / "+s(p.mako_res_fem_post_lat,"mm"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Rotaciones Tibiales</div>"+
-    row("Coronal/Transverso/Sagital", s(p.mako_rot_tib_coronal,"°")+" / "+s(p.mako_rot_tib_transverso,"°")+" / "+s(p.mako_rot_tib_sagital,"°"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Resecciones Tibiales</div>"+
-    row("Proximal Med/Lat", s(p.mako_res_tib_prox_med,"mm")+" / "+s(p.mako_res_tib_prox_lat,"mm"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Joint Line</div>"+
-    row("LDFA/MPTA/aHKA", s(p.mako_jl_ldfa,"°")+" / "+s(p.mako_jl_mpta,"°")+" / "+s(p.mako_jl_ahka,"°"))+
-    row("JLO", s(p.mako_jl_jlo,"mm"))+
-    row("Fémur JLA / Tibia JLA", s(p.mako_jl_fem_jla,"°")+" / "+s(p.mako_jl_tib_jla,"°"))+
-    row("MEC to Bone / Implant", s(p.mako_jl_mec_bone,"mm")+" / "+s(p.mako_jl_mec_implant,"mm"))+
-    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Información Anatómica</div>"+
-    row("Alineamiento Cor/Trans/Sag", s(p.mako_anat_coronal,"°")+" / "+s(p.mako_anat_transverso,"°")+" / "+s(p.mako_anat_sagital,"°"))+
-    row("AA-MA Coronal/Sagital", s(p.mako_anat_aa_ma_cor,"°")+" / "+s(p.mako_anat_aa_ma_sag,"°"))+
-    row("PCA to TEA", s(p.mako_anat_pca_tea,"°"))+
-    row("Slope Medial/Lateral", s(p.mako_slope_med,"°")+" / "+s(p.mako_slope_lat,"°"))+
+    row("Resección Femoral/Tibial", s(p.mako_reseccion_femoral,"mm")+" / "+s(p.mako_reseccion_tibial,"mm"))+
     (p.mako_notas?row("Notas MAKO",p.mako_notas):"")
   ) : ""}
 
@@ -2156,7 +2317,6 @@ function doExport(){
     "womac_dolor_pre","womac_rigidez_pre","womac_func_pre",
     // Obsolete legacy fields
     "ldfa","flexum","rangoFlex","corte_femoral_frontal","corte_femoral_sagital",
-    "mako_flex_gap","mako_ext_gap","mako_reseccion_femoral","mako_reseccion_tibial",
     "corte_tibial_frontal","flexion_gap","extension_gap","arcoMovil_post",
   ]);
   const baseKeys = Object.keys(pts[0]||{}).filter(k=>!skipFields.has(k)&&!k.startsWith("_"));
@@ -2169,24 +2329,7 @@ function doExport(){
     { label:"RX Pre-op",        keys:["kellgren","morfotipo","varo_valgo_clinico","ejeMecanico","vca","mad","aLDFA","mLDFA","mpta","jlca","tibialSlope","pco_pre","aco_pre","is_pre","alturaRotuliana","subluxRotuliana"] },
     { label:"Quirúrgico",       keys:["cirujano","implante","tamFemur","tamTibia","tamInserto","tamRotula","tecnica","conservacionLca","liberaciones","patella_resurfacing","tourniquet","tiempoCirugia","sangrado"] },
     { label:"RX Post-op",       keys:["ejeMecanico_post","mad_post","mLDFA_post","dffa","atfa","tibialSlope_post","pco_post","aco_post","is_post","altura_rotuliana_post"] },
-    { label:"Mako", keys:[
-      "mako_usado",
-      "mako_hka_plan","mako_hka_real","mako_dffa_plan","mako_dffa_real",
-      "mako_atfa_plan","mako_atfa_real","mako_slope_plan","mako_slope_real",
-      "mako_lax_pre_ext_med","mako_lax_pre_ext_lat","mako_lax_pre_flex_med","mako_lax_pre_flex_lat",
-      "mako_lax_post_ext_med","mako_lax_post_ext_lat","mako_lax_post_flex_med","mako_lax_post_flex_lat",
-      "mako_flex_gap_med","mako_flex_gap_lat","mako_ext_gap_med","mako_ext_gap_lat",
-      "mako_balance_flex","mako_balance_ext",
-      "mako_rot_fem_coronal","mako_rot_fem_transverso","mako_rot_fem_sagital",
-      "mako_res_fem_distal_med","mako_res_fem_distal_lat","mako_res_fem_post_med","mako_res_fem_post_lat",
-      "mako_rot_tib_coronal","mako_rot_tib_transverso","mako_rot_tib_sagital",
-      "mako_res_tib_prox_med","mako_res_tib_prox_lat",
-      "mako_jl_ldfa","mako_jl_mpta","mako_jl_ahka","mako_jl_jlo",
-      "mako_jl_fem_jla","mako_jl_tib_jla","mako_jl_mec_bone","mako_jl_mec_implant",
-      "mako_anat_coronal","mako_anat_transverso","mako_anat_sagital",
-      "mako_anat_aa_ma_cor","mako_anat_aa_ma_sag","mako_anat_pca_tea",
-      "mako_slope_med","mako_slope_lat","mako_notas",
-    ] },
+    { label:"Mako",             keys:["mako_usado","mako_hka_plan","mako_hka_real","mako_dffa_plan","mako_dffa_real","mako_atfa_plan","mako_atfa_real","mako_slope_plan","mako_slope_real","mako_flex_gap","mako_ext_gap","mako_balance_flex","mako_balance_ext","mako_reseccion_femoral","mako_reseccion_tibial","mako_notas"] },
     { label:"Complicaciones",   keys:["infeccion","tvp_tep","rigidez","aflojamiento","fractura_periprotesica","revision","otras_complicaciones","notas"] },
   ];
 
@@ -2212,29 +2355,13 @@ function doExport(){
   const colList = [];
   // Clean up column labels: strip group-specific prefixes
   const COL_LABEL_MAP = {
-    mako_usado:"Usado",
-    mako_hka_plan:"HKA Plan", mako_hka_real:"HKA Real",
+    mako_usado:"Usado", mako_hka_plan:"HKA Plan", mako_hka_real:"HKA Real",
     mako_dffa_plan:"DFFA Plan", mako_dffa_real:"DFFA Real",
     mako_atfa_plan:"aTFA Plan", mako_atfa_real:"aTFA Real",
     mako_slope_plan:"Slope Plan", mako_slope_real:"Slope Real",
-    mako_lax_pre_ext_med:"Lax Pre Ext Med", mako_lax_pre_ext_lat:"Lax Pre Ext Lat",
-    mako_lax_pre_flex_med:"Lax Pre Flex Med", mako_lax_pre_flex_lat:"Lax Pre Flex Lat",
-    mako_lax_post_ext_med:"Lax Post Ext Med", mako_lax_post_ext_lat:"Lax Post Ext Lat",
-    mako_lax_post_flex_med:"Lax Post Flex Med", mako_lax_post_flex_lat:"Lax Post Flex Lat",
-    mako_flex_gap_med:"Flex Gap Med", mako_flex_gap_lat:"Flex Gap Lat",
-    mako_ext_gap_med:"Ext Gap Med", mako_ext_gap_lat:"Ext Gap Lat",
+    mako_flex_gap:"Flex Gap", mako_ext_gap:"Ext Gap",
     mako_balance_flex:"Balance Flex", mako_balance_ext:"Balance Ext",
-    mako_rot_fem_coronal:"Rot Fem Coronal", mako_rot_fem_transverso:"Rot Fem Transverso", mako_rot_fem_sagital:"Rot Fem Sagital",
-    mako_res_fem_distal_med:"Res Fem Distal Med", mako_res_fem_distal_lat:"Res Fem Distal Lat",
-    mako_res_fem_post_med:"Res Fem Post Med", mako_res_fem_post_lat:"Res Fem Post Lat",
-    mako_rot_tib_coronal:"Rot Tib Coronal", mako_rot_tib_transverso:"Rot Tib Transverso", mako_rot_tib_sagital:"Rot Tib Sagital",
-    mako_res_tib_prox_med:"Res Tib Prox Med", mako_res_tib_prox_lat:"Res Tib Prox Lat",
-    mako_jl_ldfa:"JL LDFA", mako_jl_mpta:"JL MPTA", mako_jl_ahka:"JL aHKA", mako_jl_jlo:"JL JLO",
-    mako_jl_fem_jla:"Fémur JLA", mako_jl_tib_jla:"Tibia JLA",
-    mako_jl_mec_bone:"MEC to Bone", mako_jl_mec_implant:"MEC to Implant",
-    mako_anat_coronal:"Anat Coronal", mako_anat_transverso:"Anat Transverso", mako_anat_sagital:"Anat Sagital",
-    mako_anat_aa_ma_cor:"AA-MA Coronal", mako_anat_aa_ma_sag:"AA-MA Sagital", mako_anat_pca_tea:"PCA-TEA",
-    mako_slope_med:"Slope Medial", mako_slope_lat:"Slope Lateral",
+    mako_reseccion_femoral:"Resección Femoral", mako_reseccion_tibial:"Resección Tibial",
     mako_notas:"Notas",
   };
   baseGroups.forEach(g=>{
