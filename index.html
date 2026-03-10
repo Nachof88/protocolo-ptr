@@ -399,6 +399,10 @@ function emptyForm(){
     // Plan vs Real
     mako_hka_plan:"",mako_hka_real:"",mako_dffa_plan:"",mako_dffa_real:"",
     mako_atfa_plan:"",mako_atfa_real:"",mako_slope_plan:"",mako_slope_real:"",
+    // Laxitud pre-implantación
+    mako_lax_pre_ext_med:"",mako_lax_pre_ext_lat:"",mako_lax_pre_flex_med:"",mako_lax_pre_flex_lat:"",
+    // Laxitud post-implantación
+    mako_lax_post_ext_med:"",mako_lax_post_ext_lat:"",mako_lax_post_flex_med:"",mako_lax_post_flex_lat:"",
     // Gaps
     mako_flex_gap_med:"",mako_flex_gap_lat:"",mako_ext_gap_med:"",mako_ext_gap_lat:"",
     mako_balance_flex:"",mako_balance_ext:"",
@@ -726,6 +730,24 @@ function tabMako(ro){
       ${planReal("Slope Planificado (°)","mako_slope_plan","Slope Real (°)","mako_slope_real")}
     </div>
 
+    <!-- ── LAXITUD PRE-IMPLANTACIÓN ──────────────────────────────── -->
+    ${sub("📏 Laxitud Pre-implantación (mm)")}
+    <div class="grid-3" style="margin-bottom:8px">
+      ${field("Extensión Medial",  numInp("mako_lax_pre_ext_med","","0.5","","",ro))}
+      ${field("Extensión Lateral", numInp("mako_lax_pre_ext_lat","","0.5","","",ro))}
+      ${field("Flexión Medial",    numInp("mako_lax_pre_flex_med","","0.5","","",ro))}
+      ${field("Flexión Lateral",   numInp("mako_lax_pre_flex_lat","","0.5","","",ro))}
+    </div>
+
+    <!-- ── LAXITUD POST-IMPLANTACIÓN ─────────────────────────────── -->
+    ${sub("📏 Laxitud Post-implantación (mm)")}
+    <div class="grid-3" style="margin-bottom:8px">
+      ${field("Extensión Medial",  numInp("mako_lax_post_ext_med","","0.5","","",ro))}
+      ${field("Extensión Lateral", numInp("mako_lax_post_ext_lat","","0.5","","",ro))}
+      ${field("Flexión Medial",    numInp("mako_lax_post_flex_med","","0.5","","",ro))}
+      ${field("Flexión Lateral",   numInp("mako_lax_post_flex_lat","","0.5","","",ro))}
+    </div>
+
     <!-- ── GAPS ──────────────────────────────────────────────────── -->
     ${sub("🔲 Gaps (mm)")}
     <div class="grid-3" style="margin-bottom:8px">
@@ -747,9 +769,13 @@ function tabMako(ro){
 
     <!-- ── RESECCIONES FEMORALES ─────────────────────────────────── -->
     ${sub("✂️ Resecciones Femorales (mm)")}
+    <div style="font-size:11px;color:#64748b;margin-bottom:6px;font-style:italic">Distal</div>
     <div class="grid-3" style="margin-bottom:8px">
       ${field("Distal Medial",    numInp("mako_res_fem_distal_med","","0.5","","",ro))}
       ${field("Distal Lateral",   numInp("mako_res_fem_distal_lat","","0.5","","",ro))}
+    </div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:6px;font-style:italic">Posterior</div>
+    <div class="grid-3" style="margin-bottom:8px">
       ${field("Posterior Medial", numInp("mako_res_fem_post_med","","0.5","","",ro))}
       ${field("Posterior Lateral",numInp("mako_res_fem_post_lat","","0.5","","",ro))}
     </div>
@@ -764,6 +790,7 @@ function tabMako(ro){
 
     <!-- ── RESECCIONES TIBIALES ──────────────────────────────────── -->
     ${sub("✂️ Resecciones Tibiales (mm)")}
+    <div style="font-size:11px;color:#64748b;margin-bottom:6px;font-style:italic">Proximal</div>
     <div class="grid-3" style="margin-bottom:8px">
       ${field("Proximal Medial",  numInp("mako_res_tib_prox_med","","0.5","","",ro))}
       ${field("Proximal Lateral", numInp("mako_res_tib_prox_lat","","0.5","","",ro))}
@@ -1627,6 +1654,12 @@ function exportPDF(id){
     row("DFFA Plan/Real", s(p.mako_dffa_plan,"°")+" / "+s(p.mako_dffa_real,"°"))+
     row("aTFA Plan/Real", s(p.mako_atfa_plan,"°")+" / "+s(p.mako_atfa_real,"°"))+
     row("Slope Plan/Real", s(p.mako_slope_plan,"°")+" / "+s(p.mako_slope_real,"°"))+
+    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Laxitud Pre-implantación</div>"+
+    row("Extensión Med/Lat", s(p.mako_lax_pre_ext_med,"mm")+" / "+s(p.mako_lax_pre_ext_lat,"mm"))+
+    row("Flexión Med/Lat",   s(p.mako_lax_pre_flex_med,"mm")+" / "+s(p.mako_lax_pre_flex_lat,"mm"))+
+    "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Laxitud Post-implantación</div>"+
+    row("Extensión Med/Lat", s(p.mako_lax_post_ext_med,"mm")+" / "+s(p.mako_lax_post_ext_lat,"mm"))+
+    row("Flexión Med/Lat",   s(p.mako_lax_post_flex_med,"mm")+" / "+s(p.mako_lax_post_flex_lat,"mm"))+
     "<div style='font-weight:700;color:#0f4c81;font-size:11px;text-transform:uppercase;margin:8px 0 4px'>Gaps</div>"+
     row("Flex Gap Med/Lat", s(p.mako_flex_gap_med,"mm")+" / "+s(p.mako_flex_gap_lat,"mm"))+
     row("Ext Gap Med/Lat",  s(p.mako_ext_gap_med,"mm")+" / "+s(p.mako_ext_gap_lat,"mm"))+
@@ -1707,6 +1740,8 @@ function doExport(){
       "mako_usado",
       "mako_hka_plan","mako_hka_real","mako_dffa_plan","mako_dffa_real",
       "mako_atfa_plan","mako_atfa_real","mako_slope_plan","mako_slope_real",
+      "mako_lax_pre_ext_med","mako_lax_pre_ext_lat","mako_lax_pre_flex_med","mako_lax_pre_flex_lat",
+      "mako_lax_post_ext_med","mako_lax_post_ext_lat","mako_lax_post_flex_med","mako_lax_post_flex_lat",
       "mako_flex_gap_med","mako_flex_gap_lat","mako_ext_gap_med","mako_ext_gap_lat",
       "mako_balance_flex","mako_balance_ext",
       "mako_rot_fem_coronal","mako_rot_fem_transverso","mako_rot_fem_sagital",
@@ -1749,6 +1784,10 @@ function doExport(){
     mako_dffa_plan:"DFFA Plan", mako_dffa_real:"DFFA Real",
     mako_atfa_plan:"aTFA Plan", mako_atfa_real:"aTFA Real",
     mako_slope_plan:"Slope Plan", mako_slope_real:"Slope Real",
+    mako_lax_pre_ext_med:"Lax Pre Ext Med", mako_lax_pre_ext_lat:"Lax Pre Ext Lat",
+    mako_lax_pre_flex_med:"Lax Pre Flex Med", mako_lax_pre_flex_lat:"Lax Pre Flex Lat",
+    mako_lax_post_ext_med:"Lax Post Ext Med", mako_lax_post_ext_lat:"Lax Post Ext Lat",
+    mako_lax_post_flex_med:"Lax Post Flex Med", mako_lax_post_flex_lat:"Lax Post Flex Lat",
     mako_flex_gap_med:"Flex Gap Med", mako_flex_gap_lat:"Flex Gap Lat",
     mako_ext_gap_med:"Ext Gap Med", mako_ext_gap_lat:"Ext Gap Lat",
     mako_balance_flex:"Balance Flex", mako_balance_ext:"Balance Ext",
