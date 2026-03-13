@@ -5,6 +5,7 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Protocolo PTR</title>
 <style>
@@ -178,26 +179,47 @@ const FIREBASE_CONFIG = {
 
 // ── Firebase init ─────────────────────────────────────────────────────────────
 let db = null;
+let auth = null;
 let FB_READY = false;
 
 function initFirebase(){
   try {
     if(FIREBASE_CONFIG.projectId === "REEMPLAZAR") {
       console.warn("Firebase no configurado — usando solo localStorage");
+      render();
       return;
     }
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.firestore();
+    auth = firebase.auth();
     FB_READY = true;
     console.log("Firebase conectado ✓");
-    syncFromFirebase(); // load cloud data on startup
+    // Auth state listener — renders app when ready
+    auth.onAuthStateChanged(function(fbUser){
+      if(fbUser){
+        const username = fbUser.email.replace('@ptr.app','');
+        // Load users from Firestore then find matching user
+        syncFromFirebase().then(()=>{
+          const ptrUser = STATE.users.find(u=>u.username===username && u.active);
+          if(ptrUser){
+            STATE.user = ptrUser;
+          } else {
+            auth.signOut();
+            STATE.user = null;
+          }
+          render();
+        });
+      } else {
+        STATE.user = null;
+        render();
+      }
+    });
   } catch(e) {
-    console.warn("Firebase error:", e.message);
+    console.warn("Firebase error:", e);
+    render();
   }
 }
 
-// ── Sync status ───────────────────────────────────────────────────────────────
-let SYNC_STATUS = "local"; // "local" | "syncing" | "synced" | "error"
 function setSyncStatus(s){
   SYNC_STATUS = s;
   const el = document.getElementById("sync-status");
@@ -1965,10 +1987,33 @@ function render(){
 function doLogin(){
   const u = document.getElementById("login-u")?.value.trim()||"";
   const p = document.getElementById("login-p")?.value||"";
-  const found = STATE.users.find(x=>x.username===u&&x.password===p&&x.active);
-  if(found){ STATE.user=found; render(); }
-  else { document.getElementById("login-err").style.display="block"; }
+  const errEl = document.getElementById("login-err");
+
+  if(!u||!p){ errEl.style.display="block"; return; }
+
+  if(auth && FB_READY){
+    // Firebase Auth login
+    const email = u + "@ptr.app";
+    errEl.style.display="none";
+    document.getElementById("login-u").disabled=true;
+    document.getElementById("login-p").disabled=true;
+    auth.signInWithEmailAndPassword(email, p)
+      .then(()=>{
+        // onAuthStateChanged will handle the rest
+      })
+      .catch(()=>{
+        document.getElementById("login-u").disabled=false;
+        document.getElementById("login-p").disabled=false;
+        errEl.style.display="block";
+      });
+  } else {
+    // Fallback: local login
+    const found = STATE.users.find(x=>x.username===u&&x.password===p&&x.active);
+    if(found){ STATE.user=found; render(); }
+    else { errEl.style.display="block"; }
+  }
 }
+
 function doLogout(){ STATE.user=null; STATE.view="list"; render(); }
 
 function setFormField(key,val){
@@ -2657,9 +2702,9 @@ function formatRutInput(input){
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
+// initFirebase calls render() via onAuthStateChanged
+// If no Firebase config, render() is called directly from initFirebase
 initFirebase();
-render();
-setSyncStatus(FB_READY ? "syncing" : "local");
 </script>
 </body>
 </html>
