@@ -1006,7 +1006,7 @@ function renderConfig(){
 
     const pwdForm = STATE.pwdTarget ? `
       <div style="margin-top:16px;padding:14px;background:#f0f9ff;border-radius:8px;border:1px solid #bae6fd">
-        <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:10px">Cambiar contraseña de <strong>${STATE.users.find(u=>u.id===STATE.pwdTarget)?.name}</strong></div>
+        <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:10px">Cambiar contraseña de <strong>${STATE.users.find(u=>Number(u.id)===Number(STATE.pwdTarget))?.name}</strong></div>
         <div style="display:flex;gap:8px">
           <input type="password" id="new-pwd-${STATE.pwdTarget}" placeholder="Nueva contraseña (mín. 6 caracteres)" style="flex:1;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none">
           <button class="btn-blue" onclick="savePwd(${STATE.pwdTarget})">Guardar</button>
@@ -2182,10 +2182,10 @@ function togglePwdVisible(uid, pwd){
   if(!el) return;
   el.textContent = el.textContent.includes("•") ? pwd : "••••••••";
 }
-function startPwd(id){ STATE.pwdTarget=id; render(); }
+function startPwd(id){ STATE.pwdTarget=Number(id); render(); }
 function cancelPwd(){ STATE.pwdTarget=null; render(); }
 function savePwd(userId){
-  const targetId = userId !== undefined ? userId : STATE.pwdTarget;
+  const targetId = Number(userId !== undefined ? userId : STATE.pwdTarget);
   const inputEl = document.getElementById("new-pwd-"+targetId) || document.getElementById("new-pwd");
   const p = inputEl?.value||"";
   if(p.length<6){ alert("Mínimo 6 caracteres."); return; }
