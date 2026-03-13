@@ -2186,54 +2186,39 @@ function startPwd(id){ STATE.pwdTarget=Number(id); render(); }
 function cancelPwd(){ STATE.pwdTarget=null; render(); }
 function savePwd(userId){
   const targetId = Number(userId !== undefined ? userId : STATE.pwdTarget);
-  const inputEl = document.getElementById("new-pwd-"+targetId) || document.getElementById("new-pwd");
+  const inputEl = document.getElementById("new-pwd-"+targetId);
   const p = inputEl?.value||"";
   if(p.length<6){ alert("Mínimo 6 caracteres."); return; }
 
-  const targetUser = STATE.users.find(u=>u.id===targetId);
+  const targetUser = STATE.users.find(u=>Number(u.id)===targetId);
   if(!targetUser){ alert("Usuario no encontrado."); return; }
 
-  // Update in local state
-  STATE.users = STATE.users.map(u=>u.id===targetId?{...u,password:p}:u);
-  lsSet(KEYS.users, STATE.users);
-  fsSaveUsers(STATE.users);
-
-  // Update in Firebase Auth
-  if(auth && FB_READY){
-    const email = targetUser.username + "@ptr.app";
-    // Need to get the user by email and update password via Admin SDK
-    // Since we can't do that client-side, we use a workaround:
-    // If changing own password, use updatePassword
-    if(STATE.user && STATE.user.id === targetId){
-      const fbUser = auth.currentUser;
-      if(fbUser){
-        fbUser.updatePassword(p)
-          .then(()=>{
-            STATE.pwdTarget=null;
-            STATE.configFlash="Contraseña actualizada en Firebase ✓";
-            setTimeout(()=>{ STATE.configFlash=""; render(); },2500);
-            render();
-          })
-          .catch(e=>{
-            alert("Error al actualizar en Firebase: "+e.message);
-          });
-        return;
-      }
-    } else {
-      // Admin changing another user's password
-      // We can't do this client-side without Admin SDK
-      // Store it locally and show instruction
-      STATE.pwdTarget=null;
-      STATE.configFlash="⚠️ Para cambiar la clave de "+targetUser.name+" ve a firebase.google.com → proyecto protocolo-ptr → Authentication → Users → busca "+targetUser.username+"@ptr.app → ··· → Editar usuario → Nueva contraseña → Guardar";
-      setTimeout(()=>{ STATE.configFlash=""; render(); },12000);
-      render();
+  // Changing own password
+  if(STATE.user && Number(STATE.user.id) === targetId){
+    const fbUser = auth ? auth.currentUser : null;
+    if(fbUser){
+      fbUser.updatePassword(p)
+        .then(()=>{
+          // Also update local
+          STATE.users = STATE.users.map(u=>Number(u.id)===targetId?{...u,password:p}:u);
+          lsSet(KEYS.users, STATE.users);
+          fsSaveUsers(STATE.users);
+          STATE.pwdTarget=null;
+          STATE.configFlash="✓ Contraseña actualizada correctamente";
+          setTimeout(()=>{ STATE.configFlash=""; render(); },3000);
+          render();
+        })
+        .catch(e=>{
+          alert("Error: "+e.message);
+        });
       return;
     }
   }
 
+  // Admin changing another user's password — show Firebase instructions
   STATE.pwdTarget=null;
-  STATE.configFlash="Contraseña actualizada ✓";
-  setTimeout(()=>{ STATE.configFlash=""; render(); },2500);
+  STATE.configFlash="Para cambiar la clave de "+targetUser.name+": ve a firebase.google.com → proyecto protocolo-ptr → Authentication → Users → busca "+targetUser.username+"@ptr.app → ··· → Editar usuario → escribe nueva contraseña → Guardar";
+  setTimeout(()=>{ STATE.configFlash=""; render(); },12000);
   render();
 }
 
