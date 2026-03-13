@@ -998,8 +998,8 @@ function renderConfig(){
       <div style="margin-top:16px;padding:14px;background:#f0f9ff;border-radius:8px;border:1px solid #bae6fd">
         <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:10px">Cambiar contraseña de <strong>${STATE.users.find(u=>u.id===STATE.pwdTarget)?.name}</strong></div>
         <div style="display:flex;gap:8px">
-          <input type="password" id="new-pwd" placeholder="Nueva contraseña (mín. 4 caracteres)" style="flex:1;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none">
-          <button class="btn-blue" onclick="savePwd()">Guardar</button>
+          <input type="password" id="new-pwd-${STATE.pwdTarget}" placeholder="Nueva contraseña (mín. 6 caracteres)" style="flex:1;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none">
+          <button class="btn-blue" onclick="savePwd(${STATE.pwdTarget})">Guardar</button>
           <button class="btn-gray" onclick="cancelPwd()">Cancelar</button>
         </div>
       </div>` : "";
@@ -2167,16 +2167,59 @@ function togglePwdVisible(uid, pwd){
 }
 function startPwd(id){ STATE.pwdTarget=id; render(); }
 function cancelPwd(){ STATE.pwdTarget=null; render(); }
-function savePwd(){
-  const p=document.getElementById("new-pwd")?.value||"";
-  if(p.length<4){ alert("Mínimo 4 caracteres."); return; }
-  STATE.users=STATE.users.map(u=>u.id===STATE.pwdTarget?{...u,password:p}:u);
-  lsSet(KEYS.users,STATE.users);
+function savePwd(userId){
+  const targetId = userId !== undefined ? userId : STATE.pwdTarget;
+  const inputEl = document.getElementById("new-pwd-"+targetId) || document.getElementById("new-pwd");
+  const p = inputEl?.value||"";
+  if(p.length<6){ alert("Mínimo 6 caracteres."); return; }
+
+  const targetUser = STATE.users.find(u=>u.id===targetId);
+  if(!targetUser){ alert("Usuario no encontrado."); return; }
+
+  // Update in local state
+  STATE.users = STATE.users.map(u=>u.id===targetId?{...u,password:p}:u);
+  lsSet(KEYS.users, STATE.users);
+  fsSaveUsers(STATE.users);
+
+  // Update in Firebase Auth
+  if(auth && FB_READY){
+    const email = targetUser.username + "@ptr.app";
+    // Need to get the user by email and update password via Admin SDK
+    // Since we can't do that client-side, we use a workaround:
+    // If changing own password, use updatePassword
+    if(STATE.user && STATE.user.id === targetId){
+      const fbUser = auth.currentUser;
+      if(fbUser){
+        fbUser.updatePassword(p)
+          .then(()=>{
+            STATE.pwdTarget=null;
+            STATE.configFlash="Contraseña actualizada en Firebase ✓";
+            setTimeout(()=>{ STATE.configFlash=""; render(); },2500);
+            render();
+          })
+          .catch(e=>{
+            alert("Error al actualizar en Firebase: "+e.message);
+          });
+        return;
+      }
+    } else {
+      // Admin changing another user's password
+      // We can't do this client-side without Admin SDK
+      // Store it locally and show instruction
+      STATE.pwdTarget=null;
+      STATE.configFlash="⚠️ Contraseña local actualizada. Para aplicar en Firebase ve a firebase.google.com → Authentication → Users → "+targetUser.username+"@ptr.app";
+      setTimeout(()=>{ STATE.configFlash=""; render(); },8000);
+      render();
+      return;
+    }
+  }
+
   STATE.pwdTarget=null;
   STATE.configFlash="Contraseña actualizada ✓";
   setTimeout(()=>{ STATE.configFlash=""; render(); },2500);
   render();
 }
+
 function toggleUser(id){
   if(id===STATE.user.id){ alert("No puede desactivar tu propio usuario."); return; }
   STATE.users=STATE.users.map(u=>u.id===id?{...u,active:!u.active}:u);
