@@ -2224,8 +2224,8 @@ function savePwd(userId){
       // We can't do this client-side without Admin SDK
       // Store it locally and show instruction
       STATE.pwdTarget=null;
-      STATE.configFlash="⚠️ Contraseña local actualizada. Para aplicar en Firebase ve a firebase.google.com → Authentication → Users → "+targetUser.username+"@ptr.app";
-      setTimeout(()=>{ STATE.configFlash=""; render(); },8000);
+      STATE.configFlash="⚠️ Para cambiar la clave de "+targetUser.name+" ve a firebase.google.com → proyecto protocolo-ptr → Authentication → Users → busca "+targetUser.username+"@ptr.app → ··· → Editar usuario → Nueva contraseña → Guardar";
+      setTimeout(()=>{ STATE.configFlash=""; render(); },12000);
       render();
       return;
     }
