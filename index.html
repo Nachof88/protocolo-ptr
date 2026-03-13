@@ -211,6 +211,11 @@ function initFirebase(){
         });
       } else {
         STATE.user = null;
+        // Load users from localStorage so login screen works
+        const localUsers = lsGet(KEYS.users, []);
+        if(localUsers.length > 0) STATE.users = localUsers;
+        const localConfig = lsGet(KEYS.config, null);
+        if(localConfig) STATE.config = localConfig;
         render();
       }
     });
