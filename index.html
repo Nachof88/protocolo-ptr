@@ -210,13 +210,18 @@ function initFirebase(){
           render();
         });
       } else {
-        STATE.user = null;
-        // Load users from localStorage so login screen works
-        const localUsers = lsGet(KEYS.users, []);
-        if(localUsers.length > 0) STATE.users = localUsers;
-        const localConfig = lsGet(KEYS.config, null);
-        if(localConfig) STATE.config = localConfig;
-        render();
+        // Only render if we haven't already handled logout in doLogout()
+        if(STATE.user !== null){
+          STATE.user = null;
+          const localUsers = lsGet(KEYS.users, DEFAULT_USERS);
+          if(localUsers.length > 0) STATE.users = localUsers;
+          render();
+        } else {
+          // Already handled by doLogout, just make sure login shows
+          if(!document.getElementById("login-u")){
+            render();
+          }
+        }
       }
     });
   } catch(e) {
@@ -2019,7 +2024,14 @@ function doLogin(){
   }
 }
 
-function doLogout(){ STATE.user=null; STATE.view="list"; render(); }
+function doLogout(){
+  STATE.user = null;
+  STATE.view = "list";
+  // Reload users from localStorage before rendering login
+  STATE.users = lsGet(KEYS.users, DEFAULT_USERS);
+  if(auth && FB_READY) auth.signOut();
+  render();
+}
 
 function setFormField(key,val){
   STATE.form[key]=val;
