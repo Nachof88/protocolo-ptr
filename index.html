@@ -920,6 +920,7 @@ function renderForm(){
   const tabs = TABS.map(t=>`<button class="tab-btn${STATE.tab===t.id?" active":""}" onclick="switchTab('${t.id}')">${t.label}</button>`).join("");
   return `
     ${demo?`<div class="demo-banner">👁️ Modo demo — puede navegar pero los cambios no se guardan.</div>`:""}
+    ${STATE.form.nombre?`<div style="background:#0f4c81;color:#fff;padding:8px 16px;border-radius:8px;margin-bottom:12px;font-size:15px;font-weight:700">👤 ${STATE.form.nombre}</div>`:""}
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:18px">
       <div class="tabs" style="margin-bottom:0">${tabs}</div>
       ${!demo&&STATE.editId?`<span style="font-size:11px;color:#15803d;font-weight:600">&#10003; Borrador guardado</span>`:(!demo?`<span style="font-size:11px;color:#94a3b8">Se guardará al avanzar</span>`:"")}
@@ -2005,7 +2006,7 @@ function render(){
     <div class="header-inner">
       <div class="header-logo">
         <span style="font-size:22px">🦴</span>
-        <div><h1>Protocolo PTR</h1><p>${STATE.form&&STATE.form.nombre ? "Paciente: "+STATE.form.nombre : "Prótesis Total de Rodilla · v3.1"}</p></div>
+        <div><h1>Protocolo PTR</h1><p>Prótesis Total de Rodilla · v3.1</p></div>
       </div>
       <div class="header-nav">
         ${demo?`<span class="demo-badge">DEMO — Solo lectura</span>`:""}
