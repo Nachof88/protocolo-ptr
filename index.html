@@ -2758,7 +2758,7 @@ function doExport(){
   // Fields to skip from the patient base object
   const skipFields = new Set([
     // Internal/technical
-    "id","fechaCx","_oxford_pre_vals","_womac_pre_vals",
+    "id","_oxford_pre_vals","_womac_pre_vals",
     // Legacy/renamed fields that may exist in old patient records
     "hc","seguimiento_meses",
     "kssKnee_post","kssFuncion_post","womac_post","oxford_post",
@@ -2819,7 +2819,7 @@ function doExport(){
     mako_notas:"Notas Mako",
     cd_dist_pre:"Dist. P-PTA Pre (cm)", cd_sup_pre:"Sup. Art. Pat. Pre (cm)",
     cd_dist_post:"Dist. P-PTA Post (cm)", cd_sup_post:"Sup. Art. Pat. Post (cm)",
-    aLDFA_post:"aLDFA Post (°)", mpta_post:"MPTA Post (°)",
+    aLDFA_post:"aLDFA Post (°)", mpta_post:"MPTA Post (°)", mLDFA_post:"mLDFA Post (°)",
     pco_pre:"PCO Pre (cm)", aco_pre:"ACO Pre (cm)",
     pco_post:"PCO Post (cm)", aco_post:"ACO Post (cm)",
     kssKnee_pre:"KSS Knee Pre", kssFuncion_pre:"KSS Func. Pre",
