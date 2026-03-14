@@ -1165,9 +1165,12 @@ const SCORES = {
         {label:"16-20°",pts:-10},{label:"> 20°",pts:-15},
       ]},
       { titulo:"Deducción — Alineación", key:"ded_alin", tipo:"deduccion", items:[
-        {label:"5-10° valgo (normal)",pts:0},{label:"0-4° valgo",pts:-3},
-        {label:"11-15° valgo",pts:-3},{label:"Cada grado adicional",pts:-3},
+        {label:"0-4° valgo",pts:-3},{label:"5-10° valgo (normal)",pts:0},
+        {label:"11-15° valgo",pts:-3},{label:">15° valgo (c/grado adicional)",pts:-3},
         {label:"Varo (cada grado)",pts:-3},
+      ]},
+      { titulo:"Deducción — Extension lag", key:"ded_extlag", tipo:"deduccion", items:[
+        {label:"Sin lag",pts:0},{label:"10°",pts:-5},{label:"20°",pts:-10},{label:">20°",pts:-15},
       ]},
     ]
   },
