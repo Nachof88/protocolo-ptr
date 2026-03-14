@@ -1995,6 +1995,102 @@ function renderCD(){
   if(el2){ el2.textContent=cd2; el2.style.color=cd2==="—"?"#94a3b8":ok2?"#15803d":"#dc2626"; }
 }
 
+function filterScores(){
+  STATE.scoresFilter = document.getElementById("scores-search")?.value||"";
+  render();
+}
+
+function printScoreBtn(btn){
+  var pid    = Number(btn.getAttribute("data-pid"));
+  var score  = btn.getAttribute("data-score");
+  var period = btn.getAttribute("data-period");
+  var label  = btn.getAttribute("data-label");
+  if(score==="oxford") exportOxfordPDF(pid, period, label);
+  else exportWomacPDF(pid, period, label);
+}
+
+function renderScores(){
+  var PERIODOS_LIST = [
+    {id:"preop", label:"Pre-op",  meses:0},
+    {id:"6m",    label:"6 meses", meses:5},
+    {id:"12m",   label:"12 meses",meses:11},
+    {id:"24m",   label:"24 meses",meses:23},
+    {id:"3-5a",  label:"3-5 años",meses:36},
+    {id:"5-9a",  label:"5-9 años",meses:60},
+    {id:"10a+",  label:"10+ años",meses:120},
+  ];
+
+  var q = (STATE.scoresFilter||"").toLowerCase();
+  var pts = STATE.patients.filter(function(p){
+    return !q || (p.nombre||"").toLowerCase().includes(q) || (p.rut||"").toLowerCase().includes(q);
+  });
+  var allControles = getControles();
+  var hoy = new Date();
+
+  var rows = pts.map(function(p){
+    var pControles = allControles.filter(function(ct){ return Number(ct.pacienteId)===Number(p.id); });
+    var fechaCx = p.fechaCx ? new Date(p.fechaCx) : null;
+    var meses = fechaCx ? (hoy - fechaCx)/(1000*60*60*24*30) : -1;
+
+    var pendientes = [];
+    var btns = [];
+
+    PERIODOS_LIST.forEach(function(per){
+      if(meses < 0 && per.id !== "preop") return;
+      if(per.meses > meses && per.id !== "preop") return;
+
+      var ctrl = pControles.find(function(ct){ return ct.periodo===per.id; });
+      var oxOk  = ctrl && ctrl.oxford!==""  && ctrl.oxford!==undefined;
+      var woOk  = ctrl && ctrl.womac_total!=="" && ctrl.womac_total!==undefined;
+
+      if(!oxOk) pendientes.push(per.label+" Oxford");
+      if(!woOk) pendientes.push(per.label+" WOMAC");
+
+      if(!oxOk) btns.push(
+        '<button data-pid="'+p.id+'" data-score="oxford" data-period="'+per.id+'" data-label="'+per.label+'" onclick="printScoreBtn(this)" '
+        +'style="padding:3px 8px;font-size:11px;cursor:pointer;background:#e0f2fe;color:#0369a1;border:0.5px solid #bae6fd;border-radius:6px;margin:2px">Oxford '+per.label+'</button>'
+      );
+      if(!woOk) btns.push(
+        '<button data-pid="'+p.id+'" data-score="womac" data-period="'+per.id+'" data-label="'+per.label+'" onclick="printScoreBtn(this)" '
+        +'style="padding:3px 8px;font-size:11px;cursor:pointer;background:#e0f2fe;color:#0369a1;border:0.5px solid #bae6fd;border-radius:6px;margin:2px">WOMAC '+per.label+'</button>'
+      );
+    });
+
+    var pendBadges = pendientes.length===0
+      ? '<span style="color:#15803d;font-size:12px;font-weight:600">&#10003; Al d&#237;a</span>'
+      : pendientes.slice(0,4).map(function(txt){
+          return '<span style="background:#fef9c3;color:#854d0e;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:600;margin-right:3px;display:inline-block;margin-bottom:2px">&#9888; '+txt+'</span>';
+        }).join('')+(pendientes.length>4?'<span style="font-size:11px;color:#94a3b8">+'+(pendientes.length-4)+'</span>':"");
+
+    var printCol = btns.length===0
+      ? '<span style="color:#94a3b8;font-size:12px">&mdash;</span>'
+      : '<div style="display:flex;flex-wrap:wrap">'+btns.join('')+'</div>';
+
+    return '<tr style="border-bottom:1px solid #f1f5f9">'
+      +'<td style="padding:10px 8px;font-weight:600;font-size:13px">'+(p.nombre||"&mdash;")+'</td>'
+      +'<td style="padding:10px 8px;font-size:12px;color:#64748b">'+(p.fechaCx||"&mdash;")+'</td>'
+      +'<td style="padding:10px 8px">'+pendBadges+'</td>'
+      +'<td style="padding:10px 8px">'+printCol+'</td>'
+      +'</tr>';
+  }).join('');
+
+  return '<div class="card">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">'
+    +'<h2 style="margin:0;font-size:18px;color:#0f4c81">&#128221; Scores e Impresi&#243;n</h2>'
+    +'<input id="scores-search" type="text" placeholder="&#128269; Buscar paciente..." value="'+(STATE.scoresFilter||"")+'" oninput="filterScores()" style="padding:7px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;outline:none;width:220px">'
+    +'</div>'
+    +(pts.length===0
+      ?'<div style="text-align:center;padding:40px;color:#94a3b8">No se encontraron pacientes.</div>'
+      :'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
+      +'<thead><tr style="background:#f8fafc;font-size:11px;text-transform:uppercase;color:#64748b">'
+      +'<th style="padding:10px 8px;text-align:left">Paciente</th>'
+      +'<th style="padding:10px 8px;text-align:left">Fecha Cx</th>'
+      +'<th style="padding:10px 8px;text-align:left">Pendientes</th>'
+      +'<th style="padding:10px 8px;text-align:left">Imprimir</th>'
+      +'</tr></thead><tbody>'+rows+'</tbody></table></div>')
+    +'</div>';
+}
+
 function render(){
   const app = document.getElementById("app");
   if(!STATE.user){ app.innerHTML=renderLogin(); return; }
@@ -2013,6 +2109,7 @@ function render(){
         ${demo?`<span class="demo-badge">DEMO — Solo lectura</span>`:""}
         <button class="nav-btn${v==="list"||v==="form"?" active":""}" onclick="goList()">📋 Pacientes</button>
         <button class="nav-btn${v==="dashboard"?" active":""}" onclick="goDashboard()">📊 Dashboard</button>
+        <button class="nav-btn${v==="scores"?" active":""}" onclick="goScores()">📝 Scores</button>
         ${admin?`<button class="nav-btn${v==="config"?" active":""}" onclick="goConfig()">⚙️ Configuración</button>`:""}
         <div class="nav-sep"></div>
         <span class="nav-user">👤 ${STATE.user.name}</span>
@@ -2026,6 +2123,7 @@ function render(){
   if(v==="form")      pageContent = renderForm();
   if(v==="config")    pageContent = renderConfig();
   if(v==="dashboard") pageContent = renderDashboard();
+  if(v==="scores")    pageContent = renderScores();
 
   app.innerHTML = header + `<div class="page">${pageContent}</div>`;
 }
@@ -2077,6 +2175,7 @@ function setFormField(key,val){
 function switchTab(id){ autoSave(); STATE.tab=id; render(); }
 function goList(){ STATE.view="list"; STATE.editId=null; STATE.form=emptyForm(); render(); }
 function goDashboard(){ STATE.view="dashboard"; render(); }
+function goScores(){ STATE.view="scores"; STATE.scoresFilter=""; render(); }
 function goConfig(){ STATE.view="config"; render(); }
 function newPatient(){ STATE.form=emptyForm(); STATE.editId=null; STATE.currentControles=[]; STATE.tab="demografico"; STATE.view="form"; render(); }
 
