@@ -625,7 +625,14 @@ function tabPreopScores(ro){
           style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;background:#f8fafc;outline:none">
       </div>
     </div>
-    ${customFieldsHTML('preop_scores',ro)}</div>`;
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0">
+      <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Imprimir cuestionarios para el paciente</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="exportOxfordPDF(STATE.editId)" style="padding:9px 18px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🖨️ Oxford Knee Score</button>
+        <button onclick="exportWomacPDF(STATE.editId)" style="padding:9px 18px;background:#0891b2;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🖨️ WOMAC</button>
+      </div>
+    </div>
+    ${customFieldsHTML('preop_scores',ro)}</div>\`;
 }
 
 function tabQuirurgico(ro){
@@ -2286,6 +2293,83 @@ function addUser(){
 }
 
 // ── XLSX Export ───────────────────────────────────────────────────────────────
+
+function exportOxfordPDF(id){
+  const p = STATE.patients.find(x=>Number(x.id)===Number(id));
+  if(!p){ alert("Paciente no encontrado"); return; }
+  const fecha = new Date().toLocaleDateString('es-CL');
+  const fechaCx = p.fechaCx ? new Date(p.fechaCx).toLocaleDateString('es-CL') : "—";
+  const opts = ["Ninguno / Sin dificultad","Muy poco / Poca dificultad","Moderado / Dificultad moderada","Severo / Mucha dificultad","Insoportable / Imposible"];
+  const preguntas = OXFORD_ITEMS.map((q,i) => {
+    const cols = opts.map(o => '<td style="width:20%;padding:6px 4px;text-align:center;border:1px solid #e2e8f0;font-size:11px"><div style="width:18px;height:18px;border:2px solid #0f4c81;border-radius:50%;margin:0 auto 4px"></div>'+o+'</td>').join('');
+    return '<div style="margin-bottom:20px;page-break-inside:avoid"><div style="font-weight:700;font-size:13px;margin-bottom:8px;color:#1e293b">'+(i+1)+'. '+q+'</div><table style="width:100%;border-collapse:collapse"><tr>'+cols+'</tr></table></div>';
+  }).join('');
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Oxford Knee Score</title>'
+    + '<style>body{font-family:Arial,sans-serif;margin:0;padding:24px;color:#1e293b;font-size:13px}@media print{body{padding:0}.no-print{display:none}}</style></head><body>'
+    + '<div style="text-align:center;margin-bottom:24px;border-bottom:2px solid #0f4c81;padding-bottom:16px">'
+    + '<div style="font-size:22px;font-weight:800;color:#0f4c81">🦴 Protocolo PTR</div>'
+    + '<div style="font-size:16px;font-weight:700;margin-top:4px">Oxford Knee Score (OKS)</div>'
+    + '<div style="font-size:11px;color:#64748b;margin-top:4px">Cuestionario Pre-operatorio — Por favor responda todas las preguntas</div></div>'
+    + '<table style="width:100%;margin-bottom:20px"><tr>'
+    + '<td><strong>Paciente:</strong> '+(p.nombre||"—")+'</td>'
+    + '<td><strong>RUT:</strong> '+(p.rut||"—")+'</td>'
+    + '<td><strong>Fecha:</strong> '+fecha+'</td></tr><tr>'
+    + '<td><strong>Cirujano:</strong> '+(p.cirujano||"—")+'</td>'
+    + '<td><strong>Lado:</strong> '+(p.lado||"—")+'</td>'
+    + '<td><strong>Fecha Cx:</strong> '+fechaCx+'</td></tr></table>'
+    + '<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px;margin-bottom:20px;font-size:12px">'
+    + '<strong>Instrucciones:</strong> Por favor marque con un círculo la respuesta que mejor describa su situación durante las últimas 4 semanas. Responda todas las preguntas pensando en su rodilla operada (o a operar).</div>'
+    + preguntas
+    + '<div style="margin-top:30px;border-top:1px solid #e2e8f0;padding-top:16px"><table style="width:100%"><tr>'
+    + '<td style="width:50%;padding-right:20px"><div style="border-bottom:1px solid #1e293b;height:30px;margin-bottom:4px"></div><div style="font-size:11px;color:#64748b">Firma del paciente</div></td>'
+    + '<td><div style="border-bottom:1px solid #1e293b;height:30px;margin-bottom:4px"></div><div style="font-size:11px;color:#64748b">Fecha</div></td></tr></table></div>'
+    + '<div class="no-print" style="margin-top:20px;text-align:center"><button onclick="window.print()" style="padding:10px 24px;background:#0f4c81;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">🖨️ Imprimir / Guardar PDF</button></div>'
+    + '</body></html>';
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+}
+
+function exportWomacPDF(id){
+  const p = STATE.patients.find(x=>Number(x.id)===Number(id));
+  if(!p){ alert("Paciente no encontrado"); return; }
+  const fecha = new Date().toLocaleDateString('es-CL');
+  const fechaCx = p.fechaCx ? new Date(p.fechaCx).toLocaleDateString('es-CL') : "—";
+  const opts = ["Ninguno","Poco","Bastante","Mucho","Muchísimo"];
+  const seccion = (titulo, items, inicio) => {
+    const preg = items.map((q,i) => {
+      const cols = opts.map(o => '<td style="width:20%;padding:5px 3px;text-align:center;border:1px solid #e2e8f0;font-size:11px"><div style="width:16px;height:16px;border:2px solid #0f4c81;border-radius:50%;margin:0 auto 3px"></div>'+o+'</td>').join('');
+      return '<div style="margin-bottom:14px;page-break-inside:avoid"><div style="font-weight:700;font-size:12px;margin-bottom:6px">'+(inicio+i+1)+'. '+q+'</div><table style="width:100%;border-collapse:collapse"><tr>'+cols+'</tr></table></div>';
+    }).join('');
+    return '<div style="margin-bottom:16px"><div style="background:#0f4c81;color:#fff;padding:6px 12px;border-radius:6px;font-weight:700;font-size:12px;margin-bottom:10px">'+titulo+'</div>'+preg+'</div>';
+  };
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>WOMAC</title>'
+    + '<style>body{font-family:Arial,sans-serif;margin:0;padding:24px;color:#1e293b;font-size:13px}@media print{body{padding:0}.no-print{display:none}}</style></head><body>'
+    + '<div style="text-align:center;margin-bottom:20px;border-bottom:2px solid #0f4c81;padding-bottom:14px">'
+    + '<div style="font-size:22px;font-weight:800;color:#0f4c81">🦴 Protocolo PTR</div>'
+    + '<div style="font-size:16px;font-weight:700;margin-top:4px">WOMAC</div>'
+    + '<div style="font-size:11px;color:#64748b;margin-top:4px">Cuestionario Pre-operatorio — Por favor responda todas las preguntas</div></div>'
+    + '<table style="width:100%;margin-bottom:16px"><tr>'
+    + '<td><strong>Paciente:</strong> '+(p.nombre||"—")+'</td>'
+    + '<td><strong>RUT:</strong> '+(p.rut||"—")+'</td>'
+    + '<td><strong>Fecha:</strong> '+fecha+'</td></tr><tr>'
+    + '<td><strong>Cirujano:</strong> '+(p.cirujano||"—")+'</td>'
+    + '<td><strong>Lado:</strong> '+(p.lado||"—")+'</td>'
+    + '<td><strong>Fecha Cx:</strong> '+fechaCx+'</td></tr></table>'
+    + '<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px;margin-bottom:16px;font-size:12px">'
+    + '<strong>Instrucciones:</strong> Las siguientes preguntas se refieren a su rodilla durante las últimas 48 horas. Para cada pregunta marque con un círculo la respuesta que mejor describe su situación.</div>'
+    + seccion("SECCIÓN A — DOLOR: ¿Cuánto dolor ha sentido en su rodilla...?", WOMAC_DOLOR, 0)
+    + seccion("SECCIÓN B — RIGIDEZ", WOMAC_RIGIDEZ, WOMAC_DOLOR.length)
+    + seccion("SECCIÓN C — FUNCIÓN: ¿Cuánta dificultad ha tenido para...?", WOMAC_FUNC, WOMAC_DOLOR.length+WOMAC_RIGIDEZ.length)
+    + '<div style="margin-top:24px;border-top:1px solid #e2e8f0;padding-top:14px"><table style="width:100%"><tr>'
+    + '<td style="width:50%;padding-right:20px"><div style="border-bottom:1px solid #1e293b;height:28px;margin-bottom:4px"></div><div style="font-size:11px;color:#64748b">Firma del paciente</div></td>'
+    + '<td><div style="border-bottom:1px solid #1e293b;height:28px;margin-bottom:4px"></div><div style="font-size:11px;color:#64748b">Fecha</div></td></tr></table></div>'
+    + '<div class="no-print" style="margin-top:20px;text-align:center"><button onclick="window.print()" style="padding:10px 24px;background:#0f4c81;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">🖨️ Imprimir / Guardar PDF</button></div>'
+    + '</body></html>';
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+}
 
 function exportPDF(id){
   const p = STATE.patients.find(x=>x.id===id);
