@@ -2748,14 +2748,14 @@ function doExport(){
   };
   baseGroups.forEach(g=>{
     g.keys.forEach(k=>colList.push({group:g.label, h2:COL_LABEL_MAP[k]||k, baseKey:k}));
-    // Add calculated columns after RX Pre-op
+    // Add calculated columns
     if(g.label==="RX Pre-op"){
       colList.push({group:"RX Pre-op", h2:"CD Pre", calcKey:"cd_pre"});
-      colList.push({group:"RX Pre-op", h2:"PCO Ratio", calcKey:"pco_ratio"});
-      colList.push({group:"RX Pre-op", h2:"ACO Ratio", calcKey:"aco_ratio"});
     }
     if(g.label==="RX Post-op"){
       colList.push({group:"RX Post-op", h2:"CD Post", calcKey:"cd_post"});
+      colList.push({group:"RX Post-op", h2:"PCO Ratio", calcKey:"pco_ratio"});
+      colList.push({group:"RX Post-op", h2:"ACO Ratio", calcKey:"aco_ratio"});
     }
   });
   periodGroups.forEach(pg=>{
