@@ -2788,3 +2788,2757 @@ initFirebase();
 </script>
 </body>
 </html>
+.card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:22px;margin-bottom:18px}
+.sec-title{border-bottom:2px solid #f1f5f9;padding-bottom:11px;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+.sec-title .icon{font-size:18px}
+.sec-title h3{font-weight:800;font-size:14px;color:#0f4c81}
+.sec-title p{font-size:11px;color:#94a3b8;margin-top:1px}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.span-2{grid-column:span 2}
+.span-3{grid-column:span 3}
+
+/* Fields */
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#64748b;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;color:#1e293b;background:#f8fafc;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#0f4c81}
+.field textarea{min-height:75px;resize:vertical}
+.field select{cursor:pointer}
+.field input:disabled,.field select:disabled,.field textarea:disabled{opacity:.6;cursor:not-allowed}
+
+/* Date picker */
+.date-grid{display:grid;grid-template-columns:1fr 2fr 1.4fr;gap:5px}
+.date-grid select{padding:8px 4px;text-align:center}
+
+/* Buttons */
+.btn-blue{background:#0f4c81;color:#fff;border:none;border-radius:7px;padding:10px 22px;font-weight:700;font-size:14px;cursor:pointer}
+.btn-gray{background:#e2e8f0;color:#334155;border:none;border-radius:7px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer}
+.btn-red{background:#fee2e2;color:#b91c1c;border:none;border-radius:6px;padding:5px 10px;font-weight:600;font-size:12px;cursor:pointer}
+.btn-green{background:#f0fdf4;color:#15803d;border:none;border-radius:6px;padding:5px 10px;font-weight:600;font-size:12px;cursor:pointer}
+.btn-sm{padding:4px 10px;font-size:11px}
+
+/* Info boxes */
+.info-box{padding:9px 13px;border-radius:7px;margin-bottom:14px;font-size:12px;line-height:1.6}
+.info-blue{background:#f0f9ff;color:#0369a1}
+.info-green{background:#f0fdf4;color:#15803d}
+.info-yellow{background:#fefce8;color:#854d0e}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.tab-btn{padding:7px 15px;border-radius:18px;border:none;cursor:pointer;font-weight:500;background:#f1f5f9;color:#64748b;font-size:13px}
+.tab-btn.active{background:#0f4c81;color:#fff;font-weight:700}
+
+/* Table */
+.table-wrap{overflow-x:auto;background:#fff;border-radius:10px;border:1px solid #e2e8f0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:#f8fafc}
+th{padding:9px 10px;text-align:left;font-weight:700;color:#64748b;font-size:10px;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+tbody tr:nth-child(even){background:#fafafa}
+td{padding:8px 10px;border-bottom:1px solid #f1f5f9}
+.val-ok{font-weight:700;color:#15803d}
+.val-bad{font-weight:700;color:#dc2626}
+
+/* Login */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f4c81,#1e6fb5)}
+.login-box{background:#fff;border-radius:16px;padding:44px 40px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.login-box .logo{text-align:center;margin-bottom:32px}
+.login-box .logo .emoji{font-size:44px;margin-bottom:10px}
+.login-box .logo h1{font-size:20px;font-weight:800;color:#0f4c81;margin-bottom:4px}
+.login-box .logo p{font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em}
+.login-box .field{margin-bottom:16px}
+.login-err{background:#fee2e2;color:#b91c1c;border-radius:7px;padding:9px 13px;font-size:13px;margin-bottom:16px}
+.login-note{text-align:center;font-size:11px;color:#cbd5e1;margin-top:20px}
+
+/* Flash */
+.flash-ok{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:7px;padding:10px 14px;font-size:13px;margin-bottom:16px;font-weight:600}
+
+/* Config table */
+.cfg-list-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;margin-bottom:4px}
+.cfg-list-item:nth-child(odd){background:#f8fafc}
+.cfg-list-item span{flex:1}
+
+/* Misc */
+.empty-state{text-align:center;padding:70px 20px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;color:#94a3b8}
+.empty-state .big{font-size:50px;margin-bottom:12px}
+.list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.form-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.save-ok{text-align:right;color:#15803d;font-weight:700;margin-top:8px;font-size:13px}
+.demo-banner{background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:10px 16px;font-size:13px;color:#854d0e;margin-bottom:16px;font-weight:600}
+.role-badge{border-radius:12px;padding:2px 10px;font-size:11px;font-weight:700}
+.status-badge{border-radius:12px;padding:2px 10px;font-size:11px;font-weight:700}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  .header{padding:0 12px}
+  .header-inner{height:auto;padding:10px 0;flex-direction:column;align-items:flex-start;gap:8px}
+  .header-nav{gap:4px;width:100%}
+  .nav-btn{padding:5px 10px;font-size:12px}
+  .nav-user{font-size:11px}
+  .page{padding:14px 10px}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr!important}
+  .span-2,.span-3{grid-column:span 1!important}
+  .card{padding:14px}
+  .list-header{flex-direction:column;align-items:flex-start;gap:10px}
+  .list-header>div:last-child{width:100%;display:flex;flex-direction:column;gap:8px}
+  .list-header>div:last-child button{width:100%}
+  .tabs{gap:4px}
+  .tab-btn{padding:6px 10px;font-size:12px}
+  .form-footer{flex-direction:column}
+  .form-footer button{width:100%}
+  .btn-blue,.btn-gray{padding:10px 14px;font-size:13px}
+  .login-box{padding:28px 20px;margin:16px}
+}
+@media(max-width:480px){
+  .header-logo h1{font-size:13px}
+  .tab-btn{padding:5px 8px;font-size:11px}
+}
+
+/* ── Dashboard ────────────────────────────────────────────────────────────── */
+.stat-card{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:18px;text-align:center}
+.stat-num{font-size:32px;font-weight:800;color:#0f4c81;line-height:1}
+.stat-label{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-top:6px}
+.stat-sub{font-size:13px;color:#64748b;margin-top:4px;font-weight:600}
+.chart-wrap{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:18px;margin-bottom:18px}
+.chart-title{font-weight:800;font-size:14px;color:#0f4c81;margin-bottom:4px}
+.chart-sub{font-size:11px;color:#94a3b8;margin-bottom:16px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px}
+.bar-label{width:90px;text-align:right;color:#64748b;flex-shrink:0;font-size:11px}
+.bar-track{flex:1;background:#f1f5f9;border-radius:4px;height:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;transition:width .4s}
+.scatter-wrap{position:relative;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden}
+.dot{position:absolute;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;border:1.5px solid rgba(255,255,255,.8)}
+.axis-label{font-size:10px;color:#94a3b8}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const KEYS = {users:"ptr_users_v1", patients:"ptr_db_v4", config:"ptr_config_v1"};
+
+// ── Firebase config — REPLACE with your project values ───────────────────────
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDq4sZsyuDTAoD7X5jASrevHwQfDCcDrvA",
+    authDomain: "protocolo-ptr.firebaseapp.com",
+    projectId: "protocolo-ptr",
+    storageBucket: "protocolo-ptr.firebasestorage.app",
+    messagingSenderId: "435551180251",
+    appId: "1:435551180251:web:5e500f7e8347ca522e03fe"
+};
+
+// ── Firebase init ─────────────────────────────────────────────────────────────
+let db = null;
+let auth = null;
+let FB_READY = false;
+
+function initFirebase(){
+  try {
+    if(FIREBASE_CONFIG.projectId === "REEMPLAZAR") {
+      console.warn("Firebase no configurado — usando solo localStorage");
+      render();
+      return;
+    }
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+    auth = firebase.auth();
+    FB_READY = true;
+    console.log("Firebase conectado ✓");
+    // Auth state listener — renders app when ready
+    auth.onAuthStateChanged(function(fbUser){
+      if(fbUser){
+        const username = fbUser.email.replace('@ptr.app','');
+        // Load users from Firestore then find matching user
+        syncFromFirebase().then(()=>{
+          const ptrUser = STATE.users.find(u=>u.username===username && u.active);
+          if(ptrUser){
+            STATE.user = ptrUser;
+          } else {
+            auth.signOut();
+            STATE.user = null;
+          }
+          render();
+        });
+      } else {
+        // Only render if we haven't already handled logout in doLogout()
+        if(STATE.user !== null){
+          STATE.user = null;
+          const localUsers = lsGet(KEYS.users, DEFAULT_USERS);
+          if(localUsers.length > 0) STATE.users = localUsers;
+          render();
+        } else {
+          // Already handled by doLogout, just make sure login shows
+          if(!document.getElementById("login-u")){
+            render();
+          }
+        }
+      }
+    });
+  } catch(e) {
+    console.warn("Firebase error:", e);
+    render();
+  }
+}
+
+function setSyncStatus(s){
+  SYNC_STATUS = s;
+  const el = document.getElementById("sync-status");
+  if(!el) return;
+  const cfg = {
+    local:   {color:"#94a3b8", icon:"💾", text:"Solo local"},
+    syncing: {color:"#f59e0b", icon:"⟳",  text:"Sincronizando..."},
+    synced:  {color:"#15803d", icon:"☁️",  text:"Sincronizado"},
+    error:   {color:"#dc2626", icon:"⚠️",  text:"Error sync"},
+  }[s] || {color:"#94a3b8", icon:"?", text:s};
+  el.innerHTML = `<span style="color:${cfg.color};font-size:11px;font-weight:600">${cfg.icon} ${cfg.text}</span>`;
+}
+
+// ── Firestore collections ─────────────────────────────────────────────────────
+const FS_COL = {
+  patients:  "ptr_patients",
+  controles: "ptr_controles",
+  users:     "ptr_users",
+  config:    "ptr_config",
+};
+
+// ── Load all data from Firestore ──────────────────────────────────────────────
+async function syncFromFirebase(){
+  if(!FB_READY) return;
+  setSyncStatus("syncing");
+  try {
+    // Patients
+    const pSnap = await db.collection(FS_COL.patients).get();
+    if(!pSnap.empty){
+      const pts = pSnap.docs.map(d=>({...d.data(), _fsId:d.id}));
+      STATE.patients = pts;
+      lsSet(KEYS.patients, pts);
+    }
+    // Controles — merge cloud with local to avoid losing unsync'd controls
+    const cSnap = await db.collection(FS_COL.controles).get();
+    if(!cSnap.empty){
+      const cloudCtrls = cSnap.docs.map(d=>({...d.data(), _fsId:d.id}));
+      const localCtrls = lsGet("ptr_controles_v1", []);
+      // Merge: start with cloud, add any local ones not yet in cloud
+      const cloudIds = new Set(cloudCtrls.map(c=>String(c.id)));
+      const onlyLocal = localCtrls.filter(c=>!cloudIds.has(String(c.id)));
+      const merged = [...cloudCtrls, ...onlyLocal];
+      lsSet("ptr_controles_v1", merged);
+      // Push local-only controls to Firestore
+      for(const ctrl of onlyLocal){ fsSetControl(ctrl); }
+    }
+    // Users
+    const uSnap = await db.collection(FS_COL.users).get();
+    if(!uSnap.empty){
+      const users = uSnap.docs.map(d=>d.data());
+      STATE.users = users;
+      lsSet(KEYS.users, users);
+    }
+    // Config
+    const cfSnap = await db.collection(FS_COL.config).doc("main").get();
+    if(cfSnap.exists){
+      STATE.config = cfSnap.data().config || STATE.config;
+      lsSet(KEYS.config, STATE.config);
+  fsSaveConfig(STATE.config);
+    }
+    setSyncStatus("synced");
+    render();
+  } catch(e) {
+    console.warn("syncFromFirebase error:", e.message);
+    setSyncStatus("error");
+  }
+}
+
+// ── Save patient to Firestore ─────────────────────────────────────────────────
+async function fsSetPatient(patient){
+  if(!FB_READY) return;
+  try {
+    const docId = String(patient.id);
+    await db.collection(FS_COL.patients).doc(docId).set(patient);
+  } catch(e){ setSyncStatus("error"); }
+}
+
+async function fsDeletePatient(id){
+  if(!FB_READY) return;
+  try { await db.collection(FS_COL.patients).doc(String(id)).delete(); }
+  catch(e){ setSyncStatus("error"); }
+}
+
+// ── Save control to Firestore ─────────────────────────────────────────────────
+async function fsSetControl(ctrl){
+  if(!FB_READY) return;
+  try {
+    await db.collection(FS_COL.controles).doc(String(ctrl.id)).set(ctrl);
+  } catch(e){ setSyncStatus("error"); }
+}
+
+async function fsDeleteControl(id){
+  if(!FB_READY) return;
+  try { await db.collection(FS_COL.controles).doc(String(id)).delete(); }
+  catch(e){ setSyncStatus("error"); }
+}
+
+// ── Save users to Firestore ───────────────────────────────────────────────────
+async function fsSaveUsers(users){
+  if(!FB_READY) return;
+  try {
+    const batch = db.batch();
+    users.forEach(u=>{
+      batch.set(db.collection(FS_COL.users).doc(String(u.id)), u);
+    });
+    await batch.commit();
+  } catch(e){ setSyncStatus("error"); }
+}
+
+// ── Save config to Firestore ──────────────────────────────────────────────────
+async function fsSaveConfig(config){
+  if(!FB_READY) return;
+  try {
+    await db.collection(FS_COL.config).doc("main").set({config});
+  } catch(e){ setSyncStatus("error"); }
+}
+
+const DEFAULT_USERS = [
+  {id:1,name:"Dr. Fernandez",username:"fernandez",password:"Fernandez2024",role:"admin",active:true},
+  {id:2,name:"Dr. Kosche",   username:"kosche",   password:"Kosche2024",   role:"user", active:true},
+  {id:3,name:"Dr. Espinoza", username:"espinoza", password:"Espinoza2024", role:"user", active:true},
+  {id:4,name:"Dr. Rubio",    username:"rubio",    password:"Rubio2024",    role:"user", active:true},
+  {id:5,name:"Demo",         username:"demo",     password:"demo",         role:"demo", active:true},
+];
+
+const DEFAULT_CONFIG = {
+  cirujanos:    ["Dr. Kosche","Dr. Espinoza","Dr. Fernandez","Dr. Rubio"],
+  indicaciones: ["Gonartrosis primaria","Artritis reumatoidea","Post-traumática","Osteonecrosis","Otra"],
+  cirugiaPrevia:["No","Artroscopia","Osteotomía","PTR contralateral","Otra"],
+  tecnicas:     ["Convencional intramedular","Convencional extramedular","Mixto (endomed. fémur + extramed. tibia)","Navegación","PSI","Robótica"],
+  implantes:    ["Sigma (DePuy)","Nexgen (Zimmer)","Triathlon (Stryker)","Attune (DePuy)","Persona (Zimmer)","Otro"],
+  conservLCA:   ["PS (sacrifica LCA)","CR (conserva LCA)","UCR","No"],
+  alturaRot:    ["Normal","Patela alta","Patela baja"],
+  subluxRot:    ["No","Leve","Moderada","Severa"],
+  infeccion:    ["No","Superficial","Profunda < 3m","Profunda > 3m"],
+  tvp:          ["No","TVP","TEP","TVP + TEP"],
+  rigidez:      ["No","Sí - conservador","Sí - manipulación","Sí - revisión"],
+  aflojamiento: ["No","Femoral","Tibial","Ambos"],
+};
+
+const CONFIG_LABELS = {
+  cirujanos:"Cirujanos",implantes:"Implantes",tecnicas:"Técnicas de corte",
+  indicaciones:"Indicaciones",cirugiaPrevia:"Cirugía previa",conservLCA:"Conservación LCA",
+  alturaRot:"Altura rotuliana",subluxRot:"Subluxación rotuliana",
+  infeccion:"Infección",tvp:"TVP/TEP",rigidez:"Rigidez",aflojamiento:"Aflojamiento"
+};
+
+const TABS = [
+  {id:"demografico",   label:"👤 Paciente"},
+  {id:"preop_rx",      label:"🦴 RX Pre-op"},
+  {id:"preop_scores",  label:"📊 Scores Pre"},
+  {id:"quirurgico",    label:"🔧 Quirúrgico"},
+  {id:"mako",          label:"🤖 Mako"},
+  {id:"postop_rx",     label:"📐 RX Post-op"},
+  {id:"controles",     label:"📅 Controles"},
+  {id:"seguimiento",   label:"📋 Seguimiento"},
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let STATE = {
+  user: null,
+  users: lsGet(KEYS.users, DEFAULT_USERS),
+  config: lsGet(KEYS.config, DEFAULT_CONFIG),
+  patients: lsGet(KEYS.patients, []),
+  view: "list",       // list | form | config
+  tab: "demografico",
+  editId: null,
+  form: emptyForm(),
+  configSec: "listas",
+  editListKey: null,
+  editListDraft: [],
+  pwdTarget: null,
+  savedFlash: false,
+  configFlash: "",
+  customFields: lsGet("ptr_customFields_v1", []),
+  cfNew: {label:"",type:"text",section:"demografico"},
+  dashView: "stats",  // stats | custom
+  customChart: {xKey:"ejeMecanico",yKey:"ejeMecanico_post",groupKey:""},
+  currentControles: [],
+  modal: null,
+};
+
+// ── Storage ───────────────────────────────────────────────────────────────────
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+// ── Empty form ────────────────────────────────────────────────────────────────
+function emptyForm(){
+  return {
+    id:Date.now(),fechaRegistro:new Date().toISOString().split("T")[0],
+    nombre:"",rut:"",fechaNac:"",edad:"",correo:"",sexo:"",lado:"",imc:"",asa:"",
+    dm:"",hta:"",tabaco:"",anticoagulacion:"",indicacion:"",tiempoEvolucion:"",cirugiaPrevia:"",
+    kellgren:"",morfotipo:"",varo_valgo_clinico:"",ejeMecanico:"",vca:"",mad:"",
+    aLDFA:"",mLDFA:"",mpta:"",jlca:"",tibialSlope:"",pco_pre:"",aco_pre:"",is_pre:"",cd_dist_pre:"",cd_sup_pre:"",subluxRotuliana:"",extension_pre:"",flexion_pre:"",
+    kssKnee_pre:"",kssFuncion_pre:"",womac_pre:"",oxford_pre:"",vas_pre:"",tug_pre:"",
+    cirujano:"",fechaCx:"",implante:"",tamFemur:"",tamTibia:"",tamInserto:"",tamRotula:"",
+    tecnica:"",conservacionLca:"",liberaciones:"",patella_resurfacing:"",tourniquet:"",tiempoCirugia:"",sangrado:"",
+    ejeMecanico_post:"",mad_post:"",mLDFA_post:"",aLDFA_post:"",mpta_post:"",dffa:"",atfa:"",tibialSlope_post:"",pco_post:"",aco_post:"",is_post:"",cd_dist_post:"",cd_sup_post:"",
+    // post-op scores now stored in controles system (not in patient form)
+    infeccion:"",tvp_tep:"",rigidez:"",aflojamiento:"",fractura_periprotesica:"",
+    revision:"",otras_complicaciones:"",notas:"",
+    mako_usado:"",mako_hka_plan:"",mako_hka_real:"",mako_dffa_plan:"",mako_dffa_real:"",mako_atfa_plan:"",mako_atfa_real:"",mako_slope_plan:"",mako_slope_real:"",mako_flex_gap:"",mako_ext_gap:"",mako_balance_flex:"",mako_balance_ext:"",mako_reseccion_femoral:"",mako_reseccion_tibial:"",mako_notas:"",
+  };
+}
+
+// ── Date helpers ──────────────────────────────────────────────────────────────
+const DAYS   = Array.from({length:31},(_,i)=>String(i+1).padStart(2,"0"));
+const CY     = new Date().getFullYear();
+
+function dateInpHTML(key, disabled, autoAge){
+  const dis = disabled ? "disabled" : "";
+  const val = STATE.form[key]||"";
+  const bg  = disabled ? "#f1f5f9" : "#f8fafc";
+  const onChange = autoAge
+    ? `onchange="setFormField('${key}',this.value);calcEdad(this.value)"`
+    : `onchange="setFormField('${key}',this.value)"`;
+  return `<input type="date" value="${val}" ${dis} ${onChange} style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;color:#1e293b;background:${bg};outline:none">`;
+}
+function calcEdad(fechaNac){
+  if(!fechaNac){ STATE.form.edad=""; updateEdadDisplay(); return; }
+  const hoy=new Date(), nac=new Date(fechaNac);
+  let e=hoy.getFullYear()-nac.getFullYear();
+  const mo=hoy.getMonth()-nac.getMonth();
+  if(mo<0||(mo===0&&hoy.getDate()<nac.getDate())) e--;
+  STATE.form.edad=(e>=0&&e<130)?String(e):"";
+  updateEdadDisplay();
+}
+function updateEdadDisplay(){
+  const el=document.getElementById("edad-display");
+  if(el) el.textContent=STATE.form.edad?STATE.form.edad+" años":"—";
+}
+
+// ── Render helpers ────────────────────────────────────────────────────────────
+function field(label, html, span=1){
+  return `<div class="field${span>1?" span-"+span:""}"><label>${label}</label>${html}</div>`;
+}
+function txtInp(key, placeholder="", disabled=false){
+  const dis = disabled?"disabled":"";
+  const val = (STATE.form[key]||"").replace(/"/g,"&quot;");
+  return `<input type="text" value="${val}" placeholder="${placeholder}" ${dis} oninput="setFormField('${key}',this.value)">`;
+}
+function numInp(key, placeholder="", step="", min="", max="", disabled=false){
+  const dis = disabled?"disabled":"";
+  const val = STATE.form[key]||"";
+  const attrs = [step?`step="${step}"`:"",min?`min="${min}"`:"",max?`max="${max}"`:""].filter(Boolean).join(" ");
+  return `<input type="number" value="${val}" placeholder="${placeholder}" ${attrs} ${dis} oninput="setFormField('${key}',this.value)">`;
+}
+function selInp(key, opts, disabled=false){
+  const dis = disabled?"disabled":"";
+  const cur = STATE.form[key]||"";
+  const options = opts.map(o=>`<option value="${o}"${cur===o?" selected":""}>${o}</option>`).join("");
+  return `<select ${dis} onchange="setFormField('${key}',this.value)"><option value="">— Seleccionar —</option>${options}</select>`;
+}
+function secTitle(icon, title, sub=""){
+  return `<div class="sec-title"><span class="icon">${icon}</span><div><h3>${title}</h3>${sub?`<p>${sub}</p>`:""}</div></div>`;
+}
+function infoBox(html, cls="info-blue"){
+  return `<div class="info-box ${cls}">${html}</div>`;
+}
+
+// ── Tabs content ──────────────────────────────────────────────────────────────
+
+// ── Custom fields renderer ────────────────────────────────────────────────────
+function customFieldsHTML(sectionId, ro){
+  const fields = STATE.customFields.filter(f=>f.section===sectionId);
+  if(!fields.length) return "";
+  const items = fields.map(f=>{
+    const key=f.key;
+    if(f.type==="number"){
+      return field(f.label, numInp(key,"","","","",ro));
+    } else if(f.type==="select"){
+      return field(f.label, selInp(key, f.opts||[], ro));
+    } else {
+      return field(f.label, txtInp(key,"",ro));
+    }
+  }).join("");
+  return `<div style="margin-top:13px;border-top:2px dashed #e2e8f0;padding-top:13px">
+    <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">&#10133; Campos personalizados</div>
+    <div class="grid-3">${items}</div>
+  </div>`;
+}
+
+function tabDemografico(ro){
+  const cfg = STATE.config;
+  return `<div class="card">
+    ${secTitle("👤","Datos del Paciente","Información demográfica y antecedentes")}
+    <div class="grid-3">
+      ${field("Nombre / Iniciales", txtInp("nombre","Ej: J.G.L.",ro), 2)}
+      ${field("RUT", `<input type="text" id="f-rut" value="${STATE.form.rut||''}" ${ro?"disabled":""} oninput="formatRutInput(this)" placeholder="12.345.678-9" maxlength="12" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">`)}
+      ${field("Correo electrónico", `<input type="email" value="${STATE.form.correo||""}" placeholder="paciente@correo.com" ${ro?"disabled":""} oninput="setFormField('correo',this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;background:#f8fafc;outline:none">`)}
+      ${field("Fecha de Nacimiento", dateInpHTML("fechaNac",ro,true))}
+      ${field("Edad (años)", `<div id="edad-display" style="padding:8px 11px;background:#f1f5f9;border:1.5px solid #e2e8f0;border-radius:6px;color:#0f4c81;font-weight:700;font-size:14px">${STATE.form.edad ? STATE.form.edad+" años" : "—"}</div>`)}
+      ${field("Sexo", selInp("sexo",["Masculino","Femenino"],ro))}
+      ${field("Lado operado", selInp("lado",["Derecho","Izquierdo"],ro))}
+      ${field("IMC (kg/m²)", numInp("imc","","0.1","","",ro))}
+      ${field("ASA", selInp("asa",["I","II","III","IV"],ro))}
+    </div>
+    <div class="grid-4" style="margin-top:13px">
+      ${field("Diabetes", selInp("dm",["No","Sí controlada","Sí descompensada"],ro))}
+      ${field("HTA", selInp("hta",["No","Sí controlada","Sí"],ro))}
+      ${field("Tabaquismo", selInp("tabaco",["No","Ex-fumador","Sí"],ro))}
+      ${field("Anticoagulación", selInp("anticoagulacion",["No","Sí"],ro))}
+    </div>
+    <div class="grid-3" style="margin-top:13px">
+      ${field("Indicación", selInp("indicacion",cfg.indicaciones,ro))}
+      ${field("Tiempo de evolución", selInp("tiempoEvolucion",["< 1 año","1-3 años","3-5 años","> 5 años"],ro))}
+      ${field("Cirugía previa", selInp("cirugiaPrevia",cfg.cirugiaPrevia,ro))}
+    </div>
+  
+    ${customFieldsHTML('demografico',ro)}</div>`;
+}
+
+function tabPreopRx(ro){
+  const cfg = STATE.config;
+  return `<div class="card">
+    ${secTitle("🦴","Análisis Radiológico Pre-operatorio","Teleradiografía AP en carga · RX AP / Lateral / Axial / Rosenberg")}
+    ${infoBox("<strong>VN:</strong> HKA 0°±3° &nbsp;|&nbsp; MAD ±10mm &nbsp;|&nbsp; aLDFA 85°±2° &nbsp;|&nbsp; mLDFA 87°±3° &nbsp;|&nbsp; MPTA 87-90° &nbsp;|&nbsp; JLCA &lt;2° &nbsp;|&nbsp; TS 5-7° &nbsp;|&nbsp; IS 0.8-1.2")}
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Clínico</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("Kellgren-Lawrence", selInp("kellgren",["I","II","III","IV"],ro))}
+      ${field("Morfotipo clínico", selInp("morfotipo",["Varo","Valgo","Neutro"],ro))}
+      ${field("Varo/Valgo clínico (°)", numInp("varo_valgo_clinico","(+) valgo / (-) varo","0.5","","",ro))}
+      ${field("Extensión pre-op (°)", numInp("extension_pre","0 = completa","1","","",ro))}
+      ${field("Flexión pre-op (°)", numInp("flexion_pre","ej: 110","1","","",ro))}
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Eje Mecánico (Teleradiografía)</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("HKA (°)", numInp("ejeMecanico","(-) varo / (+) valgo","0.5","","",ro))}
+      ${field("MAD (mm)", numInp("mad","(-) medial / (+) lateral","1","","",ro))}
+      ${field("JLCA (°)", numInp("jlca","VN < 2°","0.5","","",ro))}
+      ${field("mLDFA (°)", numInp("mLDFA","VN 87°±3°","0.5","","",ro))}
+      ${field("MPTA (°)", numInp("mpta","VN 87-90°","0.5","","",ro))}
+      ${field("VCA / aFTA (°)", numInp("vca","","0.5","","",ro))}
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Eje Anatómico</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("aLDFA (°)", numInp("aLDFA","VN 85°±2°","0.5","","",ro))}
+      ${field("Tibial Slope / TS (°)", numInp("tibialSlope","VN 5-7°","0.5","","",ro))}
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Rótula</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("Dist. P-PTA (cm)", `<input type="number" step="0.1" placeholder="polo inf. → borde ant. platillo" ${ro?"disabled":""} value="${STATE.form.cd_dist_pre||""}" oninput="setFormField('cd_dist_pre',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${field("Sup. Articular Pat. (cm)", `<input type="number" step="0.1" placeholder="longitud sup. articular patelar" ${ro?"disabled":""} value="${STATE.form.cd_sup_pre||""}" oninput="setFormField('cd_sup_pre',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${field("PCO — Post. Condylar Offset (cm)", `<input type="number" step="0.1" ${ro?"disabled":""} value="${STATE.form.pco_pre||""}" oninput="setFormField('pco_pre',this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${field("ACO — Ant. Condylar Offset (cm)", `<input type="number" step="0.1" ${ro?"disabled":""} value="${STATE.form.aco_pre||""}" oninput="setFormField('aco_pre',this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${(()=>{ const d=Number(STATE.form.cd_dist_pre||0),s=Number(STATE.form.cd_sup_pre||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'><span id='cd-display-pre'>${cd}</span> <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
+      ${field("Subluxación rotuliana", selInp("subluxRotuliana",cfg.subluxRot,ro))}
+    </div>
+
+    <div class="info-box info-yellow" style="margin-bottom:0">
+      <strong>MAD:</strong> Medial (varo) = negativo · Lateral (valgo) = positivo &nbsp;|&nbsp;
+      <strong>IS:</strong> &lt;0.8 patela baja · &gt;1.2 patela alta
+    </div>
+    ${customFieldsHTML('preop_rx',ro)}</div>`;
+}
+
+function tabPreopScores(ro){
+  const f = STATE.form;
+  const scoreBtn=(label,key,val,color,scoreKey)=>`
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em">${label}</div>
+      <button onclick="${ro?'':`openPreopScoreModal('${scoreKey}')`}"
+        style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:8px;border:2px solid ${val?color:"#e2e8f0"};background:${val?color+"18":"#f8fafc"};cursor:${ro?"not-allowed":"pointer"};width:100%">
+        <span style="font-size:20px;font-weight:800;color:${val?color:"#cbd5e1"}">${val||"—"}</span>
+        <span style="font-size:11px;color:${val?"#64748b":"#94a3b8"}">${val?"✓ Calculado":"Abrir calculadora"}</span>
+      </button>
+    </div>`;
+
+  return `<div class="card">
+    ${secTitle("📊","Scores Funcionales Pre-operatorios","Clic en cada score para abrir la calculadora")}
+    ${infoBox("Los scores <strong>Oxford y WOMAC</strong> son completados por el paciente · <strong>KSS</strong> lo completa el médico en la consulta","info-blue")}
+    <div class="grid-2" style="margin-bottom:16px">
+      ${scoreBtn("KSS Knee (0-100)", "kssKnee_pre", f.kssKnee_pre, "#0f4c81", "kss_knee_pre")}
+      ${scoreBtn("KSS Function (0-100)", "kssFuncion_pre", f.kssFuncion_pre, "#1e6fb5", "kss_func_pre")}
+      ${scoreBtn("Oxford Knee (12-48)", "oxford_pre", f.oxford_pre, "#7c3aed", "oxford_pre")}
+      ${scoreBtn("WOMAC Total (0-96)", "womac_pre", f.womac_pre, "#0891b2", "womac_pre")}
+    </div>
+    <div class="grid-3">
+      <div class="field">
+        <label>VAS Dolor (0-10) — paciente</label>
+        <input type="number" value="${f.vas_pre||""}" step="0.5" min="0" max="10" placeholder="0-10" ${ro?"disabled":""}
+          oninput="setFormField('vas_pre',this.value)"
+          style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;background:#f8fafc;outline:none">
+      </div>
+      <div class="field">
+        <label>TUG Test (segundos)</label>
+        <input type="number" value="${f.tug_pre||""}" step="0.1" placeholder="seg" ${ro?"disabled":""}
+          oninput="setFormField('tug_pre',this.value)"
+          style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;background:#f8fafc;outline:none">
+      </div>
+    </div>
+    ${customFieldsHTML('preop_scores',ro)}</div>`;
+}
+
+function tabQuirurgico(ro){
+  const cfg = STATE.config;
+  return `<div class="card">
+    ${secTitle("🔧","Datos Quirúrgicos","Cirujano, implante y técnica utilizada")}
+    <div class="grid-3">
+      ${field("Cirujano", selInp("cirujano",cfg.cirujanos,ro))}
+      ${field("Fecha de cirugía", dateInpHTML("fechaCx",ro,false), 2)}
+      ${field("Sistema de implante", selInp("implante",cfg.implantes,ro))}
+      ${field("Técnica de cortes", selInp("tecnica",cfg.tecnicas,ro))}
+      ${field("Conservación LCA", selInp("conservacionLca",cfg.conservLCA,ro))}
+      ${field("Tamaño Fémur", txtInp("tamFemur","",ro))}
+      ${field("Tamaño Tibia", txtInp("tamTibia","",ro))}
+      ${field("Espesor Inserto (mm)", txtInp("tamInserto","",ro))}
+      ${field("Resurfacing rotuliano", selInp("patella_resurfacing",["No","Sí"],ro))}
+      ${field("Tamaño Rótula (mm)", txtInp("tamRotula","",ro))}
+      ${field("Tourniquet", selInp("tourniquet",["Sí","No","Parcial"],ro))}
+      ${field("Liberaciones", txtInp("liberaciones","Ej: retináculo lateral...",ro), 2)}
+      ${field("Tiempo quirúrgico (min)", numInp("tiempoCirugia","","1","","",ro))}
+      ${field("Sangrado estimado (ml)", numInp("sangrado","","10","","",ro))}
+    </div>
+  
+    ${customFieldsHTML('quirurgico',ro)}</div>`;
+}
+
+function tabPostopRx(ro){
+  const cfg = STATE.config;
+  return `<div class="card">
+    ${secTitle("📐","Análisis Radiológico Post-operatorio","RX AP + Lateral en carga · 6 semanas post-op")}
+    ${infoBox("<strong>Objetivos:</strong> HKA 0°±3° &nbsp;|&nbsp; MAD ≤10mm &nbsp;|&nbsp; mLDFA 87°±3° &nbsp;|&nbsp; aLDFA 85°±2° &nbsp;|&nbsp; MPTA 87-90° &nbsp;|&nbsp; DFFA 87-90° &nbsp;|&nbsp; TS 3-5°")}
+
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("HKA Post-op (°)", numInp("ejeMecanico_post","(-) varo / (+) valgo","0.5","","",ro))}
+      ${field("MAD Post-op (mm)", numInp("mad_post","(-) medial / (+) lateral","1","","",ro))}
+      ${field("mLDFA Post-op (°)", numInp("mLDFA_post","VN 87°±3°","0.5","","",ro))}
+      ${field("aLDFA Post-op (°)", numInp("aLDFA_post","VN 85°±2°","0.1","","",ro))}
+      ${field("MPTA Post-op (°)", numInp("mpta_post","VN 87-90°","0.1","","",ro))}
+      ${field("DFFA — Flexión Femoral (°)", numInp("dffa","VN 87-90°","0.5","","",ro))}
+      ${field("Tibial Slope Post-op / TS (°)", numInp("tibialSlope_post","Obj: 3-5°","0.5","","",ro))}
+      ${field("PCO Post-op (cm)", `<input type="number" step="0.1" ${ro?"disabled":""} value="${STATE.form.pco_post||""}" oninput="setFormField('pco_post',this.value);setTimeout(renderOffsets,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${(()=>{
+        const pre=Number(STATE.form.pco_pre||0), post=Number(STATE.form.pco_post||0);
+        const ratio=(pre>0&&post>0)?(post/pre).toFixed(2):"—";
+        const ok=ratio!=="—"&&Number(ratio)>=1;
+        const col=ratio==="—"?"#94a3b8":ok?"#15803d":"#dc2626";
+        return field("PCO Ratio (post/pre)",`<div style="padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}"><span id="pco-ratio-display">${ratio}</span> <span style="font-size:11px;font-weight:400;color:#94a3b8">VN ≥1.0</span></div>`);
+      })()}
+      ${field("ACO Post-op (cm)", `<input type="number" step="0.1" ${ro?"disabled":""} value="${STATE.form.aco_post||""}" oninput="setFormField('aco_post',this.value);setTimeout(renderOffsets,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${(()=>{
+        const pre=Number(STATE.form.aco_pre||0), post=Number(STATE.form.aco_post||0);
+        const ratio=(pre>0&&post>0)?(post/pre).toFixed(2):"—";
+        const ok=ratio!=="—"&&Number(ratio)>=1;
+        const col=ratio==="—"?"#94a3b8":ok?"#15803d":"#dc2626";
+        return field("ACO Ratio (post/pre)",`<div style="padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}"><span id="aco-ratio-display">${ratio}</span> <span style="font-size:11px;font-weight:400;color:#94a3b8">VN ≥1.0</span></div>`);
+      })()}
+      ${field("Dist. P-PTA Post-op (cm)", `<input type="number" step="0.1" placeholder="polo inf. → borde ant. platillo" ${ro?"disabled":""} value="${STATE.form.cd_dist_post||""}" oninput="setFormField('cd_dist_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${field("Sup. Articular Pat. Post-op (cm)", `<input type="number" step="0.1" placeholder="longitud sup. articular patelar" ${ro?"disabled":""} value="${STATE.form.cd_sup_post||""}" oninput="setFormField('cd_sup_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${(()=>{ const d=Number(STATE.form.cd_dist_post||0),s=Number(STATE.form.cd_sup_post||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps Post-op',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'><span id='cd-display-post'>${cd}</span> <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
+    </div>
+
+    ${customFieldsHTML('postop_rx',ro)}</div>`;
+}
+
+function tabSeguimiento(ro){
+  const cfg = STATE.config;
+  const nota = (STATE.form.notas||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const otras = (STATE.form.otras_complicaciones||"").replace(/"/g,"&quot;");
+  return `<div class="card">
+    ${secTitle("📋","Complicaciones y Seguimiento")}
+    <div class="grid-3">
+      ${field("Infección", selInp("infeccion",cfg.infeccion,ro))}
+      ${field("TVP / TEP", selInp("tvp_tep",cfg.tvp,ro))}
+      ${field("Rigidez (< 90°)", selInp("rigidez",cfg.rigidez,ro))}
+      ${field("Aflojamiento aséptico", selInp("aflojamiento",cfg.aflojamiento,ro))}
+      ${field("Fractura periprotésica", selInp("fractura_periprotesica",["No","Sí"],ro))}
+      ${field("Revisión", selInp("revision",["No","Sí"],ro))}
+      <div class="field span-3"><label>Otras complicaciones</label>
+        <input type="text" value="${otras}" ${ro?"disabled":""} oninput="setFormField('otras_complicaciones',this.value)">
+      </div>
+      <div class="field span-3"><label>Notas clínicas</label>
+        <textarea ${ro?"disabled":""} oninput="setFormField('notas',this.value)">${nota}</textarea>
+      </div>
+    </div>
+  
+    ${customFieldsHTML('seguimiento',ro)}</div>`;
+}
+
+// ── Views ─────────────────────────────────────────────────────────────────────
+function tabMako(ro){
+  return `<div class="card">
+    ${secTitle("🤖","Cirugía Robótica MAKO (Stryker)","Datos del sistema de planificación y ejecución robótica")}
+
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("Cirugía con MAKO", `<select ${ro?"disabled":""} onchange="setFormField('mako_usado',this.value);render()" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:14px;background:#f8fafc;outline:none;cursor:pointer"><option value="">— Seleccionar —</option>${["No","Sí"].map(o=>`<option value="${o}"${STATE.form.mako_usado===o?" selected":""}>${o}</option>`).join("")}</select>`)}
+    </div>
+
+    ${STATE.form.mako_usado==="Sí" ? `
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plan vs Real — Eje Mecánico</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("HKA Planificado (°)", numInp("mako_hka_plan","","0.5","","",ro))}
+      ${field("HKA Real ejecutado (°)", numInp("mako_hka_real","","0.5","","",ro))}
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plan vs Real — Componente Femoral</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("DFFA Planificado (°)", numInp("mako_dffa_plan","","0.5","","",ro))}
+      ${field("DFFA Real (°)", numInp("mako_dffa_real","","0.5","","",ro))}
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Plan vs Real — Componente Tibial</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("aTFA Planificado (°)", numInp("mako_atfa_plan","","0.5","","",ro))}
+      ${field("aTFA Real (°)", numInp("mako_atfa_real","","0.5","","",ro))}
+      ${field("Slope Planificado (°)", numInp("mako_slope_plan","","0.5","","",ro))}
+      ${field("Slope Real (°)", numInp("mako_slope_real","","0.5","","",ro))}
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Balance Ligamentario (Gaps)</div>
+    ${infoBox("Gaps medidos con el sistema MAKO en la mesa quirúrgica, con implantes de prueba","info-blue")}
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("Flexion Gap (mm)", numInp("mako_flex_gap","","0.5","","",ro))}
+      ${field("Extension Gap (mm)", numInp("mako_ext_gap","","0.5","","",ro))}
+      ${field("Balance en Flexión (mm)", numInp("mako_balance_flex","medial vs lateral","0.5","","",ro))}
+      ${field("Balance en Extensión (mm)", numInp("mako_balance_ext","medial vs lateral","0.5","","",ro))}
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Resecciones Óseas</div>
+    <div class="grid-3" style="margin-bottom:14px">
+      ${field("Resección Femoral Distal (mm)", numInp("mako_reseccion_femoral","","0.5","","",ro))}
+      ${field("Resección Tibial (mm)", numInp("mako_reseccion_tibial","","0.5","","",ro))}
+    </div>
+
+    <div class="field" style="margin-bottom:0">
+      <label>Notas MAKO</label>
+      <textarea ${ro?"disabled":""} oninput="setFormField('mako_notas',this.value)" style="min-height:60px">${(STATE.form.mako_notas||"").replace(/</g,"&lt;")}</textarea>
+    </div>
+    ` : `<div class="info-box info-yellow">Seleccione "Sí" en el campo anterior para registrar los datos del sistema MAKO.</div>`}
+
+    ${customFieldsHTML('mako',ro)}</div>`;
+}
+
+function renderLogin(){
+  return `<div id="login-screen">
+    <div class="login-box">
+      <div class="logo">
+        <div class="emoji">🦴</div>
+        <h1>Protocolo PTR</h1>
+        <p>Prótesis Total de Rodilla</p>
+      </div>
+      <div class="field"><label>Usuario</label>
+        <input type="text" id="login-u" placeholder="Ej: fernandez" autocomplete="username" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="field" style="margin-bottom:20px"><label>Contraseña</label>
+        <input type="password" id="login-p" placeholder="••••••••" autocomplete="current-password" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="login-err" style="display:none" class="login-err">Usuario o contraseña incorrectos.</div>
+      <button class="btn-blue" style="width:100%;padding:12px" onclick="doLogin()">Ingresar</button>
+      <p class="login-note">Acceso restringido — solo personal autorizado</p>
+    </div>
+  </div>`;
+}
+
+function renderList(){
+  const demo = STATE.user.role==="demo";
+  const COLS = [
+    {key:"rut",             label:"RUT"},
+    {key:"nombre",          label:"Paciente"},
+    {key:"cirujano",        label:"Cirujano"},
+    {key:"lado",            label:"Lado"},
+    {key:"fechaCx",         label:"Fecha Cx"},
+    {key:"implante",        label:"Implante"},
+    {key:"sexo",            label:"Sexo"},
+    {key:"edad",            label:"Edad"},
+    {key:"kellgren",        label:"K-L"},
+    {key:"ejeMecanico",     label:"HKA Pre"},
+    {key:"mad",             label:"MAD Pre"},
+    {key:"ejeMecanico_post",label:"HKA Post"},
+    {key:"mad_post",        label:"MAD Post"},
+    // Pre-op
+    {key:"kssKnee_pre",  label:"KSS Pre"},
+    {key:"oxford_pre",   label:"Ox. Pre"},
+    {key:"vas_pre",      label:"VAS Pre"},
+    // 6 meses
+    {key:"_kss_6m",  label:"KSS 6m",   ctrl:true, periodo:"6m",  field:"kss_knee"},
+    {key:"_ox_6m",   label:"Ox. 6m",   ctrl:true, periodo:"6m",  field:"oxford"},
+    {key:"_vas_6m",  label:"VAS 6m",   ctrl:true, periodo:"6m",  field:"vas"},
+    // 12 meses
+    {key:"_kss_12m", label:"KSS 12m",  ctrl:true, periodo:"12m", field:"kss_knee"},
+    {key:"_ox_12m",  label:"Ox. 12m",  ctrl:true, periodo:"12m", field:"oxford"},
+    {key:"_vas_12m", label:"VAS 12m",  ctrl:true, periodo:"12m", field:"vas"},
+    // 24 meses
+    {key:"_kss_24m", label:"KSS 24m",  ctrl:true, periodo:"24m", field:"kss_knee"},
+    {key:"_ox_24m",  label:"Ox. 24m",  ctrl:true, periodo:"24m", field:"oxford"},
+    {key:"_vas_24m", label:"VAS 24m",  ctrl:true, periodo:"24m", field:"vas"},
+    {key:"tecnica",  label:"Técnica"},
+  ];
+  const q = (STATE.listFilter||"").toLowerCase();
+  let pts = STATE.patients.filter(p=>{
+    if(!q) return true;
+    return Object.values(p).some(v=>String(v||"").toLowerCase().includes(q));
+  });
+  if(STATE.sortCol){
+    const k=STATE.sortCol, dir=STATE.sortDir;
+    pts=[...pts].sort((a,b)=>{
+      const av=a[k]||"",bv=b[k]||"";
+      const an=Number(av),bn=Number(bv);
+      if(!isNaN(an)&&!isNaN(bn)&&av!==""&&bv!=="") return (an-bn)*dir;
+      return String(av).localeCompare(String(bv))*dir;
+    });
+  }
+  const thBase="padding:9px 10px;text-align:left;font-weight:700;color:#64748b;font-size:10px;text-transform:uppercase;border-bottom:2px solid #e2e8f0;white-space:nowrap;cursor:pointer;user-select:none;background:#f8fafc;position:sticky;top:0;z-index:1";
+  const arrow=k=>STATE.sortCol===k?(STATE.sortDir===1?" \u25b2":" \u25bc"):" \u25bd";
+  const ths=COLS.map(c=>`<th style="${thBase}" onclick="sortList('${c.key}')">${c.label}${arrow(c.key)}</th>`).join("");
+  // Detect duplicate RUTs — same date = bilateral, different date = second surgery
+  const rutGroups={};
+  STATE.patients.forEach(p=>{
+    if(!p.rut) return;
+    if(!rutGroups[p.rut]) rutGroups[p.rut]=[];
+    rutGroups[p.rut].push(p.fechaCx||"");
+  });
+
+  const rows=pts.map(p=>{
+    const hkaPre=p.ejeMecanico!==""?`<span class="${Math.abs(Number(p.ejeMecanico))>3?"val-bad":"val-ok"}">${p.ejeMecanico}&deg;</span>`:"&mdash;";
+    const madPre=p.mad!==""?`<span class="${Math.abs(Number(p.mad))>10?"val-bad":"val-ok"}">${p.mad}mm</span>`:"&mdash;";
+    const hkaPost=p.ejeMecanico_post!==""?`<span class="${Math.abs(Number(p.ejeMecanico_post))>3?"val-bad":"val-ok"}">${p.ejeMecanico_post}&deg;</span>`:"&mdash;";
+    const madPost=p.mad_post!==""?`<span class="${Math.abs(Number(p.mad_post))>10?"val-bad":"val-ok"}">${p.mad_post}mm</span>`:"&mdash;";
+    const pControles = getControlesPaciente(p.id);
+    const ctrlByPeriodo = {};
+    pControles.forEach(ctrl=>{ ctrlByPeriodo[ctrl.periodo]=ctrl; });
+    const cells=COLS.map(c=>{
+      if(c.key==="ejeMecanico")     return `<td style="padding:8px 10px;white-space:nowrap">${hkaPre}</td>`;
+      if(c.key==="mad")             return `<td style="padding:8px 10px;white-space:nowrap">${madPre}</td>`;
+      if(c.key==="ejeMecanico_post")return `<td style="padding:8px 10px;white-space:nowrap">${hkaPost}</td>`;
+      if(c.key==="mad_post")        return `<td style="padding:8px 10px;white-space:nowrap">${madPost}</td>`;
+      if(c.key==="nombre"){
+        let badge = "";
+        if(p.rut && rutGroups[p.rut] && rutGroups[p.rut].length > 1){
+          const dates = rutGroups[p.rut];
+          const sameDate = dates.every(d=>d===dates[0] && d!=="");
+          if(sameDate)
+            badge = ` <span title="Cirugía bilateral — mismo acto quirúrgico" style="background:#fef9c3;color:#854d0e;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">bilateral</span>`;
+          else
+            badge = ` <span title="Este paciente tiene otro registro en la base de datos" style="background:#e0f2fe;color:#0369a1;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">2 registros</span>`;
+        }
+        return `<td style="padding:8px 10px;white-space:nowrap"><strong>${p.nombre||"&mdash;"}</strong>${badge}</td>`;
+      }
+      if(c.ctrl){
+        const ctrl = ctrlByPeriodo[c.periodo];
+        const val = ctrl ? (ctrl[c.field]||"") : "";
+        return `<td style="padding:8px 10px;white-space:nowrap;text-align:center">${val||"&mdash;"}</td>`;
+      }
+      return `<td style="padding:8px 10px;white-space:nowrap">${p[c.key]||"&mdash;"}</td>`;
+    }).join("");
+    return `<tr style="border-bottom:1px solid #f1f5f9">${cells}<td style="padding:8px 10px;white-space:nowrap"><div style="display:flex;gap:4px"><button class="btn-gray btn-sm" onclick="editPatient(${p.id})">${demo?"&#128065; Ver":"&#9998; Editar"}</button><button class="btn-gray btn-sm" onclick="exportPDF(${p.id})">&#128196; PDF</button>${!demo?`<button class="btn-red" onclick="delPatient(${p.id})">&#128465;</button>`:""}</div></td></tr>`;
+  }).join("");
+  const filterVal=(STATE.listFilter||"").replace(/"/g,"&quot;");
+  const searchBar=`<div style="padding:12px 16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><input type="text" value="${filterVal}" placeholder="Buscar por nombre, cirujano, implante..." oninput="filterList(this.value)" style="flex:1;min-width:200px;padding:7px 12px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none">${STATE.listFilter?'<button class="btn-gray btn-sm" onclick="filterList(\'\')">&times; Limpiar</button>':""}<span style="font-size:12px;color:#94a3b8">${pts.length} de ${STATE.patients.length} pacientes</span></div>`;
+  const tableHTML=pts.length===0?`<div style="padding:40px;text-align:center;color:#94a3b8;font-size:13px">${q?`Sin resultados para &ldquo;${q}&rdquo;`:"Sin pacientes registrados"}</div>`:`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr>${ths}<th style="${thBase};cursor:default"></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  const mainContent=STATE.patients.length===0?`<div class="empty-state"><div class="big">&#129460;</div><strong style="font-size:15px;color:#64748b">Sin pacientes registrados</strong><p style="margin-top:6px;font-size:13px">${demo?"Modo demo &mdash; los datos no se guardan.":'Clic en &quot;+ Nuevo Paciente&quot; para comenzar'}</p></div>`:`<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0">${searchBar}${tableHTML}</div>`;
+  return `<div class="list-header"><div><div style="font-weight:800;font-size:16px;color:#1e293b">${STATE.patients.length} ${STATE.patients.length===1?"paciente registrado":"pacientes registrados"}</div><div style="font-size:12px;color:#94a3b8">Base de datos &middot; Pr&oacute;tesis Total de Rodilla</div></div><div style="display:flex;align-items:center;gap:8px"><div id="sync-status" style="padding:4px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px"></div><button class="btn-gray" onclick="syncFromFirebase()" title="Forzar sincronización" style="padding:6px 10px">☁️</button><button class="btn-gray" onclick="doExport()">&#128229; Exportar Excel (.xlsx)</button>${!demo?`<button class="btn-blue" onclick="newPatient()">+ Nuevo Paciente</button>`:""}</div></div>${mainContent}`;
+}
+
+function filterList(q){ STATE.listFilter=q; render(); }
+function sortList(col){
+  if(STATE.sortCol===col){ STATE.sortDir*=-1; }
+  else { STATE.sortCol=col; STATE.sortDir=1; }
+  render();
+}
+
+
+function renderForm(){
+  const demo = STATE.user.role==="demo";
+  const ro = demo;
+  let content = "";
+  switch(STATE.tab){
+    case "demografico":   content=tabDemografico(ro); break;
+    case "preop_rx":      content=tabPreopRx(ro); break;
+    case "preop_scores":  content=tabPreopScores(ro); break;
+    case "quirurgico":    content=tabQuirurgico(ro); break;
+    case "postop_rx":     content=tabPostopRx(ro); break;
+    case "controles": {
+      const allC = getControles();
+      const eid2 = Number(STATE.editId);
+      STATE.currentControles = allC.filter(x=>Number(x.pacienteId)===eid2);
+      content=tabControles(STATE.editId, STATE.user.role==="demo");
+      break;
+    }
+    case "seguimiento":   content=tabSeguimiento(ro); break;
+    case "mako":          content=tabMako(ro); break;
+  }
+  const tabs = TABS.map(t=>`<button class="tab-btn${STATE.tab===t.id?" active":""}" onclick="switchTab('${t.id}')">${t.label}</button>`).join("");
+  return `
+    ${demo?`<div class="demo-banner">👁️ Modo demo — puede navegar pero los cambios no se guardan.</div>`:""}
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+      <div class="tabs" style="margin-bottom:0">${tabs}</div>
+      ${!demo&&STATE.editId?`<span style="font-size:11px;color:#15803d;font-weight:600">&#10003; Borrador guardado</span>`:(!demo?`<span style="font-size:11px;color:#94a3b8">Se guardará al avanzar</span>`:"")}
+    </div>
+    ${content}
+    <div class="form-footer" style="align-items:center">
+      <button class="btn-gray" onclick="goList()" style="margin-right:auto">← Volver a lista</button>
+      ${(()=>{
+        const ids=TABS.map(t=>t.id), idx=ids.indexOf(STATE.tab), isFirst=idx===0, isLast=idx===ids.length-1;
+        const prevBtn = !isFirst ? `<button class="btn-gray" onclick="prevTab()">← Anterior</button>` : "";
+        const nextBtn = !isLast  ? `<button class="btn-blue" onclick="nextTab()">Siguiente →</button>` : "";
+        const saveBtn = !demo    ? `<button class="btn-blue" style="background:#15803d" onclick="savePatient()">💾 Guardar</button>` : "";
+        return prevBtn + nextBtn + (isLast ? saveBtn : (!demo ? `<button class="btn-gray" onclick="autoSave()" style="font-size:12px">💾 Guardar borrador</button>` + saveBtn : ""));
+      })()}
+    </div>
+    ${STATE.savedFlash?`<div class="save-ok">✓ Guardado correctamente</div>`:""}
+  `;
+}
+
+function renderConfig(){
+  const sec = STATE.configSec;
+  const flash = STATE.configFlash ? `<div class="flash-ok">${STATE.configFlash}</div>` : "";
+
+  const secBtns = `<div style="display:flex;gap:8px;margin-bottom:20px">
+    <button class="btn-${sec==="listas"?"blue":"gray"}" onclick="setCfgSec('listas')" style="font-size:13px;padding:8px 18px">📋 Listas desplegables</button>
+    <button class="btn-${sec==="usuarios"?"blue":"gray"}" onclick="setCfgSec('usuarios')" style="font-size:13px;padding:8px 18px">👥 Usuarios</button>
+    <button class="btn-${sec==="campos"?"blue":"gray"}" onclick="setCfgSec('campos')" style="font-size:13px;padding:8px 18px">&#10133; Campos extra</button>
+  </div>`;
+
+  let body = "";
+  if(sec==="listas"){
+    if(STATE.editListKey){
+      const key = STATE.editListKey;
+      const items = STATE.editListDraft.map((item,i)=>`
+        <div class="cfg-list-item">
+          <span>${item.replace(/</g,"&lt;")}</span>
+          <button class="btn-gray btn-sm" onclick="moveListItem(${i},-1)" ${i===0?"disabled":""}>↑</button>
+          <button class="btn-gray btn-sm" onclick="moveListItem(${i},1)" ${i===STATE.editListDraft.length-1?"disabled":""}>↓</button>
+          <button class="btn-red" onclick="removeListItem(${i})">✕</button>
+        </div>`).join("");
+      body = `<div class="card">
+        ${secTitle("✏️",`Editando: ${CONFIG_LABELS[key]}`)}
+        <div style="margin-bottom:14px">${items}</div>
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <input type="text" id="new-list-item" placeholder="Nuevo elemento..." style="flex:1;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none" onkeydown="if(event.key==='Enter')addListItem()">
+          <button class="btn-green" onclick="addListItem()">+ Agregar</button>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn-gray" onclick="cancelEditList()">Cancelar</button>
+          <button class="btn-blue" onclick="saveList()">💾 Guardar lista</button>
+        </div>
+      </div>`;
+    } else {
+      const cards = Object.entries(CONFIG_LABELS).map(([k,label])=>`
+        <div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px">${label}</div>
+            <div style="font-size:11px;color:#94a3b8">${(STATE.config[k]||[]).length} opciones</div>
+          </div>
+          <button class="btn-gray" style="padding:6px 14px;font-size:12px" onclick="startEditList('${k}')">✏️ Editar</button>
+        </div>`).join("");
+      body = `<div class="card">
+        ${secTitle("📋","Listas desplegables","Modifica las opciones de cada campo")}
+        <div class="grid-2">${cards}</div>
+      </div>`;
+    }
+  } else {
+    const rows = STATE.users.map((u,i)=>{
+      const roleBg = u.role==="admin"?"#dbeafe":u.role==="demo"?"#fef9c3":"#f0fdf4";
+      const roleColor = u.role==="admin"?"#1d4ed8":u.role==="demo"?"#854d0e":"#15803d";
+      const roleLabel = u.role==="admin"?"Admin":u.role==="demo"?"Demo":"Usuario";
+      return `<tr>
+        <td><strong>${u.name}</strong></td>
+        <td style="font-family:monospace;color:#64748b">${u.username}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span id="pwd-display-${u.id}" style="font-family:monospace;font-size:13px;color:#64748b;letter-spacing:.05em">••••••••</span>
+            <button onclick="togglePwdVisible(${u.id},'${u.password}')" style="background:none;border:none;cursor:pointer;font-size:13px;padding:2px 4px" title="Mostrar/ocultar">👁️</button>
+          </div>
+        </td>
+        <td><span class="role-badge" style="background:${roleBg};color:${roleColor}">${roleLabel}</span></td>
+        <td><span class="status-badge" style="background:${u.active?"#f0fdf4":"#fef2f2"};color:${u.active?"#15803d":"#b91c1c"}">${u.active?"Activo":"Inactivo"}</span></td>
+        <td>
+          <div style="display:flex;gap:5px">
+            <button class="btn-gray btn-sm" onclick="startPwd(${u.id})">🔑 Cambiar</button>
+            <button class="btn-gray btn-sm" onclick="toggleUser(${u.id})">${u.active?"🚫 Desact.":"✅ Activar"}</button>
+            <button class="btn-red" onclick="deleteUser(${u.id})">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+
+    const pwdForm = STATE.pwdTarget ? `
+      <div style="margin-top:16px;padding:14px;background:#f0f9ff;border-radius:8px;border:1px solid #bae6fd">
+        <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:10px">Cambiar contraseña de <strong>${STATE.users.find(u=>Number(u.id)===Number(STATE.pwdTarget))?.name}</strong></div>
+        <div style="display:flex;gap:8px">
+          <input type="password" id="new-pwd-${STATE.pwdTarget}" placeholder="Nueva contraseña (mín. 6 caracteres)" style="flex:1;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none">
+          <button class="btn-blue" onclick="savePwd(${STATE.pwdTarget})">Guardar</button>
+          <button class="btn-gray" onclick="cancelPwd()">Cancelar</button>
+        </div>
+      </div>` : "";
+
+    body = `
+      <div class="card">
+        ${secTitle("👥","Usuarios del sistema")}
+        <div style="overflow-x:auto">
+          <table><thead><tr><th>Nombre</th><th>Usuario</th><th>Contraseña</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody>${rows}</tbody></table>
+        </div>
+        ${pwdForm}
+      </div>
+      <div class="card">
+        ${secTitle("➕","Crear nuevo usuario")}
+        <div class="grid-4">
+          <div class="field"><label>Nombre completo</label><input type="text" id="nu-name" placeholder="Dr. García" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"></div>
+          <div class="field"><label>Usuario</label><input type="text" id="nu-user" placeholder="garcia" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"></div>
+          <div class="field"><label>Contraseña inicial</label><input type="text" id="nu-pass" placeholder="mín. 4 caracteres" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none"></div>
+          <div class="field"><label>Rol</label>
+            <select id="nu-role" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;outline:none;cursor:pointer">
+              <option value="user">Usuario</option>
+              <option value="admin">Admin</option>
+              <option value="demo">Demo (solo lectura)</option>
+            </select>
+          </div>
+        </div>
+        <div style="text-align:right;margin-top:12px"><button class="btn-blue" onclick="addUser()">+ Crear usuario</button></div>
+      </div>`;
+  }
+
+
+  if(sec==="campos"){
+    const SECS = [{id:"demografico",l:"Paciente"},{id:"preop_rx",l:"RX Pre-op"},{id:"preop_scores",l:"Scores Pre"},{id:"quirurgico",l:"Quirúrgico"},{id:"postop_rx",l:"RX Post-op"},{id:"seguimiento",l:"Seguimiento"},{id:"mako",l:"Mako"},{id:"controles",l:"Controles"}];
+    const cf = STATE.customFields;
+    const rows = cf.length===0
+      ? `<p style="color:#94a3b8;font-size:13px;padding:12px 0">No hay campos extra aún.</p>`
+      : cf.map((f,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:${i%2===0?"#f8fafc":"#fff"};border-radius:6px;margin-bottom:4px">
+          <span style="flex:1;font-weight:600;font-size:13px">${f.label}</span>
+          <span style="font-size:11px;color:#94a3b8;background:#f1f5f9;border-radius:10px;padding:2px 10px">${SECS.find(s=>s.id===f.section)?.l||f.section}</span>
+          <span style="font-size:11px;color:#94a3b8;background:#f1f5f9;border-radius:10px;padding:2px 10px">${f.type==="number"?"Número":f.type==="select"?"Desplegable":"Texto"}</span>
+          ${f.type==="select"?`<span style="font-size:11px;color:#64748b">${(f.opts||[]).join(", ")}</span>`:""}
+          <button class="btn-red" onclick="delCustomField(${i})">&#128465;</button>
+        </div>`).join("");
+    const secOpts = SECS.map(s=>`<option value="${s.id}"${STATE.cfNew.section===s.id?" selected":""}>${s.l}</option>`).join("");
+    const typeOpts = ["text","number","select"].map(t=>`<option value="${t}"${STATE.cfNew.type===t?" selected":""}>${t==="number"?"Número":t==="select"?"Desplegable":"Texto"}</option>`).join("");
+    const optsRow = STATE.cfNew.type==="select"
+      ? `<div style="margin-top:10px"><label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">Opciones del desplegable (separadas por coma)</label><input type="text" id="cf-opts" placeholder="Ej: Opción A, Opción B, Opción C" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>`
+      : "";
+    body = `<div class="card">
+      <div style="border-bottom:2px solid #f1f5f9;padding-bottom:11px;margin-bottom:16px;display:flex;align-items:center;gap:9px"><span style="font-size:18px">&#10133;</span><div><h3 style="font-weight:800;font-size:14px;color:#0f4c81">Campos extra</h3><p style="font-size:11px;color:#94a3b8">Agrega variables personalizadas a cualquier sección del formulario</p></div></div>
+      <div style="margin-bottom:18px">${rows}</div>
+      <div style="background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;padding:16px">
+        <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:12px">&#8594; Agregar nuevo campo</div>
+        <div class="grid-3">
+          <div class="field"><label>Nombre del campo</label><input type="text" id="cf-label" placeholder="Ej: Rotación femoral" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none"></div>
+          <div class="field"><label>Sección</label><select id="cf-sec" onchange="setCfNew('section',this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none;cursor:pointer"><option value="">— Elegir —</option>${secOpts}</select></div>
+          <div class="field"><label>Tipo de campo</label><select id="cf-type" onchange="setCfNew('type',this.value)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none;cursor:pointer">${typeOpts}</select></div>
+        </div>
+        ${optsRow}
+        <div style="text-align:right;margin-top:12px"><button class="btn-blue" onclick="addCustomField()">&#10133; Agregar campo</button></div>
+      </div>
+    </div>`;
+  }
+
+  return secBtns + flash + body;
+}
+
+// ── Main render ───────────────────────────────────────────────────────────────
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SISTEMA DE CONTROLES DE SEGUIMIENTO
+// Cada control = { id, pacienteId, periodo, fecha, kss_knee, kss_func,
+//   womac, oxford, vas, tug, extension, flexion, dolor_palp, derrame,
+//   notas, completadoPor }
+// ═══════════════════════════════════════════════════════════════════════════
+
+const PERIODOS = [
+  {id:"preop",  label:"Pre-operatorio"},
+  {id:"6m",     label:"6 meses"},
+  {id:"12m",    label:"12 meses"},
+  {id:"24m",    label:"24 meses"},
+  {id:"3-5a",   label:"3 a 5 años"},
+  {id:"5-9a",   label:"5 a 9 años"},
+  {id:"10a+",   label:"10 años o más"},
+];
+
+function emptyControl(pacienteId){
+  return {
+    id: Date.now(),
+    pacienteId: Number(pacienteId),
+    periodo: "",
+    fecha: "",
+    // Scores médico
+    kss_knee: "", kss_func: "",
+    tug: "",
+    // Scores paciente (PRO)
+    womac_dolor:"",womac_rigidez:"",womac_func:"",womac_total:"",
+    oxford:"",
+    vas:"",
+    // Examen físico
+    extension:"", flexion:"", dolor_palp:"", derrame:"",
+    notas:"",
+  };
+}
+
+function getControles(){ return lsGet("ptr_controles_v1",[]); }
+function saveControles(arr){
+  lsSet("ptr_controles_v1",arr);
+  // Sync individual control changes handled in updateControl/addControl/deleteControl
+}
+function getControlesPaciente(pid){ const npid=Number(pid); return getControles().filter(c=>Number(c.pacienteId)===npid).sort((a,b)=>{
+  const order=PERIODOS.map(p=>p.id);
+  return order.indexOf(a.periodo)-order.indexOf(b.periodo)||a.fecha.localeCompare(b.fecha);
+}); }
+
+// ── Score definitions ────────────────────────────────────────────────────────
+
+const SCORES = {
+
+  kss_knee: {
+    label:"KSS Knee",
+    completadoPor:"medico",
+    max:100,
+    color:"#0f4c81",
+    secciones:[
+      { titulo:"Dolor", key:"dolor", items:[
+        {label:"Sin dolor",pts:50},{label:"Leve o al subir escaleras",pts:40},
+        {label:"Leve u ocasional",pts:30},{label:"Moderado ocasional",pts:20},
+        {label:"Moderado continuo",pts:10},{label:"Severo",pts:0},
+      ]},
+      { titulo:"Rango de movimiento", key:"rom", tipo:"slider", min:0, max:125, step:5,
+        calc: v=>Math.floor(v/5), label_unit:"°", nota:"1 punto cada 5°, máx 25pts" },
+      { titulo:"Estabilidad AP (mm)", key:"estab_ap", items:[
+        {label:"< 5 mm",pts:10},{label:"5-10 mm",pts:5},{label:"> 10 mm",pts:0},
+      ]},
+      { titulo:"Estabilidad ML (°)", key:"estab_ml", items:[
+        {label:"< 5°",pts:15},{label:"6-9°",pts:10},{label:"10-14°",pts:5},{label:"> 15°",pts:0},
+      ]},
+      { titulo:"Deducción — Flexum", key:"ded_flexum", tipo:"deduccion", items:[
+        {label:"Sin flexum",pts:0},{label:"5-10°",pts:-2},{label:"11-15°",pts:-5},
+        {label:"16-20°",pts:-10},{label:"> 20°",pts:-15},
+      ]},
+      { titulo:"Deducción — Alineación", key:"ded_alin", tipo:"deduccion", items:[
+        {label:"5-10° valgo (normal)",pts:0},{label:"0-4° valgo",pts:-3},
+        {label:"11-15° valgo",pts:-3},{label:"Cada grado adicional",pts:-3},
+        {label:"Varo (cada grado)",pts:-3},
+      ]},
+    ]
+  },
+
+  kss_func: {
+    label:"KSS Function",
+    completadoPor:"medico",
+    max:100,
+    color:"#1e6fb5",
+    secciones:[
+      { titulo:"Marcha (distancia)", key:"marcha", items:[
+        {label:"Ilimitada",pts:50},{label:"> 10 cuadras",pts:40},
+        {label:"5-10 cuadras",pts:30},{label:"< 5 cuadras",pts:20},
+        {label:"Solo en casa",pts:10},{label:"No puede caminar",pts:0},
+      ]},
+      { titulo:"Subir escaleras", key:"escaleras", items:[
+        {label:"Sube y baja normalmente",pts:50},{label:"Sube normalmente, baja con barandilla",pts:40},
+        {label:"Sube y baja con barandilla",pts:30},{label:"Sube con barandilla, no baja",pts:15},
+        {label:"No puede",pts:0},
+      ]},
+      { titulo:"Deducción — Ayuda para caminar", key:"ded_ayuda", tipo:"deduccion", items:[
+        {label:"Ninguna",pts:0},{label:"Un bastón",pts:-5},
+        {label:"Dos bastones",pts:-10},{label:"Muletas o andador",pts:-20},
+      ]},
+    ]
+  },
+
+  oxford: {
+    label:"Oxford Knee Score",
+    completadoPor:"paciente",
+    max:48,
+    min:12,
+    color:"#7c3aed",
+    nota:"12 ítems · 1-4 pts c/u · Mayor = peor (se invierte: 48=mejor, 12=peor)",
+    secciones:[
+      { titulo:"Oxford Knee Score — 12 ítems", key:"oxford_items", tipo:"oxford_12" }
+    ]
+  },
+
+  womac: {
+    label:"WOMAC",
+    completadoPor:"paciente",
+    color:"#0891b2",
+    nota:"Escala Likert 0-4 · Dolor (5 ítems) · Rigidez (2 ítems) · Función (17 ítems)",
+    secciones:[
+      { titulo:"Dolor (5 ítems × 4 = 20 máx)", key:"womac_dolor_items", tipo:"womac_dolor" },
+      { titulo:"Rigidez (2 ítems × 4 = 8 máx)", key:"womac_rigidez_items", tipo:"womac_rigidez" },
+      { titulo:"Función (17 ítems × 4 = 68 máx)", key:"womac_func_items", tipo:"womac_func" },
+    ]
+  },
+
+};
+
+// Oxford 12 preguntas
+const OXFORD_ITEMS = [
+  "¿Cómo describiría el dolor en su rodilla durante las últimas 4 semanas?",
+  "¿Ha tenido dificultad para lavarse y secarse (todo el cuerpo) durante las últimas 4 semanas?",
+  "¿Ha tenido dificultad para entrar o salir de un automóvil o para usar transporte público durante las últimas 4 semanas?",
+  "¿Cuánto tiempo puede caminar antes de que el dolor de rodilla sea severo?",
+  "¿Cuánto dolor de rodilla ha tenido al sentarse o estar acostado durante las últimas 4 semanas?",
+  "¿Ha cojido debido al dolor de rodilla?",
+  "¿Podría arrodillarse y levantarse nuevamente?",
+  "¿Ha tenido dificultad al realizar sus tareas habituales en el hogar?",
+  "¿Cuánto se ha preocupado por su rodilla?",
+  "¿Ha tenido dificultad para subir o bajar un tramo de escaleras?",
+  "¿Ha tenido dificultad al estar de pie por un tiempo prolongado?",
+  "¿Ha tenido dificultad para bajar de la cama?",
+];
+const OXFORD_OPTS = ["Ninguno/Sin dificultad","Muy poco/Poca dificultad","Moderado/Dificultad moderada","Severo/Mucha dificultad","Insoportable/Imposible"];
+
+// WOMAC preguntas
+const WOMAC_DOLOR = [
+  "Al caminar en superficie plana","Al subir o bajar escaleras",
+  "Por la noche en la cama","Al estar sentado o acostado","Al estar de pie",
+];
+const WOMAC_RIGIDEZ = [
+  "¿Cuánta rigidez siente en la mañana al despertar?",
+  "¿Cuánta rigidez siente después de estar sentado/acostado/descansando?",
+];
+const WOMAC_FUNC = [
+  "Bajar escaleras","Subir escaleras","Levantarse después de estar sentado",
+  "Estar de pie","Agacharse al suelo","Caminar en superficie plana",
+  "Entrar y salir del automóvil","Ir de compras","Ponerse medias/calcetines",
+  "Levantarse de la cama","Sacarse medias/calcetines","Estar acostado en cama",
+  "Entrar o salir de la bañera","Estar sentado","Sentarse y pararse del inodoro",
+  "Hacer tareas domésticas pesadas","Hacer tareas domésticas livianas",
+];
+const WOMAC_OPTS = ["Ninguno (0)","Poco (1)","Bastante (2)","Mucho (3)","Muchísimo (4)"];
+
+// ── Modal state ──────────────────────────────────────────────────────────────
+STATE.modal = null; // { scoreKey, controlIdx, values:{} }
+
+function openScoreModalById(scoreKey, ctrlId){
+  const idx = STATE.currentControles.findIndex(c=>Number(c.id)===Number(ctrlId));
+  if(idx===-1) return;
+  openScoreModal(scoreKey, idx);
+}
+function openScoreModal(scoreKey, controlIdx){
+  const ctrl = STATE.currentControles[controlIdx];
+  // Pre-fill existing values
+  let values = {};
+  if(scoreKey==="oxford") values = ctrl._oxford_vals||{};
+  else if(scoreKey==="womac") values = ctrl._womac_vals||{};
+  else {
+    SCORES[scoreKey].secciones.forEach(s=>{ values[s.key]=ctrl[s.key]!==undefined?ctrl[s.key]:""; });
+  }
+  STATE.modal = {scoreKey, controlIdx, values};
+  renderModalOverlay();
+}
+
+function renderModalOverlay(){
+  let el = document.getElementById("score-modal-overlay");
+  if(!el){ el=document.createElement("div"); el.id="score-modal-overlay"; document.body.appendChild(el); }
+  el.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px";
+  el.innerHTML = renderScoreModal();
+}
+
+function closeModal(){
+  const el=document.getElementById("score-modal-overlay");
+  if(el) el.remove();
+  STATE.modal=null;
+}
+
+function renderScoreModal(){
+  const {scoreKey,controlIdx,values} = STATE.modal;
+  // For pre-op modals, scoreDef holds the actual SCORES key
+  const effectiveKey = STATE.modal.scoreDef || scoreKey;
+  const score = SCORES[effectiveKey];
+  let total = 0, maxPts = 0, content = "";
+
+  if(effectiveKey==="oxford"){
+    const vals = values;
+    let sum=0, complete=true;
+    const items = OXFORD_ITEMS.map((q,i)=>{
+      const v = vals[i]!==undefined ? Number(vals[i]) : -1;
+      if(v<0) complete=false; else sum+=v;
+      const opts = OXFORD_OPTS.map((o,j)=>`
+        <label style="display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-radius:6px;cursor:pointer;background:${v===j?"#ede9fe":"transparent"};border:1.5px solid ${v===j?"#7c3aed":"transparent"}">
+          <input type="radio" name="oxford_${i}" value="${j}" ${v===j?"checked":""} onchange="modalSetVal(${i},${j})" style="margin-top:2px;accent-color:#7c3aed">
+          <span style="font-size:13px;color:#334155">${o}</span>
+        </label>`).join("");
+      return `<div style="margin-bottom:14px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0">
+        <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px">${i+1}. ${q}</div>
+        <div>${opts}</div>
+      </div>`;
+    }).join("");
+    // Oxford score: invert (0=best response maps to 4pts, 4=worst maps to 0pts) → 48-sum
+    const rawScore = complete ? 48 - sum : null;
+    total = rawScore;
+    content = `<div style="margin-bottom:12px">${items}</div>`;
+    const badge = complete
+      ? `<div style="background:#7c3aed;color:#fff;border-radius:8px;padding:10px 18px;font-size:18px;font-weight:800;text-align:center">
+          Oxford: ${rawScore}/48 &nbsp;·&nbsp; ${rawScore>=41?"Excelente":rawScore>=34?"Bueno":rawScore>=27?"Regular":"Malo"}
+        </div>`
+      : `<div style="background:#f1f5f9;color:#64748b;border-radius:8px;padding:10px 18px;font-size:13px;text-align:center">Complete todos los ítems para calcular</div>`;
+    content = content + badge;
+
+  } else if(effectiveKey==="womac"){
+    const vals = values;
+    const renderBlock=(items,optList,prefix,title,maxScore)=>{
+      let sum=0, done=true;
+      const rows=items.map((q,i)=>{
+        const k=`${prefix}_${i}`, v=vals[k]!==undefined?Number(vals[k]):-1;
+        if(v<0) done=false; else sum+=v;
+        const opts=optList.map((o,j)=>`
+          <label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;cursor:pointer;background:${v===j?"#e0f2fe":"transparent"};border:1.5px solid ${v===j?"#0891b2":"transparent"}">
+            <input type="radio" name="${k}" value="${j}" ${v===j?"checked":""} onchange="modalSetVal('${k}',${j})" style="accent-color:#0891b2">
+            <span style="font-size:12px">${o}</span>
+          </label>`).join("");
+        return `<div style="margin-bottom:10px;padding:10px;background:#fafafa;border-radius:6px;border:1px solid #e2e8f0">
+          <div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px">${i+1}. ${q}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${opts}</div>
+        </div>`;
+      }).join("");
+      const subTotal=done?sum:null;
+      return `<div style="margin-bottom:18px">
+        <div style="font-weight:700;font-size:13px;color:#0891b2;margin-bottom:8px">${title} ${subTotal!==null?`<span style="background:#0891b2;color:#fff;border-radius:10px;padding:2px 10px;font-size:12px">${subTotal}/${maxScore}</span>`:""}</div>
+        ${rows}
+      </div>`;
+    };
+    const d=renderBlock(WOMAC_DOLOR,WOMAC_OPTS,"wd","Dolor",20);
+    const r=renderBlock(WOMAC_RIGIDEZ,WOMAC_OPTS,"wr","Rigidez",8);
+    const f=renderBlock(WOMAC_FUNC,WOMAC_OPTS,"wf","Función",68);
+    // calc total
+    let dSum=0,rSum=0,fSum=0,allDone=true;
+    WOMAC_DOLOR.forEach((_,i)=>{ const v=vals[`wd_${i}`]; if(v===undefined||v==="") allDone=false; else dSum+=Number(v); });
+    WOMAC_RIGIDEZ.forEach((_,i)=>{ const v=vals[`wr_${i}`]; if(v===undefined||v==="") allDone=false; else rSum+=Number(v); });
+    WOMAC_FUNC.forEach((_,i)=>{ const v=vals[`wf_${i}`]; if(v===undefined||v==="") allDone=false; else fSum+=Number(v); });
+    const wTotal=allDone?dSum+rSum+fSum:null;
+    total=wTotal;
+    const badge=allDone
+      ?`<div style="background:#0891b2;color:#fff;border-radius:8px;padding:10px 18px;font-size:16px;font-weight:800;text-align:center">
+          WOMAC Total: ${wTotal}/96 &nbsp;·&nbsp; Dolor:${dSum}/20 &nbsp;·&nbsp; Rigidez:${rSum}/8 &nbsp;·&nbsp; Función:${fSum}/68
+        </div>`
+      :`<div style="background:#f1f5f9;color:#64748b;border-radius:8px;padding:10px 18px;font-size:13px;text-align:center">Complete todos los ítems</div>`;
+    content=d+r+f+badge;
+
+  } else {
+    // KSS knee o function
+    let runningTotal = 0;
+    score.secciones.forEach(sec=>{
+      const v = values[sec.key];
+      const isDeduccion = sec.tipo==="deduccion";
+      if(sec.tipo==="slider"){
+        const sv = v!==""&&v!==undefined ? Number(v) : 0;
+        const pts = sec.calc(sv);
+        runningTotal+=pts;
+        content+=`<div style="margin-bottom:14px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:12px;font-weight:700;color:#64748b">${sec.titulo}</span>
+            <span style="font-size:13px;font-weight:800;color:#0f4c81">${sv}${sec.label_unit||""} → ${pts} pts</span>
+          </div>
+          <div style="font-size:11px;color:#94a3b8;margin-bottom:8px">${sec.nota}</div>
+          <input type="range" min="${sec.min}" max="${sec.max}" step="${sec.step}" value="${sv}"
+            oninput="modalSetVal('${sec.key}',this.value)"
+            style="width:100%;accent-color:#0f4c81">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8"><span>${sec.min}°</span><span>${sec.max}°</span></div>
+        </div>`;
+      } else {
+        const selectedVal = v!==""&&v!==undefined ? v : null;
+        // selectedVal stored as "pts:idx" to distinguish items with same pts
+        const selectedPts = selectedVal!==null ? Number(String(selectedVal).split(":")[0]) : null;
+        const selectedIdx = selectedVal!==null && String(selectedVal).includes(":") ? Number(String(selectedVal).split(":")[1]) : null;
+        if(selectedPts!==null) runningTotal+=selectedPts;
+        const opts = sec.items.map((item,ii)=>{
+          const isSelected = selectedIdx!==null ? selectedIdx===ii : selectedPts===item.pts;
+          const radioVal = `${item.pts}:${ii}`;
+          return `<label style="display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;background:${isSelected?"#dbeafe":"transparent"};border:1.5px solid ${isSelected?"#0f4c81":"transparent"}">
+            <input type="radio" name="kss_${sec.key}" value="${radioVal}" ${isSelected?"checked":""} onchange="modalSetVal('${sec.key}','${radioVal}')" style="margin-top:2px;accent-color:#0f4c81">
+            <span style="flex:1;font-size:13px;color:#334155">${item.label}</span>
+            <span style="font-size:12px;font-weight:700;color:${item.pts<0?"#dc2626":"#0f4c81"}">${item.pts>=0?"+":""}${item.pts}</span>
+          </label>`;
+        }).join("");
+        content+=`<div style="margin-bottom:12px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0">
+          <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px">${isDeduccion?"⚠️ ":""}${sec.titulo}</div>
+          ${opts}
+        </div>`;
+      }
+    });
+    total=runningTotal;
+    const clamp=Math.max(0,Math.min(100,total));
+    const badge=`<div style="background:#0f4c81;color:#fff;border-radius:8px;padding:10px 18px;font-size:18px;font-weight:800;text-align:center">
+      ${score.label}: ${clamp}/100 ${clamp>=85?"⭐ Excelente":clamp>=70?"✓ Bueno":clamp>=60?"Regular":"⚠ Malo"}
+    </div>`;
+    content=content+badge;
+  }
+
+  return `<div style="background:#fff;border-radius:14px;max-width:640px;width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 25px 60px rgba(0,0,0,.3)">
+    <div style="padding:18px 22px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div>
+        <div style="font-weight:800;font-size:16px;color:#0f4c81">${score.label}</div>
+        <div style="font-size:11px;color:#94a3b8">${score.completadoPor==="paciente"?"📱 Lo completa el paciente":"🩺 Lo completa el médico"}</div>
+      </div>
+      <button onclick="closeModal()" style="background:#f1f5f9;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:#64748b">×</button>
+    </div>
+    <div style="overflow-y:auto;padding:18px 22px;flex:1">${content}</div>
+    <div style="padding:14px 22px;border-top:1px solid #e2e8f0;display:flex;gap:8px;justify-content:flex-end;flex-shrink:0">
+      <button onclick="closeModal()" style="background:#e2e8f0;color:#334155;border:none;border-radius:7px;padding:9px 18px;font-weight:600;cursor:pointer">Cancelar</button>
+      <button onclick="STATE.modal.isPreop?savePreopScoreModal():saveScoreModal()" style="background:#0f4c81;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-weight:700;cursor:pointer">✓ Guardar score</button>
+    </div>
+  </div>`;
+}
+
+function modalSetVal(key,val){
+  STATE.modal.values[key]=val;
+  const scrollEl = document.querySelector("#score-modal-overlay > div > div:nth-child(2)");
+  const scrollPos = scrollEl ? scrollEl.scrollTop : 0;
+  renderModalOverlay();
+  const scrollElAfter = document.querySelector("#score-modal-overlay > div > div:nth-child(2)");
+  if(scrollElAfter) scrollElAfter.scrollTop = scrollPos;
+}
+
+
+// ── Pre-op score modal (saves to STATE.form, not a control) ──────────────────
+function openPreopScoreModal(scoreKey){
+  // Map pre-op keys to score definitions
+  const scoreDefMap = {
+    'kss_knee_pre':  'kss_knee',
+    'kss_func_pre':  'kss_func',
+    'oxford_pre':    'oxford',
+    'womac_pre':     'womac',
+  };
+  const scoreDef = scoreDefMap[scoreKey];
+  // Pre-fill from STATE.form
+  let values = {};
+  if(scoreDef==="oxford") values = STATE.form._oxford_pre_vals||{};
+  else if(scoreDef==="womac") values = STATE.form._womac_pre_vals||{};
+  else {
+    SCORES[scoreDef].secciones.forEach(s=>{ values[s.key]=STATE.form[s.key+"_pre"]||""; });
+  }
+  STATE.modal = {scoreKey, controlIdx:null, values, isPreop:true, scoreDef};
+  renderModalOverlay();
+}
+
+function savePreopScoreModal(){
+  const {scoreDef, values} = STATE.modal;
+  if(scoreDef==="oxford"){
+    STATE.form._oxford_pre_vals = {...values};
+    let sum=0, complete=true;
+    OXFORD_ITEMS.forEach((_,i)=>{ const v=values[i]; if(v===undefined||v==="") complete=false; else sum+=Number(v); });
+    STATE.form.oxford_pre = complete ? String(48-sum) : "";
+  } else if(scoreDef==="womac"){
+    STATE.form._womac_pre_vals = {...values};
+    let dSum=0,rSum=0,fSum=0,allDone=true;
+    WOMAC_DOLOR.forEach((_,i)=>{ const v=values[`wd_${i}`]; if(v===undefined||v==="") allDone=false; else dSum+=Number(v); });
+    WOMAC_RIGIDEZ.forEach((_,i)=>{ const v=values[`wr_${i}`]; if(v===undefined||v==="") allDone=false; else rSum+=Number(v); });
+    WOMAC_FUNC.forEach((_,i)=>{ const v=values[`wf_${i}`]; if(v===undefined||v==="") allDone=false; else fSum+=Number(v); });
+    STATE.form.womac_pre = allDone ? String(dSum+rSum+fSum) : "";
+    STATE.form.womac_dolor_pre = String(dSum);
+    STATE.form.womac_rigidez_pre = String(rSum);
+    STATE.form.womac_func_pre = String(fSum);
+  } else {
+    let total=0;
+    SCORES[scoreDef].secciones.forEach(sec=>{
+      const v=values[sec.key];
+      if(sec.tipo==="slider") total+=sec.calc(Number(v||0));
+      else if(v!==""&&v!==undefined) total+=Number(String(v).split(":")[0]);
+    });
+    const clamp = Math.max(0,Math.min(100,total));
+    if(scoreDef==="kss_knee") STATE.form.kssKnee_pre = String(clamp);
+    else STATE.form.kssFuncion_pre = String(clamp);
+  }
+  closeModal();
+  render();
+}
+
+function saveScoreModal(){
+  const {scoreKey,controlIdx,values}=STATE.modal;
+  const ctrl=STATE.currentControles[controlIdx];
+  if(scoreKey==="oxford"){
+    ctrl._oxford_vals={...values};
+    let sum=0,complete=true;
+    OXFORD_ITEMS.forEach((_,i)=>{ const v=values[i]; if(v===undefined||v==="") complete=false; else sum+=Number(v); });
+    ctrl.oxford=(complete&&Object.keys(values).length===OXFORD_ITEMS.length)?String(48-sum):"";
+  } else if(scoreKey==="womac"){
+    ctrl._womac_vals={...values};
+    let dSum=0,rSum=0,fSum=0,allDone=true;
+    WOMAC_DOLOR.forEach((_,i)=>{ const v=values[`wd_${i}`]; if(v===undefined||v==="") allDone=false; else dSum+=Number(v); });
+    WOMAC_RIGIDEZ.forEach((_,i)=>{ const v=values[`wr_${i}`]; if(v===undefined||v==="") allDone=false; else rSum+=Number(v); });
+    WOMAC_FUNC.forEach((_,i)=>{ const v=values[`wf_${i}`]; if(v===undefined||v==="") allDone=false; else fSum+=Number(v); });
+    ctrl.womac_dolor=String(dSum); ctrl.womac_rigidez=String(rSum); ctrl.womac_func=String(fSum);
+    ctrl.womac_total=allDone?String(dSum+rSum+fSum):"";
+  } else {
+    // KSS
+    let total=0;
+    SCORES[scoreKey].secciones.forEach(sec=>{
+      const v=values[sec.key];
+      ctrl[sec.key]=v;
+      if(sec.tipo==="slider"){ total+=sec.calc(Number(v||0)); }
+      else if(v!==""&&v!==undefined){
+        // value stored as "pts:idx" — extract pts
+        total+=Number(String(v).split(":")[0]);
+      }
+    });
+    // Only save if at least one section was answered
+    const hasAnyKSS = SCORES[scoreKey].secciones.some(sec=>values[sec.key]!==""&&values[sec.key]!==undefined);
+    if(scoreKey==="kss_knee") ctrl.kss_knee=hasAnyKSS?String(Math.max(0,Math.min(100,total))):"";
+    else ctrl.kss_func=hasAnyKSS?String(Math.max(0,Math.min(100,total))):"";
+  }
+  // persist
+  const all=getControles();
+  const idx=all.findIndex(c=>Number(c.id)===Number(ctrl.id));
+  if(idx>=0) all[idx]={...ctrl}; else all.push({...ctrl});
+  saveControles(all);
+  STATE.currentControles[controlIdx]={...ctrl};
+  closeModal();
+  render();
+}
+
+// ── Tab Controles ─────────────────────────────────────────────────────────────
+function tabControles(pacienteId, ro){
+  // Sort controls chronologically by periodo then fecha
+  const periodoOrder = PERIODOS.map(p=>p.id);
+  const controles = [...STATE.currentControles].sort((a,b)=>{
+    const pi = periodoOrder.indexOf(a.periodo) - periodoOrder.indexOf(b.periodo);
+    if(pi!==0) return pi;
+    return (a.fecha||"").localeCompare(b.fecha||"");
+  });
+
+  const addBtn = !ro ? `<button onclick="addControl('${pacienteId}')"
+    style="margin-bottom:14px;padding:11px 20px;border:2px dashed #cbd5e1;border-radius:10px;background:transparent;color:#64748b;font-weight:600;font-size:14px;cursor:pointer;width:100%">
+    + Agregar control de seguimiento
+  </button>` : "";
+
+  if(!controles.length){
+    return `<div>${addBtn}<div class="empty-state"><div class="big">📅</div><strong>Sin controles registrados</strong><p style="font-size:13px;margin-top:6px">Agregue el primer control para comenzar el seguimiento</p></div></div>`;
+  }
+
+  const COL_W = 160; // px per control column
+  const LBL_W = 170; // px for label column
+  const totalW = LBL_W + controles.length * COL_W;
+
+  // ── Score button ──────────────────────────────────────────────────────────
+  const sBtn=(label,scoreKey,ctrlIdx,val,color)=>`
+    <button onclick="${ro?'':`openScoreModalById('${scoreKey}',${ctrlIdx})`}"
+      style="width:${COL_W-20}px;padding:6px 8px;border-radius:6px;border:2px solid ${val?color:"#e2e8f0"};background:${val?color+"18":"#f8fafc"};cursor:${ro?"default":"pointer"};text-align:center;display:block">
+      <div style="font-size:16px;font-weight:800;color:${val?color:"#cbd5e1"}">${val||"—"}</div>
+      <div style="font-size:9px;color:#94a3b8">${val?"calculado":ro?"":"completar"}</div>
+    </button>`;
+
+  // ── Input ─────────────────────────────────────────────────────────────────
+  const inp=(ctrlId,key,val,type="number",step="1",ph="")=>`
+    <input type="${type}" value="${val||""}" step="${step}" placeholder="${ph}" ${ro?"disabled":""}
+      oninput="updateControlById(${ctrlId},'${key}',this.value)"
+      style="width:${COL_W-20}px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;background:#f8fafc;outline:none;display:block">`;
+
+  const sel=(ctrlId,key,val,opts)=>`
+    <select ${ro?"disabled":""} onchange="updateControlById(${ctrlId},'${key}',this.value)"
+      style="width:${COL_W-20}px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;background:#f8fafc;outline:none;cursor:pointer;display:block">
+      <option value="">—</option>
+      ${opts.map(o=>`<option value="${o}"${val===o?" selected":""}>${o}</option>`).join("")}
+    </select>`;
+
+  // ── Column headers ────────────────────────────────────────────────────────
+  const thCols = controles.map((ctrl,i)=>{
+    const pLabel = PERIODOS.find(p=>p.id===ctrl.periodo)?.label||"Sin período";
+    const fechaStr = ctrl.fecha ? ctrl.fecha.split("-").reverse().join("/") : "—";
+    return `<th style="width:${COL_W}px;min-width:${COL_W}px;max-width:${COL_W}px;padding:10px 10px;background:#0f4c81;color:#fff;font-weight:700;font-size:12px;text-align:center;border-right:1px solid rgba(255,255,255,.2);vertical-align:top">
+      <div style="font-size:13px;font-weight:800">${pLabel}</div>
+      <div style="font-size:11px;opacity:.8;margin:3px 0">${fechaStr}</div>
+      ${!ro?`<div style="display:flex;gap:4px;justify-content:center;margin-top:6px">
+        <select onchange="updateControlById(${ctrl.id},'periodo',this.value)"
+          style="font-size:10px;padding:2px 4px;border-radius:4px;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;max-width:90px">
+          ${PERIODOS.map(p=>`<option value="${p.id}"${ctrl.periodo===p.id?" selected":""}>${p.label}</option>`).join("")}
+        </select>
+        <button onclick="deleteControlById(${ctrl.id})" style="background:rgba(220,38,38,.8);color:#fff;border:none;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer">✕</button>
+      </div>
+      <input type="date" value="${ctrl.fecha||""}" onchange="updateControlById(${ctrl.id},'fecha',this.value)"
+        style="margin-top:5px;font-size:10px;padding:2px 4px;border-radius:4px;border:none;background:rgba(255,255,255,.2);color:#fff;outline:none;width:${COL_W-24}px">
+      `:""}
+    </th>`;
+  }).join("");
+
+  // ── Row builder ───────────────────────────────────────────────────────────
+  const TD = `padding:8px 10px;border-bottom:1px solid #f1f5f9;border-right:1px solid #f1f5f9;vertical-align:middle;width:${COL_W}px;min-width:${COL_W}px;max-width:${COL_W}px`;
+  const TH_LBL = `padding:8px 14px;border-bottom:1px solid #f1f5f9;background:#f8fafc;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;width:${LBL_W}px;min-width:${LBL_W}px;max-width:${LBL_W}px`;
+
+  const row=(label,sub,cellFn)=>`<tr>
+    <td style="${TH_LBL}">${label}${sub?`<div style="font-size:9px;color:#94a3b8;font-weight:400;text-transform:none;margin-top:1px">${sub}</div>`:""}</td>
+    ${controles.map((ctrl,i)=>`<td style="${TD}">${cellFn(ctrl,i)}</td>`).join("")}
+  </tr>`;
+
+  const rows = [
+    row("KSS Knee","médico · /100",     (ctrl,i)=>sBtn("KSS Knee","kss_knee",ctrl.id,ctrl.kss_knee,"#0f4c81")),
+    row("KSS Function","médico · /100", (ctrl,i)=>sBtn("KSS Function","kss_func",ctrl.id,ctrl.kss_func,"#1e6fb5")),
+    row("Oxford","paciente · /48",      (ctrl,i)=>sBtn("Oxford","oxford",ctrl.id,ctrl.oxford,"#7c3aed")),
+    row("WOMAC","paciente · /96",       (ctrl,i)=>sBtn("WOMAC","womac",ctrl.id,ctrl.womac_total,"#0891b2")),
+    row("VAS","paciente · 0–10",        (ctrl,i)=>inp(ctrl.id,"vas",ctrl.vas,"number","0.5","0–10")),
+    row("TUG Test","segundos",          (ctrl,i)=>inp(ctrl.id,"tug",ctrl.tug,"number","0.1","seg")),
+    row("Extensión","°",                (ctrl,i)=>inp(ctrl.id,"extension",ctrl.extension,"number","1","0°")),
+    row("Flexión","°",                  (ctrl,i)=>inp(ctrl.id,"flexion",ctrl.flexion,"number","1","120°")),
+    row("Arco","°",                     (ctrl,i)=>{
+      const f=Number(ctrl.flexion||0),e=Number(ctrl.extension||0);
+      return `<div id="arco-${i}" style="padding:5px 8px;background:#f0fdf4;border-radius:6px;font-weight:700;color:#15803d;text-align:center;font-size:14px">${f>0&&f>e?f-e+"°":"—"}</div>`;
+    }),
+    row("Dolor palp.","palpación",      (ctrl,i)=>sel(ctrl.id,"dolor_palp",ctrl.dolor_palp,["No","Leve","Moderado","Severo"])),
+    row("Derrame","articular",          (ctrl,i)=>sel(ctrl.id,"derrame",ctrl.derrame,["No","Leve","Moderado","Severo"])),
+    row("Notas","",                     (ctrl,i)=>`<textarea ${ro?"disabled":""} oninput="updateControlById(${ctrl.id},'notas',this.value)"
+      style="width:${COL_W-20}px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;background:#f8fafc;outline:none;min-height:50px;resize:vertical;display:block">${(ctrl.notas||"").replace(/</g,"&lt;")}</textarea>`),
+  ].join("");
+
+  return `<div>
+    ${addBtn}
+    <div style="overflow-x:auto">
+      <table style="border-collapse:collapse;width:${totalW}px;table-layout:fixed">
+        <colgroup>
+          <col style="width:${LBL_W}px">
+          ${controles.map(()=>`<col style="width:${COL_W}px">`).join("")}
+        </colgroup>
+        <thead><tr>
+          <th style="width:${LBL_W}px;padding:8px 14px;background:#1e293b;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:left">Medición</th>
+          ${thCols}
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:#94a3b8">💡 Clic en los botones para abrir la calculadora · Los demás campos se guardan al escribir</div>
+  </div>`;
+}
+
+function addControl(pacienteId){
+  const ctrl=emptyControl(Number(pacienteId));
+  const all=getControles();
+  all.push(ctrl);
+  saveControles(all);
+  setSyncStatus("syncing"); fsSetControl(ctrl).then(()=>setSyncStatus("synced"));
+  STATE.currentControles = all.filter(x=>Number(x.pacienteId)===Number(pacienteId));
+  render();
+}
+
+function updateControlById(ctrlId,key,val){
+  const idx = STATE.currentControles.findIndex(c=>Number(c.id)===Number(ctrlId));
+  if(idx===-1) return;
+  updateControl(idx,key,val);
+}
+function updateControl(idx,key,val){
+  STATE.currentControles[idx][key]=val;
+  const all=getControles();
+  const ci=all.findIndex(c=>Number(c.id)===Number(STATE.currentControles[idx].id));
+  if(ci>=0) all[ci]={...STATE.currentControles[idx]}; else all.push({...STATE.currentControles[idx]});
+  saveControles(all);
+  setSyncStatus("syncing"); fsSetControl({...STATE.currentControles[idx]}).then(()=>setSyncStatus("synced"));
+  // Update arco display without full re-render (keeps focus)
+  if(key==="flexion"||key==="extension"){
+    const ctrl=STATE.currentControles[idx];
+    const f=Number(ctrl.flexion||0), e=Number(ctrl.extension||0);
+    const arcoEl=document.getElementById("arco-"+idx);
+    if(arcoEl) arcoEl.textContent=(f&&f>e)?f-e+"°":"—";
+  }
+}
+
+function deleteControlById(ctrlId){
+  const idx = STATE.currentControles.findIndex(c=>Number(c.id)===Number(ctrlId));
+  if(idx===-1) return;
+  deleteControl(idx);
+}
+function deleteControl(idx){
+  if(!confirm("¿Eliminar este control?")) return;
+  const ctrl=STATE.currentControles[idx];
+  const all=getControles().filter(c=>Number(c.id)!==Number(ctrl.id));
+  saveControles(all);
+  fsDeleteControl(ctrl.id);
+  STATE.currentControles=STATE.currentControles.filter((_,i)=>i!==idx);
+  render();
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const pts = STATE.patients;
+  if(pts.length===0) return `<div class="empty-state"><div class="big">&#128202;</div><strong style="font-size:15px;color:#64748b">Sin datos para mostrar</strong><p style="font-size:13px;margin-top:6px">Carg\u00e1 pacientes primero</p></div>`;
+
+  const dv = STATE.dashView;
+
+  // ── Helpers ──
+  const nums = (arr,key) => arr.map(p=>p[key]).filter(v=>v!==""&&!isNaN(Number(v))).map(Number);
+  const avg  = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1) : "—";
+  const pct  = (n,d) => d ? Math.round(n/d*100) : 0;
+
+  // ── KPIs ──
+  const hkaPre  = nums(pts,"ejeMecanico");
+  const hkaPost = nums(pts,"ejeMecanico_post");
+  const hkaOK   = hkaPost.filter(v=>Math.abs(v)<=3).length;
+  const kssPre  = nums(pts,"kssKnee_pre");
+  const allCtrlsD = getControles();
+  const kssPostArr = pts.map(p=>{
+    const pc=allCtrlsD.filter(x=>Number(x.pacienteId)===Number(p.id)&&x.kss_knee!=="");
+    return pc.length ? Number(pc[pc.length-1].kss_knee) : NaN;
+  }).filter(x=>!isNaN(x));
+  const kssPost = kssPostArr;
+  const vasPre  = nums(pts,"vas_pre");
+  const vasPost = pts.map(p=>{
+    const pc=allCtrlsD.filter(x=>Number(x.pacienteId)===Number(p.id)&&x.vas!=="");
+    return pc.length ? Number(pc[pc.length-1].vas) : NaN;
+  }).filter(x=>!isNaN(x));
+  const oxPre   = nums(pts,"oxford_pre");
+  const oxPost  = pts.map(p=>{
+    const pc=allCtrlsD.filter(x=>Number(x.pacienteId)===Number(p.id)&&x.oxford!=="");
+    return pc.length ? Number(pc[pc.length-1].oxford) : NaN;
+  }).filter(x=>!isNaN(x));
+  const withPost = pts.filter(p=>p.ejeMecanico_post!=="").length;
+
+  const kpiGrid = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px">
+    <div class="stat-card"><div class="stat-num">${pts.length}</div><div class="stat-label">Pacientes</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#15803d">${withPost>0?pct(hkaOK,withPost)+"%":"—"}</div><div class="stat-label">HKA ±3° post-op</div><div class="stat-sub">${hkaOK}/${withPost} casos</div></div>
+    <div class="stat-card"><div class="stat-num">${avg(hkaPre)}°</div><div class="stat-label">HKA Pre promedio</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#15803d">${avg(hkaPost)}°</div><div class="stat-label">HKA Post promedio</div></div>
+    <div class="stat-card"><div class="stat-num">${avg(kssPre)}</div><div class="stat-label">KSS Pre</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#15803d">${avg(kssPost)}</div><div class="stat-label">KSS Post</div></div>
+    <div class="stat-card"><div class="stat-num">${avg(vasPre)}</div><div class="stat-label">VAS Pre</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#15803d">${avg(vasPost)}</div><div class="stat-label">VAS Post</div></div>
+  </div>`;
+
+  // ── Bar chart helper ──
+  function barChart(title, sub, data, color){
+    const max = Math.max(...data.map(d=>d.v),1);
+    const bars = data.map(d=>`<div class="bar-row">
+      <div class="bar-label">${d.l}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct(d.v,max)}%;background:${color}">${d.v}</div></div>
+    </div>`).join("");
+    return `<div class="chart-wrap"><div class="chart-title">${title}</div><div class="chart-sub">${sub}</div>${bars}</div>`;
+  }
+
+  // ── Count helper ──
+  function countBy(key){
+    const map={};
+    pts.forEach(p=>{ const v=p[key]||"Sin dato"; map[v]=(map[v]||0)+1; });
+    return Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([l,v])=>({l,v}));
+  }
+
+  // ── HKA improvement scatter ──
+  function scatterHKA(){
+    const pairs = pts.filter(p=>p.ejeMecanico!==""&&p.ejeMecanico_post!=="").map(p=>({
+      pre:Number(p.ejeMecanico), post:Number(p.ejeMecanico_post), nombre:p.nombre||"?", id:p.id
+    }));
+    if(!pairs.length) return `<div class="chart-wrap"><div class="chart-title">&#127919; Correcci\u00f3n HKA: Pre vs Post</div><div style="color:#94a3b8;font-size:13px;padding:20px">Sin datos post-op</div></div>`;
+    const allV = [...pairs.map(p=>p.pre),...pairs.map(p=>p.post)];
+    const minV=Math.min(...allV)-2, maxV=Math.max(...allV)+2, range=maxV-minV||1;
+    const W=320,H=220,PAD=40;
+    const sx = v=>PAD+(v-minV)/range*(W-PAD*2);
+    const sy = v=>H-PAD-(v-minV)/range*(H-PAD*2);
+    const dots = pairs.map(p=>{
+      const x1=sx(p.pre),y1=sy(p.pre),x2=sx(p.post),y2=sy(p.post);
+      const col=Math.abs(p.post)<=3?"#15803d":"#dc2626";
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+        <circle cx="${x1}" cy="${y1}" r="5" fill="#94a3b8" stroke="#fff" stroke-width="1.5"><title>${p.nombre} Pre: ${p.pre}°</title></circle>
+        <circle cx="${x2}" cy="${y2}" r="5" fill="${col}" stroke="#fff" stroke-width="1.5"><title>${p.nombre} Post: ${p.post}°</title></circle>`;
+    }).join("");
+    // Zero line
+    const z=sy(0);
+    const zx1=sx(minV), zx2=sx(maxV);
+    // Axis ticks
+    const ticks=[];
+    for(let v=Math.ceil(minV);v<=Math.floor(maxV);v+=2){
+      ticks.push(`<line x1="${sx(v)}" y1="${H-PAD}" x2="${sx(v)}" y2="${H-PAD+4}" stroke="#e2e8f0"/>
+        <text x="${sx(v)}" y="${H-PAD+14}" text-anchor="middle" font-size="9" fill="#94a3b8">${v}°</text>
+        <line x1="${PAD-4}" y1="${sy(v)}" x2="${PAD}" y2="${sy(v)}" stroke="#e2e8f0"/>
+        <text x="${PAD-6}" y="${sy(v)+3}" text-anchor="end" font-size="9" fill="#94a3b8">${v}°</text>`);
+    }
+    return `<div class="chart-wrap">
+      <div class="chart-title">&#127919; Correcci\u00f3n HKA: Pre vs Post</div>
+      <div class="chart-sub">Cada l\u00ednea = un paciente · Verde = objetivo ±3° · Gris = pre-op · Color = post-op</div>
+      <div style="overflow-x:auto">
+        <svg width="${W}" height="${H}" style="display:block;margin:0 auto">
+          <rect width="${W}" height="${H}" fill="#f8fafc" rx="6"/>
+          ${ticks.join("")}
+          <line x1="${PAD}" y1="${PAD}" x2="${PAD}" y2="${H-PAD}" stroke="#e2e8f0"/>
+          <line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="#e2e8f0"/>
+          <line x1="${zx1}" y1="${z}" x2="${zx2}" y2="${z}" stroke="#0f4c81" stroke-width="1" stroke-dasharray="4,3" opacity=".4"/>
+          <rect x="${sx(-3)}" y="${PAD}" width="${sx(3)-sx(-3)}" height="${H-PAD*2}" fill="#dcfce7" opacity=".3"/>
+          ${dots}
+          <text x="${W/2}" y="${H-4}" text-anchor="middle" font-size="10" fill="#64748b">Pre-op / Post-op (°)</text>
+          <text x="10" y="${H/2}" text-anchor="middle" font-size="10" fill="#64748b" transform="rotate(-90,10,${H/2})">Eje Mec\u00e1nico (°)</text>
+        </svg>
+      </div>
+    </div>`;
+  }
+
+  // ── KSS improvement ──
+  function kssImprovement(){
+    const allC = getControles();
+  const pairs=pts.filter(p=>p.kssKnee_pre!=="").map(p=>{
+    const pCtrls = allC.filter(x=>Number(x.pacienteId)===Number(p.id)&&x.kss_knee!=="")
+      .sort((a,b)=>{ const ord=PERIODOS.map(x=>x.id); return ord.indexOf(a.periodo)-ord.indexOf(b.periodo); });
+    const lastCtrl = pCtrls[pCtrls.length-1];
+    return lastCtrl ? {pre:Number(p.kssKnee_pre),post:Number(lastCtrl.kss_knee),n:p.nombre||"?"} : null;
+  }).filter(Boolean);
+    if(!pairs.length) return "";
+    const improved=pairs.filter(p=>p.post>p.pre).length;
+    const avgDiff=(pairs.reduce((s,p)=>s+(p.post-p.pre),0)/pairs.length).toFixed(1);
+    const diff=Number(avgDiff);
+    return `<div class="chart-wrap">
+      <div class="chart-title">&#128200; Mejora KSS Knee</div>
+      <div class="chart-sub">${pairs.length} pacientes con seguimiento</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+        <div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px">
+          <div style="font-size:22px;font-weight:800;color:#64748b">${avg(pairs.map(p=>p.pre))}</div>
+          <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em">Pre-op</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px">
+          <div style="font-size:22px;font-weight:800;color:#15803d">${avg(pairs.map(p=>p.post))}</div>
+          <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em">Post-op</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:${diff>=0?"#f0fdf4":"#fef2f2"};border-radius:8px">
+          <div style="font-size:22px;font-weight:800;color:${diff>=0?"#15803d":"#dc2626"}">${diff>=0?"+":""}${avgDiff}</div>
+          <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em">Promedio \u0394</div>
+        </div>
+      </div>
+      ${barChart("","",
+        [{l:"Mejorados",v:improved},{l:"Sin mejora",v:pairs.length-improved}],
+        "#0f4c81"
+      ).replace('<div class="chart-wrap">','<div>').replace('</div>','').split('</div>').slice(1).join('</div>')}
+    </div>`;
+  }
+
+  // ── Fixed charts ──
+  const implantesChart = barChart("&#128295; Implantes utilizados","Distribuci\u00f3n por sistema",countBy("implante"),"#0f4c81");
+  const cirujanoChart  = barChart("&#129332; Casos por cirujano","Total de ciruj\u00edas registradas",countBy("cirujano"),"#1e6fb5");
+  const tecnicaChart   = barChart("&#128295; T\u00e9cnica quir\u00fargica","\u00bfConvencional, navegaci\u00f3n, rob\u00f3tica?",countBy("tecnica"),"#0369a1");
+  const ladoChart      = barChart("&#129460; Lado operado","Derecho vs Izquierdo",countBy("lado"),"#7c3aed");
+  const klChart        = barChart("&#129462; Kellgren-Lawrence pre-op","Grado de artrosis",countBy("kellgren"),"#b45309");
+  const resurfChart    = barChart("&#128203; Resurfacing rotuliano","",countBy("patella_resurfacing"),"#0891b2");
+
+  // ── Custom chart ──
+  const CHART_FIELDS = [
+    {key:"ejeMecanico",      label:"HKA Pre (°)"},
+    {key:"ejeMecanico_post", label:"HKA Post (°)"},
+    {key:"mad",              label:"MAD Pre (mm)"},
+    {key:"mad_post",         label:"MAD Post (mm)"},
+    {key:"kssKnee_pre",      label:"KSS Pre"},
+    {key:"kssFuncion_pre",   label:"KSS Func Pre"},
+    {key:"oxford_pre",       label:"Oxford Pre"},
+    {key:"womac_pre",        label:"WOMAC Pre"},
+    {key:"vas_pre",          label:"VAS Pre"},
+    {key:"tug_pre",          label:"TUG Pre (seg)"},
+    {key:"tibialSlope",      label:"Tibial Slope Pre"},
+    {key:"tibialSlope_post", label:"Tibial Slope Post"},
+    {key:"mpta",             label:"MPTA"},
+    {key:"edad",             label:"Edad"},
+    {key:"imc",              label:"IMC"},
+    {key:"tiempoCirugia",    label:"Tiempo Cx (min)"},
+    {key:"sangrado",         label:"Sangrado (ml)"},
+    {key:"extension_pre",    label:"Extensión pre (°)"},
+    {key:"flexion_pre",      label:"Flexión pre (°)"},
+  ];
+  const GROUP_FIELDS = [
+    {key:"",        label:"Sin agrupar"},
+    {key:"cirujano",label:"Cirujano"},
+    {key:"lado",    label:"Lado"},
+    {key:"sexo",    label:"Sexo"},
+    {key:"implante",label:"Implante"},
+    {key:"tecnica", label:"T\u00e9cnica"},
+    {key:"kellgren",label:"Kellgren-Lawrence"},
+  ];
+
+  function customChartHTML(){
+    const {xKey,yKey,groupKey} = STATE.customChart;
+    const xLabel = CHART_FIELDS.find(f=>f.key===xKey)?.label||xKey;
+    const yLabel = CHART_FIELDS.find(f=>f.key===yKey)?.label||yKey;
+    const fieldOpts = k => CHART_FIELDS.map(f=>`<option value="${f.key}"${k===f.key?" selected":""}>${f.label}</option>`).join("");
+    const groupOpts = GROUP_FIELDS.map(f=>`<option value="${f.key}"${groupKey===f.key?" selected":""}>${f.label}</option>`).join("");
+
+    // Build scatter
+    const validPts = pts.filter(p=>p[xKey]!==""&&!isNaN(Number(p[xKey]))&&p[yKey]!==""&&!isNaN(Number(p[yKey])));
+    let scatterSVG = `<div style="color:#94a3b8;font-size:13px;padding:20px;text-align:center">Sin datos suficientes para graficar</div>`;
+    if(validPts.length>=2){
+      const xs=validPts.map(p=>Number(p[xKey])), ys=validPts.map(p=>Number(p[yKey]));
+      const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+      const rx=maxX-minX||1, ry=maxY-minY||1;
+      const W=340,H=240,PAD=44;
+      const sx=v=>PAD+(v-minX)/rx*(W-PAD*2);
+      const sy=v=>H-PAD-(v-minY)/ry*(H-PAD*2);
+      const COLORS=["#0f4c81","#dc2626","#15803d","#7c3aed","#b45309","#0891b2","#be185d"];
+      const groups = groupKey ? [...new Set(validPts.map(p=>p[groupKey]||"?"))] : [""];
+      const legend = groupKey ? groups.map((g,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#64748b;margin-right:10px"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="${COLORS[i%COLORS.length]}"/></svg>${g}</span>`).join("") : "";
+      const dots2 = validPts.map(p=>{
+        const gi = groupKey ? groups.indexOf(p[groupKey]||"?") : 0;
+        const col = COLORS[gi%COLORS.length];
+        return `<circle cx="${sx(Number(p[xKey]))}" cy="${sy(Number(p[yKey]))}" r="5" fill="${col}" stroke="#fff" stroke-width="1.5" opacity=".85"><title>${p.nombre||"?"}: ${xLabel}=${p[xKey]}, ${yLabel}=${p[yKey]}</title></circle>`;
+      }).join("");
+      // Trendline
+      const n=xs.length, sx2=xs.reduce((a,b)=>a+b,0), sy2=ys.reduce((a,b)=>a+b,0);
+      const sxy=validPts.reduce((a,p)=>a+Number(p[xKey])*Number(p[yKey]),0);
+      const sxx=xs.reduce((a,b)=>a+b*b,0);
+      const slope=(n*sxy-sx2*sy2)/(n*sxx-sx2*sx2)||0;
+      const intercept=(sy2-slope*sx2)/n;
+      const tx1=minX, ty1=slope*tx1+intercept, tx2=maxX, ty2=slope*tx2+intercept;
+      const ticks=[];
+      const xStep=Math.ceil(rx/5)||1, yStep=Math.ceil(ry/5)||1;
+      for(let v=Math.ceil(minX/xStep)*xStep;v<=maxX;v+=xStep) ticks.push(`<text x="${sx(v)}" y="${H-PAD+13}" text-anchor="middle" font-size="9" fill="#94a3b8">${v}</text><line x1="${sx(v)}" y1="${H-PAD}" x2="${sx(v)}" y2="${H-PAD+4}" stroke="#e2e8f0"/>`);
+      for(let v=Math.ceil(minY/yStep)*yStep;v<=maxY;v+=yStep) ticks.push(`<text x="${PAD-6}" y="${sy(v)+3}" text-anchor="end" font-size="9" fill="#94a3b8">${v}</text><line x1="${PAD-4}" y1="${sy(v)}" x2="${PAD}" y2="${sy(v)}" stroke="#e2e8f0"/>`);
+      scatterSVG = `<div style="overflow-x:auto">
+        <svg width="${W}" height="${H}" style="display:block;margin:0 auto">
+          <rect width="${W}" height="${H}" fill="#f8fafc" rx="6"/>
+          ${ticks.join("")}
+          <line x1="${PAD}" y1="${PAD}" x2="${PAD}" y2="${H-PAD}" stroke="#e2e8f0"/>
+          <line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="#e2e8f0"/>
+          <line x1="${sx(tx1)}" y1="${sy(ty1)}" x2="${sx(tx2)}" y2="${sy(ty2)}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3"/>
+          ${dots2}
+          <text x="${W/2}" y="${H-4}" text-anchor="middle" font-size="10" fill="#64748b">${xLabel}</text>
+        </svg>
+        ${legend?`<div style="margin-top:8px;text-align:center">${legend}</div>`:""}
+      </div>`;
+    }
+
+    return `<div class="chart-wrap">
+      <div class="chart-title">&#127919; Gr\u00e1fico personalizado</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+        <div class="field"><label>Eje X</label><select onchange="setCustomChart('xKey',this.value)" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;outline:none;cursor:pointer">${fieldOpts(xKey)}</select></div>
+        <div class="field"><label>Eje Y</label><select onchange="setCustomChart('yKey',this.value)" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;outline:none;cursor:pointer">${fieldOpts(yKey)}</select></div>
+        <div class="field"><label>Color por</label><select onchange="setCustomChart('groupKey',this.value)" style="width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:12px;outline:none;cursor:pointer">${groupOpts}</select></div>
+      </div>
+      <div style="font-size:12px;color:#94a3b8;margin-bottom:12px">${validPts.length} pacientes con datos para ambos ejes &nbsp;·&nbsp; L\u00ednea gris = tendencia</div>
+      ${scatterSVG}
+    </div>`;
+  }
+
+  return `
+    <div style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div><div style="font-weight:800;font-size:16px;color:#1e293b">&#128202; Dashboard</div><div style="font-size:12px;color:#94a3b8">${pts.length} pacientes &middot; \u00daltima actualizaci\u00f3n hoy</div></div>
+    </div>
+    ${kpiGrid}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:0">
+      <div>${scatterHKA()}</div>
+      <div>${kssImprovement()}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:0">
+      <div>${implantesChart}</div>
+      <div>${cirujanoChart}</div>
+      <div>${tecnicaChart}</div>
+      <div>${klChart}</div>
+      <div>${ladoChart}</div>
+      <div>${resurfChart}</div>
+    </div>
+    ${customChartHTML()}
+  `;
+}
+
+function setCustomChart(k,v){ STATE.customChart[k]=v; render(); }
+
+
+function renderOffsets(){
+  const pco_pre=Number(STATE.form.pco_pre||0), pco_post=Number(STATE.form.pco_post||0);
+  const pco_r=(pco_pre>0&&pco_post>0)?(pco_post/pco_pre).toFixed(2):"—";
+  const el1=document.getElementById("pco-ratio-display");
+  if(el1){ el1.textContent=pco_r; el1.style.color=pco_r==="—"?"#94a3b8":Number(pco_r)>=1?"#15803d":"#dc2626"; }
+
+  const aco_pre=Number(STATE.form.aco_pre||0), aco_post=Number(STATE.form.aco_post||0);
+  const aco_r=(aco_pre>0&&aco_post>0)?(aco_post/aco_pre).toFixed(2):"—";
+  const el2=document.getElementById("aco-ratio-display");
+  if(el2){ el2.textContent=aco_r; el2.style.color=aco_r==="—"?"#94a3b8":Number(aco_r)>=1?"#15803d":"#dc2626"; }
+}
+
+function renderCD(){
+  // Update CD pre
+  const d1=Number(STATE.form.cd_dist_pre||0), s1=Number(STATE.form.cd_sup_pre||0);
+  const cd1=(d1>0&&s1>0)?(d1/s1).toFixed(2):"—";
+  const ok1=cd1!=="—"&&Number(cd1)>=0.8&&Number(cd1)<=1.2;
+  const el1=document.getElementById("cd-display-pre");
+  if(el1){ el1.textContent=cd1; el1.style.color=cd1==="—"?"#94a3b8":ok1?"#15803d":"#dc2626"; }
+  // Update CD post
+  const d2=Number(STATE.form.cd_dist_post||0), s2=Number(STATE.form.cd_sup_post||0);
+  const cd2=(d2>0&&s2>0)?(d2/s2).toFixed(2):"—";
+  const ok2=cd2!=="—"&&Number(cd2)>=0.8&&Number(cd2)<=1.2;
+  const el2=document.getElementById("cd-display-post");
+  if(el2){ el2.textContent=cd2; el2.style.color=cd2==="—"?"#94a3b8":ok2?"#15803d":"#dc2626"; }
+}
+
+function render(){
+  const app = document.getElementById("app");
+  if(!STATE.user){ app.innerHTML=renderLogin(); return; }
+
+  const demo  = STATE.user.role==="demo";
+  const admin = STATE.user.role==="admin";
+  const v     = STATE.view;
+
+  const header = `<div class="header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <span style="font-size:22px">🦴</span>
+        <div><h1>Protocolo PTR</h1><p>Prótesis Total de Rodilla · v3.1</p></div>
+      </div>
+      <div class="header-nav">
+        ${demo?`<span class="demo-badge">DEMO — Solo lectura</span>`:""}
+        <button class="nav-btn${v==="list"||v==="form"?" active":""}" onclick="goList()">📋 Pacientes</button>
+        <button class="nav-btn${v==="dashboard"?" active":""}" onclick="goDashboard()">📊 Dashboard</button>
+        ${admin?`<button class="nav-btn${v==="config"?" active":""}" onclick="goConfig()">⚙️ Configuración</button>`:""}
+        <div class="nav-sep"></div>
+        <span class="nav-user">👤 ${STATE.user.name}</span>
+        <button class="nav-exit" onclick="doLogout()">Salir</button>
+      </div>
+    </div>
+  </div>`;
+
+  let pageContent = "";
+  if(v==="list")      pageContent = renderList();
+  if(v==="form")      pageContent = renderForm();
+  if(v==="config")    pageContent = renderConfig();
+  if(v==="dashboard") pageContent = renderDashboard();
+
+  app.innerHTML = header + `<div class="page">${pageContent}</div>`;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function doLogin(){
+  const u = document.getElementById("login-u")?.value.trim()||"";
+  const p = document.getElementById("login-p")?.value||"";
+  const errEl = document.getElementById("login-err");
+
+  if(!u||!p){ errEl.style.display="block"; return; }
+
+  if(auth && FB_READY){
+    // Firebase Auth login
+    const email = u + "@ptr.app";
+    errEl.style.display="none";
+    document.getElementById("login-u").disabled=true;
+    document.getElementById("login-p").disabled=true;
+    auth.signInWithEmailAndPassword(email, p)
+      .then(()=>{
+        // onAuthStateChanged will handle the rest
+      })
+      .catch(()=>{
+        document.getElementById("login-u").disabled=false;
+        document.getElementById("login-p").disabled=false;
+        errEl.style.display="block";
+      });
+  } else {
+    // Fallback: local login
+    const found = STATE.users.find(x=>x.username===u&&x.password===p&&x.active);
+    if(found){ STATE.user=found; render(); }
+    else { errEl.style.display="block"; }
+  }
+}
+
+function doLogout(){
+  STATE.user = null;
+  STATE.view = "list";
+  // Reload users from localStorage before rendering login
+  STATE.users = lsGet(KEYS.users, DEFAULT_USERS);
+  if(auth && FB_READY) auth.signOut();
+  render();
+}
+
+function setFormField(key,val){
+  STATE.form[key]=val;
+}
+
+function switchTab(id){ autoSave(); STATE.tab=id; render(); }
+function goList(){ STATE.view="list"; STATE.editId=null; STATE.form=emptyForm(); render(); }
+function goDashboard(){ STATE.view="dashboard"; render(); }
+function goConfig(){ STATE.view="config"; render(); }
+function newPatient(){ STATE.form=emptyForm(); STATE.editId=null; STATE.currentControles=[]; STATE.tab="demografico"; STATE.view="form"; render(); }
+
+function editPatient(id){
+  const nid = Number(id);
+  const p = STATE.patients.find(x=>Number(x.id)===nid);
+  if(!p) return;
+  STATE.form = {...emptyForm(),...p}; if(p.fechaNac) calcEdad(p.fechaNac);
+  STATE.currentControles = getControlesPaciente(Number(nid));
+  STATE.editId = nid;
+  STATE.tab = "demografico";
+  STATE.view = "form";
+  render();
+}
+
+function delPatient(id){
+  if(!confirm("¿Eliminar este registro y todos sus controles?")) return;
+  STATE.patients = STATE.patients.filter(p=>p.id!==id);
+  lsSet(KEYS.patients, STATE.patients);
+  fsDeletePatient(id);
+  const toDelete = getControles().filter(c=>c.pacienteId===id);
+  toDelete.forEach(ctrl=>fsDeleteControl(ctrl.id));
+  saveControles(getControles().filter(c=>c.pacienteId!==id));
+  render();
+}
+
+function collectFormFromDOM(){
+  // STATE.form is always up-to-date via setFormField() called on every input.
+  // We only need to scrape custom fields which are dynamically keyed.
+  STATE.customFields.forEach(cf=>{
+    const el=document.querySelector(`[oninput*="${cf.key}"], [onchange*="${cf.key}"]`);
+    if(el) STATE.form[cf.key]=el.value;
+  });
+}
+function persistForm(){
+  const f = STATE.form;
+  const eid = STATE.editId ? Number(STATE.editId) : null;
+  
+  if(eid){
+    const found = STATE.patients.some(p=>Number(p.id)===eid);
+    if(found){
+      STATE.patients = STATE.patients.map(p=>Number(p.id)===eid ? {...f, id:eid} : p);
+    } else {
+      STATE.patients = [...STATE.patients, {...f, id:eid}];
+    }
+  } else {
+    const newId = Date.now();
+    STATE.form.id = newId;
+    STATE.editId = newId;
+    STATE.patients = [...STATE.patients, {...STATE.form}];
+  }
+  lsSet(KEYS.patients, STATE.patients);
+  // Sync to Firestore
+  const savedPt = STATE.patients.find(p=>Number(p.id)===Number(STATE.editId||STATE.form.id));
+  if(savedPt){ setSyncStatus("syncing"); fsSetPatient(savedPt).then(()=>setSyncStatus("synced")); }
+}
+function autoSave(){
+  if(STATE.user.role==="demo") return;
+  collectFormFromDOM();
+  persistForm();
+}
+function savePatient(){
+  if(STATE.user.role==="demo"){ alert("Modo demo: sin permisos de guardado."); return; }
+  collectFormFromDOM();
+  persistForm();
+  STATE.savedFlash=true;
+  setTimeout(()=>{ STATE.savedFlash=false; },2500);
+  goList();
+}
+function nextTab(){
+  autoSave();
+  const ids = TABS.map(t=>t.id);
+  const idx = ids.indexOf(STATE.tab);
+  if(idx < ids.length-1){ STATE.tab=ids[idx+1]; render(); }
+}
+function prevTab(){
+  autoSave();
+  const ids = TABS.map(t=>t.id);
+  const idx = ids.indexOf(STATE.tab);
+  if(idx > 0){ STATE.tab=ids[idx-1]; render(); }
+}
+
+// Config actions
+
+function setCfNew(k,v){ STATE.cfNew[k]=v; render(); }
+function addCustomField(){
+  const label=document.getElementById("cf-label")?.value.trim()||"";
+  const sec=document.getElementById("cf-sec")?.value||"";
+  const type=document.getElementById("cf-type")?.value||"text";
+  if(!label||!sec){ alert("Complete nombre y sección."); return; }
+  const key="custom_"+Date.now();
+  const f={key,label,type,section:sec};
+  if(type==="select"){
+    const raw=document.getElementById("cf-opts")?.value||"";
+    f.opts=raw.split(",").map(s=>s.trim()).filter(Boolean);
+    if(!f.opts.length){ alert("Agrega al menos una opción."); return; }
+  }
+  STATE.customFields=[...STATE.customFields,f];
+  lsSet("ptr_customFields_v1",STATE.customFields);
+  STATE.cfNew={label:"",type:"text",section:"demografico"};
+  STATE.configFlash="Campo agregado ✓";
+  setTimeout(()=>{ STATE.configFlash=""; render(); },2000);
+  render();
+}
+function delCustomField(i){
+  if(!confirm("\u00bfEliminar este campo?")) return;
+  STATE.customFields=STATE.customFields.filter((_,j)=>j!==i);
+  lsSet("ptr_customFields_v1",STATE.customFields);
+  render();
+}
+
+function setCfgSec(sec){ STATE.configSec=sec; STATE.editListKey=null; STATE.pwdTarget=null; STATE.configFlash=""; render(); }
+function startEditList(key){ STATE.editListKey=key; STATE.editListDraft=[...STATE.config[key]]; render(); }
+function cancelEditList(){ STATE.editListKey=null; render(); }
+function removeListItem(i){ STATE.editListDraft.splice(i,1); render(); }
+function moveListItem(i,d){
+  const a=STATE.editListDraft, j=i+d;
+  if(j<0||j>=a.length) return;
+  [a[i],a[j]]=[a[j],a[i]];
+  render();
+}
+function addListItem(){
+  const el=document.getElementById("new-list-item");
+  if(!el||!el.value.trim()) return;
+  STATE.editListDraft.push(el.value.trim());
+  render();
+}
+function saveList(){
+  STATE.config[STATE.editListKey]=[...STATE.editListDraft];
+  lsSet(KEYS.config, STATE.config);
+  fsSaveConfig(STATE.config);
+  STATE.editListKey=null;
+  STATE.configFlash="Lista guardada ✓";
+  setTimeout(()=>{ STATE.configFlash=""; render(); },2500);
+  render();
+}
+
+function togglePwdVisible(uid, pwd){
+  const el = document.getElementById("pwd-display-"+uid);
+  if(!el) return;
+  el.textContent = el.textContent.includes("•") ? pwd : "••••••••";
+}
+function startPwd(id){ STATE.pwdTarget=Number(id); render(); }
+function cancelPwd(){ STATE.pwdTarget=null; render(); }
+function savePwd(userId){
+  const targetId = Number(userId !== undefined ? userId : STATE.pwdTarget);
+  const inputEl = document.getElementById("new-pwd-"+targetId);
+  const p = inputEl?.value||"";
+  if(p.length<6){ alert("Mínimo 6 caracteres."); return; }
+
+  const targetUser = STATE.users.find(u=>Number(u.id)===targetId);
+  if(!targetUser){ alert("Usuario no encontrado."); return; }
+
+  // Changing own password
+  if(STATE.user && Number(STATE.user.id) === targetId){
+    const fbUser = auth ? auth.currentUser : null;
+    if(fbUser){
+      fbUser.updatePassword(p)
+        .then(()=>{
+          // Also update local
+          STATE.users = STATE.users.map(u=>Number(u.id)===targetId?{...u,password:p}:u);
+          lsSet(KEYS.users, STATE.users);
+          fsSaveUsers(STATE.users);
+          STATE.pwdTarget=null;
+          STATE.configFlash="✓ Contraseña actualizada correctamente";
+          setTimeout(()=>{ STATE.configFlash=""; render(); },3000);
+          render();
+        })
+        .catch(e=>{
+          alert("Error: "+e.message);
+        });
+      return;
+    }
+  }
+
+  // Admin changing another user's password — show Firebase instructions
+  STATE.pwdTarget=null;
+  STATE.configFlash="Para cambiar la clave de "+targetUser.name+": ve a firebase.google.com → proyecto protocolo-ptr → Authentication → Users → busca "+targetUser.username+"@ptr.app → ··· → Editar usuario → escribe nueva contraseña → Guardar";
+  setTimeout(()=>{ STATE.configFlash=""; render(); },12000);
+  render();
+}
+
+function toggleUser(id){
+  if(id===STATE.user.id){ alert("No puede desactivar tu propio usuario."); return; }
+  STATE.users=STATE.users.map(u=>u.id===id?{...u,active:!u.active}:u);
+  lsSet(KEYS.users,STATE.users);
+  render();
+}
+function deleteUser(id){
+  if(id===STATE.user.id){ alert("No puede eliminar tu propio usuario."); return; }
+  if(!confirm("¿Eliminar usuario?")) return;
+  STATE.users=STATE.users.filter(u=>u.id!==id);
+  lsSet(KEYS.users,STATE.users);
+  render();
+}
+function addUser(){
+  const name=document.getElementById("nu-name")?.value.trim()||"";
+  const user=document.getElementById("nu-user")?.value.trim().toLowerCase()||"";
+  const pass=document.getElementById("nu-pass")?.value.trim()||"";
+  const role=document.getElementById("nu-role")?.value||"user";
+  if(!name||!user||!pass){ alert("Complete todos los campos."); return; }
+  if(STATE.users.find(u=>u.username===user)){ alert("Nombre de usuario ya existe."); return; }
+  STATE.users=[...STATE.users,{id:Date.now(),name,username:user,password:pass,role,active:true}];
+  lsSet(KEYS.users,STATE.users);
+  STATE.configFlash="Usuario creado ✓";
+  setTimeout(()=>{ STATE.configFlash=""; render(); },2500);
+  render();
+}
+
+// ── XLSX Export ───────────────────────────────────────────────────────────────
+
+function exportPDF(id){
+  const p = STATE.patients.find(x=>x.id===id);
+  if(!p) return;
+  const fechaNac = p.fechaNac||"";
+  const fechaCx  = p.fechaCx||p.fechaCirugia||"";
+  const s = (v,unit="") => (v!=null&&v!=="")?v+unit:"—";
+  const row=(l,v)=>`<tr><td style="padding:5px 10px;color:#64748b;font-size:12px;white-space:nowrap;width:40%;border-bottom:1px solid #f1f5f9">${l}</td><td style="padding:5px 10px;font-weight:600;font-size:12px;border-bottom:1px solid #f1f5f9">${v}</td></tr>`;
+  const sec=(icon,title,rows)=>`
+    <div style="margin-bottom:18px;break-inside:avoid">
+      <div style="background:#0f4c81;color:#fff;padding:7px 12px;border-radius:6px 6px 0 0;font-weight:700;font-size:12px">${icon} ${title}</div>
+      <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 6px 6px">
+        ${rows}
+      </table>
+    </div>`;
+  const hkaColor=(v,thresh=3)=>v!==""&&Math.abs(Number(v))>thresh?"color:#dc2626":"color:#15803d";
+
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>PTR - ${p.nombre||"Paciente"}</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#1e293b;padding:20px;max-width:800px;margin:0 auto}
+    @media print{body{padding:0}@page{margin:1.5cm}}
+  </style>
+  </head><body>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid #0f4c81">
+    <div>
+      <div style="font-size:20px;font-weight:800;color:#0f4c81">Protocolo PTR</div>
+      <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Prótesis Total de Rodilla</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:16px;font-weight:700">${p.nombre||"—"}</div>
+      <div style="font-size:11px;color:#64748b">RUT: ${p.rut||"—"} &nbsp;·&nbsp; Fecha registro: ${p.fechaRegistro||"—"}</div>
+    </div>
+  </div>
+
+  ${sec("👤","Datos del Paciente",
+    row("Fecha de Nacimiento", s(fechaNac))+
+    row("Edad", s(p.edad,"años"))+
+    row("Sexo", s(p.sexo))+
+    row("Lado operado", s(p.lado))+
+    row("IMC", s(p.imc,"kg/m²"))+
+    row("ASA", s(p.asa))+
+    row("Diabetes", s(p.dm))+
+    row("HTA", s(p.hta))+
+    row("Tabaquismo", s(p.tabaco))+
+    row("Anticoagulación", s(p.anticoagulacion))+
+    row("Indicación", s(p.indicacion))+
+    row("Tiempo evolución", s(p.tiempoEvolucion))+
+    row("Cirugía previa", s(p.cirugiaPrevia))
+  )}
+
+  ${sec("🦴","Análisis Radiológico Pre-operatorio",
+    row("Kellgren-Lawrence", s(p.kellgren))+
+    row("Morfotipo", s(p.morfotipo))+
+    row("HKA Pre-op", `<span style="${hkaColor(p.ejeMecanico)}">${s(p.ejeMecanico,"°")}</span>`)+
+    row("MAD Pre-op", `<span style="${hkaColor(p.mad,10)}">${s(p.mad,"mm")}</span>`)+
+    row("HKA", s(p.ejeMecanico,"°")+" &nbsp; MAD: "+s(p.mad,"mm"))+
+    row("mLDFA", s(p.mLDFA,"°")+" &nbsp; aLDFA: "+s(p.aLDFA,"°"))+
+    row("MPTA", s(p.mpta,"°")+" &nbsp; JLCA: "+s(p.jlca,"°"))+
+    row("VCA / aFTA", s(p.vca,"°"))+
+    row("Tibial Slope", s(p.tibialSlope,"°"))+
+    row("IS — Insall-Salvati", s(p.is_pre)+" &nbsp; PCO: "+s(p.pco_pre,"mm")+" &nbsp; ACO: "+s(p.aco_pre,"mm"))+
+    row("Altura Rotuliana", s(p.alturaRotuliana)+" &nbsp; Subluxación: "+s(p.subluxRotuliana))+
+    row("Extensión / Flexión pre-op", s(p.extension_pre,"°")+" / "+s(p.flexion_pre,"°"))
+  )}
+
+  ${sec("📊","Scores Pre-operatorios",
+    row("KSS Knee", s(p.kssKnee_pre))+
+    row("KSS Function", s(p.kssFuncion_pre))+
+    row("WOMAC", s(p.womac_pre))+
+    row("Oxford Knee Score", s(p.oxford_pre))+
+    row("VAS Dolor", s(p.vas_pre,"/10"))+
+    row("TUG Test", s(p.tug_pre,"seg"))
+  )}
+
+  ${sec("🔧","Datos Quirúrgicos",
+    row("Cirujano", s(p.cirujano))+
+    row("Fecha de cirugía", s(fechaCx))+
+    row("Implante", s(p.implante))+
+    row("Técnica", s(p.tecnica))+
+    row("Conservación LCA", s(p.conservacionLca))+
+    row("Tamaño Fémur", s(p.tamFemur))+
+    row("Tamaño Tibia", s(p.tamTibia))+
+    row("Espesor Inserto", s(p.tamInserto,"mm"))+
+    row("Resurfacing rotuliano", s(p.patella_resurfacing))+
+    row("Tamaño Rótula", s(p.tamRotula,"mm"))+
+    row("Tourniquet", s(p.tourniquet))+
+    row("Liberaciones", s(p.liberaciones))+
+    row("Tiempo quirúrgico", s(p.tiempoCirugia,"min"))+
+    row("Sangrado estimado", s(p.sangrado,"ml"))
+  )}
+
+  ${sec("📐","Análisis Radiológico Post-operatorio",
+    row("HKA Post-op", `<span style="${hkaColor(p.ejeMecanico_post)}">${s(p.ejeMecanico_post,"°")}</span>` + " &nbsp; MAD: " + s(p.mad_post,"mm"))+
+    row("mLDFA Post-op", s(p.mLDFA_post,"°"))+
+    row("DFFA", s(p.dffa,"°")+" &nbsp; aTFA: "+s(p.atfa,"°"))+
+    row("Tibial Slope Post-op", s(p.tibialSlope_post,"°"))+
+    row("IS Post-op", s(p.is_post)+" &nbsp; PCO: "+s(p.pco_post,"mm")+" &nbsp; ACO: "+s(p.aco_post,"mm"))+
+    row("Altura Rotuliana Post-op", s(p.altura_rotuliana_post))
+  )}
+
+  ${sec("📈","Controles de Seguimiento",
+    getControlesPaciente(p.id).map(ctrl=>{
+      const pLabel=(PERIODOS.find(x=>x.id===ctrl.periodo)||{label:ctrl.periodo||"Control"}).label;
+      const fd=ctrl.fecha?" — "+ctrl.fecha:"";
+      const arco=(ctrl.flexion&&ctrl.extension)?(Number(ctrl.flexion)-Number(ctrl.extension))+"°":"—";
+      return row(pLabel+fd,[
+        ctrl.kss_knee?"KSS Knee: "+ctrl.kss_knee:"",
+        ctrl.kss_func?"KSS Func: "+ctrl.kss_func:"",
+        ctrl.oxford?"Oxford: "+ctrl.oxford:"",
+        ctrl.womac_total?"WOMAC: "+ctrl.womac_total:"",
+        ctrl.vas?"VAS: "+ctrl.vas:"",
+        ctrl.tug?"TUG: "+ctrl.tug+"s":"",
+        ctrl.extension!==undefined&&ctrl.extension!==""?"Ext: "+ctrl.extension+"°":"",
+        ctrl.flexion!==undefined&&ctrl.flexion!==""?"Flex: "+ctrl.flexion+"° (arco "+arco+")":"",
+      ].filter(Boolean).join(" · ")||"Sin datos");
+    }).join("")||row("Sin controles registrados","—")
+  )}
+
+  ${sec("📋","Seguimiento y Complicaciones",
+    row("Infección", s(p.infeccion))+
+    row("TVP / TEP", s(p.tvp_tep))+
+    row("Rigidez", s(p.rigidez))+
+    row("Aflojamiento aséptico", s(p.aflojamiento))+
+    row("Fractura periprotésica", s(p.fractura_periprotesica))+
+    row("Revisión", s(p.revision))+
+    row("Otras complicaciones", s(p.otras_complicaciones))+
+    (p.notas?row("Notas clínicas", p.notas):"")
+  )}
+
+  ${p.mako_usado==="Sí" ? sec("🤖","Cirugía MAKO",
+    row("HKA Plan/Real", s(p.mako_hka_plan,"°")+" / "+s(p.mako_hka_real,"°"))+
+    row("DFFA Plan/Real", s(p.mako_dffa_plan,"°")+" / "+s(p.mako_dffa_real,"°"))+
+    row("aTFA Plan/Real", s(p.mako_atfa_plan,"°")+" / "+s(p.mako_atfa_real,"°"))+
+    row("Slope Plan/Real", s(p.mako_slope_plan,"°")+" / "+s(p.mako_slope_real,"°"))+
+    row("Flexion Gap", s(p.mako_flex_gap,"mm")+" &nbsp; Extension Gap: "+s(p.mako_ext_gap,"mm"))+
+    row("Balance Flex/Ext", s(p.mako_balance_flex,"mm")+" / "+s(p.mako_balance_ext,"mm"))+
+    row("Resección Femoral/Tibial", s(p.mako_reseccion_femoral,"mm")+" / "+s(p.mako_reseccion_tibial,"mm"))+
+    (p.mako_notas?row("Notas MAKO",p.mako_notas):"")
+  ) : ""}
+
+    <div style="margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between">
+    <span>Protocolo PTR · Generado ${new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"2-digit",year:"numeric"})}</span>
+    <span>${STATE.user?.name||""}</span>
+  </div>
+  </body></html>`;
+
+  const win=window.open("","_blank","width=850,height=900");
+  win.document.write(html);
+  win.document.close();
+  setTimeout(()=>win.print(),400);
+}
+
+function doExport(){
+  const pts = STATE.patients;
+  if(!pts.length){ alert("No hay pacientes."); return; }
+  const allControles = getControles();
+
+  // ── Column groups definition ───────────────────────────────────────────────
+  const SCORE_FIELDS = ["kss_knee","kss_func","oxford","womac_total","vas","tug","extension","flexion"];
+  const SCORE_LABELS = ["KSS Knee","KSS Func","Oxford","WOMAC","VAS","TUG","Extensión","Flexión"];
+  const PERIODOS_EXPORT = ["preop","6m","12m","24m","3-5a","5-9a","10a+"];
+
+  // Fields to skip from the patient base object
+  const skipFields = new Set([
+    // Internal/technical
+    "id","fechaCx","_oxford_pre_vals","_womac_pre_vals",
+    // Legacy/renamed fields that may exist in old patient records
+    "hc","seguimiento_meses",
+    "kssKnee_post","kssFuncion_post","womac_post","oxford_post",
+    "vas_post","tug_post","extension_post","flexion_post",
+    // Pre-op scores (exported via controls Pre-operatorio columns)
+    "kssKnee_pre","kssFuncion_pre","womac_pre","oxford_pre","vas_pre","tug_pre",
+    "extension_pre","flexion_pre",
+    // Internal sub-scores
+    "womac_dolor_pre","womac_rigidez_pre","womac_func_pre",
+    // Obsolete legacy fields
+    "ldfa","flexum","rangoFlex","corte_femoral_frontal","corte_femoral_sagital",
+    "corte_tibial_frontal","flexion_gap","extension_gap","arcoMovil_post",
+  ]);
+  const baseKeys = Object.keys(pts[0]||{}).filter(k=>!skipFields.has(k)&&!k.startsWith("_"));
+
+  // ── Group definitions for header row 1 ────────────────────────────────────
+  // Each group: { label, count }  — drives merges in row 1
+  const BASE_GROUPS = [
+    { label:"Identificación",   keys:["fechaRegistro","nombre","rut","fechaNac","edad","correo"] },
+    { label:"Datos paciente",   keys:["sexo","lado","imc","asa","dm","hta","tabaco","anticoagulacion","indicacion","tiempoEvolucion","cirugiaPrevia"] },
+    { label:"RX Pre-op",        keys:["kellgren","morfotipo","varo_valgo_clinico","ejeMecanico","vca","mad","aLDFA","mLDFA","mpta","jlca","tibialSlope","pco_pre","aco_pre","is_pre","alturaRotuliana","subluxRotuliana"] },
+    { label:"Quirúrgico",       keys:["cirujano","implante","tamFemur","tamTibia","tamInserto","tamRotula","tecnica","conservacionLca","liberaciones","patella_resurfacing","tourniquet","tiempoCirugia","sangrado"] },
+    { label:"RX Post-op",       keys:["ejeMecanico_post","mad_post","mLDFA_post","dffa","atfa","tibialSlope_post","pco_post","aco_post","is_post","altura_rotuliana_post"] },
+    { label:"Mako",             keys:["mako_usado","mako_hka_plan","mako_hka_real","mako_dffa_plan","mako_dffa_real","mako_atfa_plan","mako_atfa_real","mako_slope_plan","mako_slope_real","mako_flex_gap","mako_ext_gap","mako_balance_flex","mako_balance_ext","mako_reseccion_femoral","mako_reseccion_tibial","mako_notas"] },
+    { label:"Complicaciones",   keys:["infeccion","tvp_tep","rigidez","aflojamiento","fractura_periprotesica","revision","otras_complicaciones","notas"] },
+  ];
+
+  // Build base groups only with keys that actually exist in the data
+  const baseGroups = BASE_GROUPS.map(g=>({
+    label: g.label,
+    keys: g.keys.filter(k=>baseKeys.includes(k))
+  })).filter(g=>g.keys.length>0);
+
+  // Any base key not covered by a group goes into "Otros"
+  const coveredKeys = new Set(baseGroups.flatMap(g=>g.keys));
+  const otherKeys = baseKeys.filter(k=>!coveredKeys.has(k));
+  if(otherKeys.length) baseGroups.push({label:"Otros", keys:otherKeys});
+
+  // Score groups per period
+  const periodGroups = PERIODOS_EXPORT.map(per=>{
+    const pLabel = PERIODOS.find(x=>x.id===per)?.label||per;
+    return { label: pLabel, period: per, count: SCORE_FIELDS.length };
+  });
+
+  // ── Build column list ──────────────────────────────────────────────────────
+  // colList: [{group, header2, key_or_fn}]
+  const colList = [];
+  // Clean up column labels: strip group-specific prefixes
+  const COL_LABEL_MAP = {
+    mako_usado:"Usado", mako_hka_plan:"HKA Plan", mako_hka_real:"HKA Real",
+    mako_dffa_plan:"DFFA Plan", mako_dffa_real:"DFFA Real",
+    mako_atfa_plan:"aTFA Plan", mako_atfa_real:"aTFA Real",
+    mako_slope_plan:"Slope Plan", mako_slope_real:"Slope Real",
+    mako_flex_gap:"Flex Gap", mako_ext_gap:"Ext Gap",
+    mako_balance_flex:"Balance Flex", mako_balance_ext:"Balance Ext",
+    mako_reseccion_femoral:"Resección Femoral", mako_reseccion_tibial:"Resección Tibial",
+    mako_notas:"Notas",
+  };
+  baseGroups.forEach(g=>{
+    g.keys.forEach(k=>colList.push({group:g.label, h2:COL_LABEL_MAP[k]||k, baseKey:k}));
+  });
+  periodGroups.forEach(pg=>{
+    SCORE_FIELDS.forEach((sf,si)=>{
+      colList.push({group:pg.label, h2:SCORE_LABELS[si], period:pg.period, scoreField:sf});
+    });
+  });
+  // Prepend N° case column
+  colList.unshift({group:"N° Caso", h2:"N° Caso", caseNum:true});
+
+  // ── Build rows ─────────────────────────────────────────────────────────────
+  // Row 1: group labels (merged)
+  // Row 2: column detail headers
+  // Row 3+: data
+
+  // Compute merge ranges for row 1
+  const merges = []; // {s:{r,c}, e:{r,c}}  0-indexed
+  let col = 0;
+  const groupStarts = {};
+  colList.forEach((col_def, ci)=>{
+    const g = col_def.group;
+    if(groupStarts[g]===undefined) groupStarts[g]=ci;
+  });
+  // Build consecutive groups
+  const groups = [];
+  colList.forEach((col_def,ci)=>{
+    if(!groups.length || groups[groups.length-1].label!==col_def.group){
+      groups.push({label:col_def.group, start:ci, end:ci});
+    } else {
+      groups[groups.length-1].end=ci;
+    }
+  });
+
+  // ── Cell data ──────────────────────────────────────────────────────────────
+  const dataRows = pts.map((p,pi)=>{
+    const pCtrls = allControles.filter(x=>Number(x.pacienteId)===Number(p.id));
+    const byPeriodo={};
+    pCtrls.forEach(x=>{ byPeriodo[x.periodo]=x; });
+    const preopFallback={
+      kss_knee:p.kssKnee_pre||"", kss_func:p.kssFuncion_pre||"",
+      oxford:p.oxford_pre||"", womac_total:p.womac_pre||"",
+      vas:p.vas_pre||"", tug:p.tug_pre||"",
+      extension:p.extension_pre||"", flexion:p.flexion_pre||"",
+    };
+    return colList.map(col_def=>{
+      if(col_def.caseNum) return String(pi+1).padStart(3,"0");
+      if(col_def.baseKey!==undefined){
+        const v=p[col_def.baseKey];
+        return (v===null||v===undefined||v==="")?"":v;
+      } else {
+        const {period,scoreField}=col_def;
+        const ctrl=byPeriodo[period];
+        if(period==="preop"&&(!ctrl||!ctrl[scoreField])){
+          const v=preopFallback[scoreField];
+          return (v===null||v===undefined||v==="")?"":v;
+        }
+        if(!ctrl) return "";
+        const v=ctrl[scoreField];
+        return (v===null||v===undefined||v==="")?"":v;
+      }
+    });
+  });
+
+  // ── Build XLSX ─────────────────────────────────────────────────────────────
+  function colName(n){let s="";n++;while(n>0){const r=(n-1)%26;s=String.fromCharCode(65+r)+s;n=Math.floor((n-1)/26);}return s;}
+  const ss=[],ssm={};
+  const ssi=v=>{const s=String(v);if(ssm[s]===undefined){ssm[s]=ss.length;ss.push(s);}return ssm[s];};
+  const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+  function makeCell(val,ri,ci){
+    const ref=colName(ci)+(ri+1);
+    if(val===""||val===null||val===undefined) return `<c r="${ref}" t="s"><v>${ssi("")}</v></c>`;
+    const num=!isNaN(Number(val))&&String(val).trim()!=="";
+    return num?`<c r="${ref}"><v>${Number(val)}</v></c>`:`<c r="${ref}" t="s"><v>${ssi(String(val))}</v></c>`;
+  }
+
+  // Row 1: group headers
+  const row1cells = groups.map(g=>{
+    // Only put label in first cell of group; rest empty
+    return colList.map((_,ci)=>{
+      if(ci===g.start) return makeCell(g.label,0,ci);
+      if(ci>g.start&&ci<=g.end) return makeCell("",0,ci);
+      return null;
+    });
+  }).flat().filter(x=>x!==null);
+  // Deduplicate (each cell appears once)
+  const row1map={};
+  // Rebuild row1 properly
+  const row1=colList.map((_,ci)=>{
+    const grp=groups.find(g=>ci>=g.start&&ci<=g.end);
+    return makeCell(ci===grp.start?grp.label:"",0,ci);
+  }).join("");
+
+  // Row 2: column detail headers
+  const row2=colList.map((col_def,ci)=>makeCell(col_def.h2,1,ci)).join("");
+
+  // Data rows
+  const dataXml=dataRows.map((row,ri)=>
+    `<row r="${ri+3}">${row.map((val,ci)=>makeCell(val,ri+2,ci)).join("")}</row>`
+  ).join("");
+
+  // Merge cells XML for row 1 groups
+  const mergeXml=groups.filter(g=>g.end>g.start).map(g=>
+    `<mergeCell ref="${colName(g.start)}1:${colName(g.end)}1"/>`
+  ).join("");
+
+  // ── Styles ──────────────────────────────────────────────────────────────────
+  // Group colors (cycling)
+  const GRP_COLORS = ["1F4E79","2E75B6","375623","833C00","6B2B6B","1A5276","4A235A","7B241C","1B6B3A","4D4D00"];
+  // For each group, assign a color index
+  const grpColorMap = {};
+  groups.forEach((g,i)=>{ grpColorMap[g.label] = GRP_COLORS[i % GRP_COLORS.length]; });
+
+  // Style index mapping:
+  // xfId 0 = default
+  // xfId 1+N = group header style for group N (bold, centered, bg=grpColor, thick bottom)
+  // xfId G+1 = row2 header: bold, centered, no fill, thick left for first-in-group
+  // xfId G+2 = row2 non-first: bold, centered
+  // xfId G+3 = data cell first-in-group: thick left border
+  // xfId G+4 = data cell normal
+  const numGroups = groups.length;
+  // Style IDs:
+  // 0 = default
+  // 1..numGroups = group header (one per group)
+  // numGroups+1 = row2 first-in-group (thick left + bold + center)
+  // numGroups+2 = row2 normal (bold + center)
+  // numGroups+3 = data first-in-group (thick left)
+  // numGroups+4 = data normal (no special)
+
+  const STYLE_R2_FIRST  = numGroups + 1;
+  const STYLE_R2_NORMAL = numGroups + 2;
+  const STYLE_DATA_FIRST = numGroups + 3;
+  const STYLE_DATA_NORMAL = numGroups + 4;
+
+  // Build fills (one per group color + default)
+  // fill 0 = none, fill 1 = gray (required by xlsx spec), fill 2+ = group colors
+  const fillsXml = `<fills count="${numGroups+2}">
+    <fill><patternFill patternType="none"/></fill>
+    <fill><patternFill patternType="gray125"/></fill>
+    ${groups.map(g=>`<fill><patternFill patternType="solid"><fgColor rgb="FF${grpColorMap[g.label]}"/><bgColor indexed="64"/></patternFill></fill>`).join("")}
+  </fills>`;
+
+  // Build fonts
+  const fontsXml = `<fonts count="3">
+    <font><sz val="11"/><name val="Calibri"/></font>
+    <font><b/><sz val="11"/><name val="Calibri"/><color rgb="FFFFFFFF"/></font>
+    <font><b/><sz val="10"/><name val="Calibri"/></font>
+  </fonts>`;
+
+  // Borders: 0=none, 1=thick left, 2=thick bottom, 3=thick left+bottom
+  const thickBorder = `<border><left style="medium"><color rgb="FF000000"/></left><right/><top/><bottom style="medium"><color rgb="FF000000"/></bottom><diagonal/></border>`;
+  const thickLeft   = `<border><left style="medium"><color rgb="FF000000"/></left><right/><top/><bottom/><diagonal/></border>`;
+  const thinAll     = `<border><left style="thin"><color rgb="FFBFBFBF"/></left><right style="thin"><color rgb="FFBFBFBF"/></right><top style="thin"><color rgb="FFBFBFBF"/></top><bottom style="thin"><color rgb="FFBFBFBF"/></bottom><diagonal/></border>`;
+  const bordersXml  = `<borders count="4"><border><left/><right/><top/><bottom/><diagonal/></border>${thickBorder}${thickLeft}${thinAll}</borders>`;
+
+  // Alignment helpers
+  const centerWrap  = `<alignment horizontal="center" vertical="center" wrapText="1"/>`;
+  const centerNoWrap= `<alignment horizontal="center" vertical="center"/>`;
+
+  // cellXfs: one xf per style
+  const xfBase = (fontId,fillId,borderId,alignXml)=>
+    `<xf numFmtId="0" fontId="${fontId}" fillId="${fillId}" borderId="${borderId}" xfId="0"${alignXml?` applyAlignment="1"`:""} applyFont="1" applyFill="1" applyBorder="1">${alignXml}</xf>`;
+
+  const xfList = [
+    xfBase(0,0,0,""),  // 0: default
+    // 1..numGroups: group headers (bold white text, group bg, thick bottom+left border, center)
+    ...groups.map((g,gi)=> xfBase(1, gi+2, 1, centerWrap)),
+    // numGroups+1: row2 first-in-group (bold, thick left, center)
+    xfBase(2, 0, 2, centerNoWrap),
+    // numGroups+2: row2 normal (bold, thin border, center)
+    xfBase(2, 0, 3, centerNoWrap),
+    // numGroups+3: data first-in-group (thick left)
+    xfBase(0, 0, 2, ""),
+    // numGroups+4: data normal
+    xfBase(0, 0, 0, ""),
+  ];
+
+  const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  ${fontsXml}${fillsXml}${bordersXml}
+  <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+  <cellXfs count="${xfList.length}">${xfList.join("")}</cellXfs>
+</styleSheet>`;
+
+  // ── Rebuild makeCell to accept style id ────────────────────────────────────
+  function makeCellS(val,ri,ci,styleId){
+    const ref=colName(ci)+(ri+1);
+    const sAttr = styleId ? ` s="${styleId}"` : "";
+    if(val===""||val===null||val===undefined) return `<c r="${ref}" t="s"${sAttr}><v>${ssi("")}</v></c>`;
+    const num=!isNaN(Number(val))&&String(val).trim()!=="";
+    return num?`<c r="${ref}"${sAttr}><v>${Number(val)}</v></c>`:`<c r="${ref}" t="s"${sAttr}><v>${ssi(String(val))}</v></c>`;
+  }
+
+  // ── Rebuild row 1 with styles ──────────────────────────────────────────────
+  const row1styled = colList.map((_,ci)=>{
+    const grp = groups.find(g=>ci>=g.start&&ci<=g.end);
+    const styleId = groups.indexOf(grp) + 1; // 1..numGroups
+    return makeCellS(ci===grp.start?grp.label:"", 0, ci, styleId);
+  }).join("");
+
+  // ── Rebuild row 2 with styles ──────────────────────────────────────────────
+  const row2styled = colList.map((col_def,ci)=>{
+    const grp = groups.find(g=>ci>=g.start&&ci<=g.end);
+    const isFirst = ci===grp.start;
+    return makeCellS(col_def.h2, 1, ci, isFirst ? STYLE_R2_FIRST : STYLE_R2_NORMAL);
+  }).join("");
+
+  // ── Rebuild data rows with styles ─────────────────────────────────────────
+  const dataXmlStyled = dataRows.map((row,ri)=>`<row r="${ri+3}">${
+    row.map((val,ci)=>{
+      const grp=groups.find(g=>ci>=g.start&&ci<=g.end);
+      const isFirst=ci===grp.start;
+      return makeCellS(val, ri+2, ci, isFirst ? STYLE_DATA_FIRST : STYLE_DATA_NORMAL);
+    }).join("")
+  }</row>`).join("");
+
+  const shXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  <sheetViews><sheetView workbookViewId="0"><pane ySplit="2" topLeftCell="A3" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
+  <sheetData>
+    <row r="1" ht="24" customHeight="1">${row1styled}</row>
+    <row r="2" ht="40" customHeight="1">${row2styled}</row>
+    ${dataXmlStyled}
+  </sheetData>
+  ${mergeXml?`<mergeCells count="${groups.filter(g=>g.end>g.start).length}">${mergeXml}</mergeCells>`:""}
+</worksheet>`;
+
+  const wbXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="PTR" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+  const wbR=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+  const aR=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
+  const ssXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${ss.length}" uniqueCount="${ss.length}">${ss.map(s=>`<si><t xml:space="preserve">${esc(s)}</t></si>`).join("")}</sst>`;
+
+  function crc32(d){let c=0xffffffff;if(!crc32.t){crc32.t=new Uint32Array(256);for(let i=0;i<256;i++){let x=i;for(let j=0;j<8;j++)x=(x&1)?(0xedb88320^(x>>>1)):(x>>>1);crc32.t[i]=x;}}for(let i=0;i<d.length;i++)c=crc32.t[(c^d[i])&0xff]^(c>>>8);return(c^0xffffffff)>>>0;}
+  function cat(a){const t=a.reduce((s,x)=>s+x.length,0),o=new Uint8Array(t);let p=0;for(const x of a){o.set(x,p);p+=x.length;}return o;}
+  function zip(files){const enc=new TextEncoder(),cd=[],ch=[];let off=0;for(const[n,cont]of files){const nb=enc.encode(n),db=typeof cont==="string"?enc.encode(cont):cont;const lh=new Uint8Array(30+nb.length),dv=new DataView(lh.buffer);dv.setUint32(0,0x04034b50,true);dv.setUint16(4,20,true);[6,8,10,12].forEach(o=>dv.setUint16(o,0,true));dv.setUint32(14,crc32(db),true);dv.setUint32(18,db.length,true);dv.setUint32(22,db.length,true);dv.setUint16(26,nb.length,true);dv.setUint16(28,0,true);lh.set(nb,30);ch.push(lh,db);const e=new Uint8Array(46+nb.length),ev=new DataView(e.buffer);ev.setUint32(0,0x02014b50,true);ev.setUint16(4,20,true);ev.setUint16(6,20,true);[8,10,12,14].forEach(o=>ev.setUint16(o,0,true));ev.setUint32(16,crc32(db),true);ev.setUint32(20,db.length,true);ev.setUint32(24,db.length,true);ev.setUint16(28,nb.length,true);[30,32,34,36].forEach(o=>ev.setUint16(o,0,true));ev.setUint32(38,0,true);ev.setUint32(42,off,true);e.set(nb,46);cd.push(e);off+=lh.length+db.length;}const cdd=cat(cd),eo=new Uint8Array(22),ev=new DataView(eo.buffer);ev.setUint32(0,0x06054b50,true);[4,6].forEach(o=>ev.setUint16(o,0,true));ev.setUint16(8,files.length,true);ev.setUint16(10,files.length,true);ev.setUint32(12,cdd.length,true);ev.setUint32(16,off,true);ev.setUint16(20,0,true);return cat([...ch,cdd,eo]);}
+
+  const zd=zip([["[Content_Types].xml",ct],["_rels/.rels",aR],["xl/workbook.xml",wbXml],["xl/_rels/workbook.xml.rels",wbR],["xl/worksheets/sheet1.xml",shXml],["xl/sharedStrings.xml",ssXml],["xl/styles.xml",stylesXml]]);
+  const blob=new Blob([zd],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=`PTR_${new Date().toISOString().split("T")[0]}.xlsx`;a.click();URL.revokeObjectURL(url);
+}
+
+// ── RUT formatter ─────────────────────────────────────────────────────────────
+function formatRut(val){
+  // Strip everything except digits and k/K
+  let v = val.replace(/[^0-9kK]/g,"").toUpperCase();
+  if(!v) return "";
+  // Separate verifier digit
+  const dv = v.slice(-1);
+  let body = v.slice(0,-1).replace(/^0+/,""); // remove leading zeros
+  if(!body) return dv; // only verifier typed
+  // Add dots every 3 digits from right
+  let formatted = "";
+  let i = body.length;
+  while(i > 0){
+    formatted = body.slice(Math.max(0,i-3), i) + (formatted ? "." + formatted : "");
+    i -= 3;
+  }
+  return formatted + "-" + dv;
+}
+
+function formatRutInput(input){
+  const raw = input.value;
+  const formatted = formatRut(raw);
+  input.value = formatted;
+  setFormField("rut", formatted);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+// initFirebase calls render() via onAuthStateChanged
+// If no Firebase config, render() is called directly from initFirebase
+initFirebase();
+</script>
+</body>
+</html>
