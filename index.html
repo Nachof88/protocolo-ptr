@@ -951,6 +951,7 @@ function renderConfig(){
   const secBtns = `<div style="display:flex;gap:8px;margin-bottom:20px">
     <button class="btn-${sec==="listas"?"blue":"gray"}" onclick="setCfgSec('listas')" style="font-size:13px;padding:8px 18px">📋 Listas desplegables</button>
     <button class="btn-${sec==="usuarios"?"blue":"gray"}" onclick="setCfgSec('usuarios')" style="font-size:13px;padding:8px 18px">👥 Usuarios</button>
+    ${STATE.user.role==="admin"?`<button class="btn-${sec==="admin"?"blue":"gray"}" onclick="setCfgSec('admin')" style="font-size:13px;padding:8px 18px">🔧 Admin</button>`:""}
     <button class="btn-${sec==="campos"?"blue":"gray"}" onclick="setCfgSec('campos')" style="font-size:13px;padding:8px 18px">&#10133; Campos extra</button>
   </div>`;
 
@@ -1085,6 +1086,21 @@ function renderConfig(){
         ${optsRow}
         <div style="text-align:right;margin-top:12px"><button class="btn-blue" onclick="addCustomField()">&#10133; Agregar campo</button></div>
       </div>
+    </div>`;
+  }
+  if(sec==="admin"){
+    body += `<div class="card" style="margin-bottom:12px">
+      <div style="font-weight:700;margin-bottom:8px;color:#dc2626">🔧 Herramientas de administración</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:14px">
+        Estas acciones afectan todos los pacientes en la base de datos. Úsalas con cuidado.
+      </div>
+      <button onclick="cleanLegacyFields()" style="padding:9px 18px;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">
+        🗑️ Eliminar campos legacy de todos los pacientes
+      </button>
+      <div style="font-size:11px;color:#94a3b8;margin-top:8px">
+        Elimina campos obsoletos (mako complejos, is_pre, atfa, etc.) de Firestore. No afecta datos clínicos.
+      </div>
+      ${STATE.configFlash?`<div style="color:#15803d;font-size:13px;margin-top:10px;font-weight:600">${STATE.configFlash}</div>`:""}
     </div>`;
   }
 
@@ -2655,6 +2671,80 @@ function exportPDF(id){
   setTimeout(()=>win.print(),400);
 }
 
+function cleanLegacyFields(){
+  if(!confirm("¿Eliminar campos legacy de todos los pacientes en Firestore?\nEsta acción no se puede deshacer.")) return;
+  const legacyFields = [
+    "is_pre",
+    "is_post",
+    "atfa",
+    "alturaRotuliana",
+    "altura_rotuliana_post",
+    "mako_lax_pre_ext_med",
+    "mako_lax_pre_ext_lat",
+    "mako_lax_pre_flex_med",
+    "mako_lax_pre_flex_lat",
+    "mako_lax_post_ext_med",
+    "mako_lax_post_ext_lat",
+    "mako_lax_post_flex_med",
+    "mako_lax_post_flex_lat",
+    "mako_flex_gap_med",
+    "mako_flex_gap_lat",
+    "mako_ext_gap_med",
+    "mako_ext_gap_lat",
+    "mako_rot_fem_coronal",
+    "mako_rot_fem_transverso",
+    "mako_rot_fem_sagital",
+    "mako_res_fem_distal_med",
+    "mako_res_fem_distal_lat",
+    "mako_res_fem_post_med",
+    "mako_res_fem_post_lat",
+    "mako_rot_tib_coronal",
+    "mako_rot_tib_transverso",
+    "mako_rot_tib_sagital",
+    "mako_res_tib_prox_med",
+    "mako_res_tib_prox_lat",
+    "mako_jl_ldfa",
+    "mako_jl_mpta",
+    "mako_jl_ahka",
+    "mako_jl_jlo",
+    "mako_jl_fem_jla",
+    "mako_jl_tib_jla",
+    "mako_jl_mec_bone",
+    "mako_jl_mec_implant",
+    "mako_anat_coronal",
+    "mako_anat_transverso",
+    "mako_anat_sagital",
+    "mako_anat_aa_ma_cor",
+    "mako_anat_aa_ma_sag",
+    "mako_anat_pca_tea",
+    "mako_slope_med",
+    "mako_slope_lat"
+  ];
+  if(!FB_READY || !db){ alert("Firebase no está conectado."); return; }
+  let count = 0;
+  const batch = db.batch();
+  db.collection("ptr_patients").get().then(snap=>{
+    snap.forEach(doc=>{
+      const update = {};
+      legacyFields.forEach(f=>{ update[f] = firebase.firestore.FieldValue.delete(); });
+      batch.update(doc.ref, update);
+      count++;
+    });
+    return batch.commit();
+  }).then(()=>{
+    // Also clean local STATE.patients
+    STATE.patients = STATE.patients.map(p=>{
+      const clean = {...p};
+      legacyFields.forEach(f=>delete clean[f]);
+      return clean;
+    });
+    lsSet(KEYS.patients, STATE.patients);
+    STATE.configFlash = "✓ Campos legacy eliminados de " + count + " paciente(s)";
+    setTimeout(()=>{ STATE.configFlash=""; render(); }, 4000);
+    render();
+  }).catch(e=>{ alert("Error: "+e.message); });
+}
+
 function doExport(){
   const pts = STATE.patients;
   if(!pts.length){ alert("No hay pacientes."); return; }
@@ -2687,18 +2777,18 @@ function doExport(){
   // ── Group definitions for header row 1 ────────────────────────────────────
   // Each group: { label, count }  — drives merges in row 1
   const BASE_GROUPS = [
-    { label:"Identificación",   keys:["fechaRegistro","nombre","rut","fechaNac","edad","correo"] },
+    { label:"Identificación",   keys:["fechaRegistro","nombre","rut","fechaNac","edad","correo","fechaCx"] },
     { label:"Datos paciente",   keys:["sexo","lado","imc","asa","dm","hta","tabaco","anticoagulacion","indicacion","tiempoEvolucion","cirugiaPrevia"] },
     { label:"RX Pre-op",        keys:["kellgren","morfotipo","varo_valgo_clinico","ejeMecanico","vca","mad","aLDFA","mLDFA","mpta","jlca","tibialSlope","pco_pre","aco_pre","cd_dist_pre","cd_sup_pre","subluxRotuliana","extension_pre","flexion_pre"] },
     { label:"Scores Pre-op",    keys:["kssKnee_pre","kssFuncion_pre","oxford_pre","womac_pre","vas_pre","tug_pre"] },
-    { label:"Quirúrgico",       keys:["cirujano","fechaCx","implante","tamFemur","tamTibia","tamInserto","tamRotula","tecnica","conservacionLca","liberaciones","patella_resurfacing","tourniquet","tiempoCirugia","sangrado"] },
+    { label:"Quirúrgico",       keys:["cirujano","implante","tamFemur","tamTibia","tamInserto","tamRotula","tecnica","conservacionLca","liberaciones","patella_resurfacing","tourniquet","tiempoCirugia","sangrado"] },
     { label:"RX Post-op",       keys:["ejeMecanico_post","mad_post","mLDFA_post","aLDFA_post","mpta_post","dffa","tibialSlope_post","pco_post","aco_post","cd_dist_post","cd_sup_post"] },
     { label:"Mako",             keys:["mako_usado","mako_hka_plan","mako_hka_real","mako_dffa_plan","mako_dffa_real","mako_atfa_plan","mako_atfa_real","mako_slope_plan","mako_slope_real","mako_flex_gap","mako_ext_gap","mako_balance_flex","mako_balance_ext","mako_reseccion_femoral","mako_reseccion_tibial","mako_notas"] },
     { label:"Complicaciones",   keys:["infeccion","tvp_tep","rigidez","aflojamiento","fractura_periprotesica","revision","otras_complicaciones","notas"] },
   ];
 
   // Build base groups only with keys that actually exist in the data
-  const baseGroups = BASE_GROUPS.map(g=>({
+    const baseGroups = BASE_GROUPS.map(g=>({
     label: g.label,
     keys: g.keys.filter(k=>baseKeys.includes(k))
   })).filter(g=>g.keys.length>0);
