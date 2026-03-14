@@ -656,28 +656,16 @@ function tabPostopRx(ro){
   const cfg = STATE.config;
   return `<div class="card">
     ${secTitle("📐","Análisis Radiológico Post-operatorio","RX AP + Lateral en carga · 6 semanas post-op")}
-    ${infoBox("<strong>Objetivos:</strong> HKA 0°±3° &nbsp;|&nbsp; MAD ≤10mm &nbsp;|&nbsp; mLDFA 87°±3° &nbsp;|&nbsp; DFFA 87-90° &nbsp;|&nbsp; aTFA 90°±2° &nbsp;|&nbsp; TS 3-5° &nbsp;|&nbsp; IS 0.8-1.2")}
+    ${infoBox("<strong>Objetivos:</strong> HKA 0°±3° &nbsp;|&nbsp; MAD ≤10mm &nbsp;|&nbsp; mLDFA 87°±3° &nbsp;|&nbsp; aLDFA 85°±2° &nbsp;|&nbsp; MPTA 87-90° &nbsp;|&nbsp; DFFA 87-90° &nbsp;|&nbsp; TS 3-5°")}
 
-    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Eje Mecánico</div>
     <div class="grid-3" style="margin-bottom:14px">
       ${field("HKA Post-op (°)", numInp("ejeMecanico_post","(-) varo / (+) valgo","0.5","","",ro))}
       ${field("MAD Post-op (mm)", numInp("mad_post","(-) medial / (+) lateral","1","","",ro))}
       ${field("mLDFA Post-op (°)", numInp("mLDFA_post","VN 87°±3°","0.5","","",ro))}
       ${field("aLDFA Post-op (°)", numInp("aLDFA_post","VN 85°±2°","0.1","","",ro))}
       ${field("MPTA Post-op (°)", numInp("mpta_post","VN 87-90°","0.1","","",ro))}
-    </div>
-
-    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Ángulos del Componente (RX AP + Lateral)</div>
-    <div class="grid-3" style="margin-bottom:14px">
-      ${field("DFFA — Distal Femoral Flexion Angle (°)", numInp("dffa","VN 87-90°","0.5","","",ro))}
-      
+      ${field("DFFA — Flexión Femoral (°)", numInp("dffa","VN 87-90°","0.5","","",ro))}
       ${field("Tibial Slope Post-op / TS (°)", numInp("tibialSlope_post","Obj: 3-5°","0.5","","",ro))}
-    </div>
-
-    <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Rótula Post-op</div>
-    <div class="grid-3" style="margin-bottom:14px">
-      ${field("Dist. P-PTA Post-op (cm)", `<input type="number" step="0.1" placeholder="polo inf. → borde ant. platillo" ${ro?"disabled":""} value="${STATE.form.cd_dist_post||""}" oninput="setFormField('cd_dist_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
-      ${field("Sup. Articular Pat. Post-op (cm)", `<input type="number" step="0.1" placeholder="longitud sup. articular patelar" ${ro?"disabled":""} value="${STATE.form.cd_sup_post||""}" oninput="setFormField('cd_sup_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
       ${field("PCO Post-op (cm)", `<input type="number" step="0.1" ${ro?"disabled":""} value="${STATE.form.pco_post||""}" oninput="setFormField('pco_post',this.value);setTimeout(renderOffsets,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
       ${(()=>{
         const pre=Number(STATE.form.pco_pre||0), post=Number(STATE.form.pco_post||0);
@@ -694,6 +682,8 @@ function tabPostopRx(ro){
         const col=ratio==="—"?"#94a3b8":ok?"#15803d":"#dc2626";
         return field("ACO Ratio (post/pre)",`<div style="padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}"><span id="aco-ratio-display">${ratio}</span> <span style="font-size:11px;font-weight:400;color:#94a3b8">VN ≥1.0</span></div>`);
       })()}
+      ${field("Dist. P-PTA Post-op (cm)", `<input type="number" step="0.1" placeholder="polo inf. → borde ant. platillo" ${ro?"disabled":""} value="${STATE.form.cd_dist_post||""}" oninput="setFormField('cd_dist_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${field("Sup. Articular Pat. Post-op (cm)", `<input type="number" step="0.1" placeholder="longitud sup. articular patelar" ${ro?"disabled":""} value="${STATE.form.cd_sup_post||""}" oninput="setFormField('cd_sup_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
       ${(()=>{ const d=Number(STATE.form.cd_dist_post||0),s=Number(STATE.form.cd_sup_post||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps Post-op',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'><span id='cd-display-post'>${cd}</span> <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
     </div>
 
