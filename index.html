@@ -1164,11 +1164,7 @@ const SCORES = {
         {label:"Sin flexum",pts:0},{label:"5-10°",pts:-2},{label:"11-15°",pts:-5},
         {label:"16-20°",pts:-10},{label:"> 20°",pts:-15},
       ]},
-      { titulo:"Deducción — Alineación", key:"ded_alin", tipo:"deduccion", items:[
-        {label:"0-4° valgo",pts:-3},{label:"5-10° valgo (normal)",pts:0},
-        {label:"11-15° valgo",pts:-3},{label:">15° valgo (c/grado adicional)",pts:-3},
-        {label:"Varo (cada grado)",pts:-3},
-      ]},
+      { titulo:"Deducción — Alineación", key:"ded_alin", tipo:"slider_alin", min:-20, max:20, step:1, label_unit:"°", nota:"(-) varo / (+) valgo · normal 5-10° valgo · -3 pts por c/grado fuera del rango" },
       { titulo:"Deducción — Extension lag", key:"ded_extlag", tipo:"deduccion", items:[
         {label:"Sin lag",pts:0},{label:"10°",pts:-5},{label:"20°",pts:-10},{label:">20°",pts:-15},
       ]},
@@ -1389,6 +1385,28 @@ function renderScoreModal(){
             style="width:100%;accent-color:#0f4c81">
           <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8"><span>${sec.min}°</span><span>${sec.max}°</span></div>
         </div>`;
+      } else if(sec.tipo==="slider_alin"){
+        const sv = v!==""&&v!==undefined ? Number(v) : 7;
+        var alinPts;
+        if(sv >= 5 && sv <= 10){ alinPts = 0; }
+        else if(sv > 10){ alinPts = -((sv-10)*3); }
+        else if(sv >= 0){ alinPts = -((5-sv)*3); }
+        else { alinPts = -((5+Math.abs(sv))*3); }
+        runningTotal += alinPts;
+        var gFuera = sv>=5&&sv<=10?0:(sv>10?sv-10:(sv>=0?5-sv:5+Math.abs(sv)));
+        var alinDesc = (sv>=5&&sv<=10) ? "rango normal" : (sv<0 ? Math.abs(sv)+"deg varo" : sv+"deg valgo") + " - "+gFuera+" grado(s) fuera";
+        var alinColor = alinPts===0 ? "#15803d" : "#dc2626";
+        var alinKey = sec.key;
+        content += "<div style='margin-bottom:14px;padding:14px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0'>"
+          + "<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'>"
+          + "<span style='font-size:12px;font-weight:700;color:#64748b'>" + sec.titulo + "</span>"
+          + "<span style='font-size:13px;font-weight:800;color:" + alinColor + "'>" + alinDesc + " -> " + alinPts + " pts</span>"
+          + "</div>"
+          + "<div style='font-size:11px;color:#94a3b8;margin-bottom:8px'>" + sec.nota + "</div>"
+          + "<div style='display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:4px'><span>Varo (-)</span><span>0</span><span>Valgo (+)</span></div>"
+          + "<input type='range' min='-20' max='20' step='1' value='" + sv + "' data-alinkey='" + alinKey + "' oninput='modalSetVal(this.dataset.alinkey,Number(this.value))' style='width:100%;accent-color:#0f4c81'>"
+          + "<div style='display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-top:6px'><span style='color:#dc2626'>Varo (-)</span><span style='font-weight:700;font-size:14px;color:" + alinColor + "'>" + sv + "deg</span><span style='color:#0f4c81'>Valgo (+)</span></div>"
+          + "</div>";
       } else {
         const selectedVal = v!==""&&v!==undefined ? v : null;
         // selectedVal stored as "pts:idx" to distinguish items with same pts
@@ -1486,8 +1504,9 @@ function savePreopScoreModal(){
     let total=0;
     SCORES[scoreDef].secciones.forEach(sec=>{
       const v=values[sec.key];
-      if(sec.tipo==="slider") total+=sec.calc(Number(v||0));
-      else if(v!==""&&v!==undefined) total+=Number(String(v).split(":")[0]);
+      if(sec.tipo==="slider"){ total+=sec.calc(Number(v||0)); }
+      else if(sec.tipo==="slider_alin"){ var sv=Number(v||7); var ap=(sv>=5&&sv<=10)?0:(sv>10?-((sv-10)*3):(sv>=0?-((5-sv)*3):-((5+Math.abs(sv))*3))); total+=ap; }
+      else if(v!==""&&v!==undefined){ total+=Number(String(v).split(":")[0]); }
     });
     const clamp = Math.max(0,Math.min(100,total));
     if(scoreDef==="kss_knee") STATE.form.kssKnee_pre = String(clamp);
@@ -1520,6 +1539,7 @@ function saveScoreModal(){
       const v=values[sec.key];
       ctrl[sec.key]=v;
       if(sec.tipo==="slider"){ total+=sec.calc(Number(v||0)); }
+      else if(sec.tipo==="slider_alin"){ var sv=Number(v||7); var ap=(sv>=5&&sv<=10)?0:(sv>10?-((sv-10)*3):(sv>=0?-((5-sv)*3):-((5+Math.abs(sv))*3))); total+=ap; }
       else if(v!==""&&v!==undefined){
         // value stored as "pts:idx" — extract pts
         total+=Number(String(v).split(":")[0]);
