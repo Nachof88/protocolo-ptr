@@ -1222,20 +1222,56 @@ const SCORES = {
 
 // Oxford 12 preguntas
 const OXFORD_ITEMS = [
-  "¿Cómo describiría el dolor en su rodilla durante las últimas 4 semanas?",
-  "¿Ha tenido dificultad para lavarse y secarse (todo el cuerpo) durante las últimas 4 semanas?",
-  "¿Ha tenido dificultad para entrar o salir de un automóvil o para usar transporte público durante las últimas 4 semanas?",
-  "¿Cuánto tiempo puede caminar antes de que el dolor de rodilla sea severo?",
-  "¿Cuánto dolor de rodilla ha tenido al sentarse o estar acostado durante las últimas 4 semanas?",
-  "¿Ha cojido debido al dolor de rodilla?",
-  "¿Podría arrodillarse y levantarse nuevamente?",
-  "¿Ha tenido dificultad al realizar sus tareas habituales en el hogar?",
-  "¿Cuánto se ha preocupado por su rodilla?",
-  "¿Ha tenido dificultad para subir o bajar un tramo de escaleras?",
-  "¿Ha tenido dificultad al estar de pie por un tiempo prolongado?",
-  "¿Ha tenido dificultad para bajar de la cama?",
+  {
+    q: "Durante las últimas 4 semanas... ¿Cómo describiría el dolor que habitualmente tiene en su rodilla?",
+    opts: ["Ninguno","Muy leve","Leve","Moderado","Severo"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Ha tenido dificultad para lavarse y secarse (todo el cuerpo) debido a su rodilla?",
+    opts: ["Sin dificultad","Muy poca dificultad","Dificultad moderada","Mucha dificultad","Imposible"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Ha tenido dificultad para subir o bajar del automóvil o usar transporte público debido a su rodilla?",
+    opts: ["Sin dificultad","Muy poca dificultad","Dificultad moderada","Mucha dificultad","Imposible"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Cuánto tiempo puede caminar antes de que el dolor en su rodilla se vuelva severo?",
+    opts: ["Sin dolor / más de 30 minutos","16 a 30 minutos","5 a 15 minutos","Solo alrededor de la casa","Para nada / dolor severo al caminar"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... Luego de una comida (sentado a la mesa), ¿cuánto dolor ha tenido al levantarse de la silla debido a su rodilla?",
+    opts: ["Sin dolor","Dolor leve","Dolor moderado","Dolor intenso","Insoportable"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Ha estado cojeando al caminar debido al dolor en su rodilla?",
+    opts: ["Nunca / casi nunca","A veces o solo al inicio","Con frecuencia, no solo al inicio","La mayor parte del tiempo","Todo el tiempo"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Podría arrodillarse y volver a levantarse?",
+    opts: ["Sí, fácilmente","Con poca dificultad","Con dificultad moderada","Con mucha dificultad","No, imposible"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Le ha molestado el dolor en su rodilla durante la noche en cama?",
+    opts: ["Para nada","Solo una o dos noches","Algunas noches","La mayoría de las noches","Todas las noches"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Cuánto ha interferido el dolor en su rodilla con su trabajo habitual? (incluido el trabajo doméstico)",
+    opts: ["Para nada","Un poco","Moderadamente","Bastante","Totalmente"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Ha sentido que su rodilla podría ceder o fallarle de repente?",
+    opts: ["Nunca / casi nunca","A veces o solo al inicio","Con frecuencia, no solo al inicio","La mayor parte del tiempo","Todo el tiempo"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Podría hacer las compras del hogar por su cuenta?",
+    opts: ["Sí, fácilmente","Con poca dificultad","Con dificultad moderada","Con mucha dificultad","No, imposible"]
+  },
+  {
+    q: "Durante las últimas 4 semanas... ¿Podría bajar un tramo de escaleras?",
+    opts: ["Sí, fácilmente","Con poca dificultad","Con dificultad moderada","Con mucha dificultad","No, imposible"]
+  },
 ];
-const OXFORD_OPTS = ["Ninguno/Sin dificultad","Muy poco/Poca dificultad","Moderado/Dificultad moderada","Severo/Mucha dificultad","Insoportable/Imposible"];
+
 
 // WOMAC preguntas
 const WOMAC_DOLOR = [
@@ -1300,10 +1336,11 @@ function renderScoreModal(){
   if(effectiveKey==="oxford"){
     const vals = values;
     let sum=0, complete=true;
-    const items = OXFORD_ITEMS.map((q,i)=>{
+    const items = OXFORD_ITEMS.map((item,i)=>{
+      const q = item.q; const itemOpts = item.opts;
       const v = vals[i]!==undefined ? Number(vals[i]) : -1;
       if(v<0) complete=false; else sum+=v;
-      const opts = OXFORD_OPTS.map((o,j)=>`
+      const opts = itemOpts.map((o,j)=>`
         <label style="display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-radius:6px;cursor:pointer;background:${v===j?"#ede9fe":"transparent"};border:1.5px solid ${v===j?"#7c3aed":"transparent"}">
           <input type="radio" name="oxford_${i}" value="${j}" ${v===j?"checked":""} onchange="modalSetVal(${i},${j})" style="margin-top:2px;accent-color:#7c3aed">
           <span style="font-size:13px;color:#334155">${o}</span>
@@ -2416,7 +2453,8 @@ function exportOxfordPDF(id){
   var fecha=new Date().toLocaleDateString("es-CL");
   var fechaCx=p.fechaCx?new Date(p.fechaCx).toLocaleDateString("es-CL"):"—";
   var opts=["Ninguno / Sin dificultad","Muy poco / Poca dificultad","Moderado / Dificultad moderada","Severo / Mucha dificultad","Insoportable / Imposible"];
-  var preguntas=OXFORD_ITEMS.map(function(q,i){
+  var preguntas=OXFORD_ITEMS.map(function(item,i){
+    var q=item.q; var opts=item.opts;
     var cols=opts.map(function(o){return "<td style=\"width:20%;padding:6px 4px;text-align:center;border:1px solid #e2e8f0;font-size:11px\"><div style=\"width:18px;height:18px;border:2px solid #0f4c81;border-radius:50%;margin:0 auto 4px\"></div>"+o+"</td>";}).join("");
     return "<div style=\"margin-bottom:20px\"><div style=\"font-weight:700;font-size:13px;margin-bottom:8px\">"+(i+1)+". "+q+"</div><table style=\"width:100%;border-collapse:collapse\"><tr>"+cols+"</tr></table></div>";
   }).join("");
