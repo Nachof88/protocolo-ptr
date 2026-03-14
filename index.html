@@ -2686,9 +2686,9 @@ function doExport(){
   const BASE_GROUPS = [
     { label:"Identificación",   keys:["fechaRegistro","nombre","rut","fechaNac","edad","correo"] },
     { label:"Datos paciente",   keys:["sexo","lado","imc","asa","dm","hta","tabaco","anticoagulacion","indicacion","tiempoEvolucion","cirugiaPrevia"] },
-    { label:"RX Pre-op",        keys:["kellgren","morfotipo","varo_valgo_clinico","ejeMecanico","vca","mad","aLDFA","mLDFA","mpta","jlca","tibialSlope","pco_pre","aco_pre","is_pre","alturaRotuliana","subluxRotuliana"] },
+    { label:"RX Pre-op",        keys:["kellgren","morfotipo","varo_valgo_clinico","ejeMecanico","vca","mad","aLDFA","mLDFA","mpta","jlca","tibialSlope","pco_pre","aco_pre","cd_dist_pre","cd_sup_pre","subluxRotuliana"] },
     { label:"Quirúrgico",       keys:["cirujano","implante","tamFemur","tamTibia","tamInserto","tamRotula","tecnica","conservacionLca","liberaciones","patella_resurfacing","tourniquet","tiempoCirugia","sangrado"] },
-    { label:"RX Post-op",       keys:["ejeMecanico_post","mad_post","mLDFA_post","dffa","atfa","tibialSlope_post","pco_post","aco_post","is_post","altura_rotuliana_post"] },
+    { label:"RX Post-op",       keys:["ejeMecanico_post","mad_post","mLDFA_post","aLDFA_post","mpta_post","dffa","tibialSlope_post","pco_post","aco_post","cd_dist_post","cd_sup_post"] },
     { label:"Mako",             keys:["mako_usado","mako_hka_plan","mako_hka_real","mako_dffa_plan","mako_dffa_real","mako_atfa_plan","mako_atfa_real","mako_slope_plan","mako_slope_real","mako_flex_gap","mako_ext_gap","mako_balance_flex","mako_balance_ext","mako_reseccion_femoral","mako_reseccion_tibial","mako_notas"] },
     { label:"Complicaciones",   keys:["infeccion","tvp_tep","rigidez","aflojamiento","fractura_periprotesica","revision","otras_complicaciones","notas"] },
   ];
@@ -2723,6 +2723,11 @@ function doExport(){
     mako_balance_flex:"Balance Flex", mako_balance_ext:"Balance Ext",
     mako_reseccion_femoral:"Resección Femoral", mako_reseccion_tibial:"Resección Tibial",
     mako_notas:"Notas",
+    cd_dist_pre:"Dist. P-PTA Pre (cm)", cd_sup_pre:"Sup. Art. Pat. Pre (cm)",
+    cd_dist_post:"Dist. P-PTA Post (cm)", cd_sup_post:"Sup. Art. Pat. Post (cm)",
+    aLDFA_post:"aLDFA Post (°)", mpta_post:"MPTA Post (°)",
+    pco_pre:"PCO Pre (cm)", aco_pre:"ACO Pre (cm)",
+    pco_post:"PCO Post (cm)", aco_post:"ACO Post (cm)",
   };
   baseGroups.forEach(g=>{
     g.keys.forEach(k=>colList.push({group:g.label, h2:COL_LABEL_MAP[k]||k, baseKey:k}));
