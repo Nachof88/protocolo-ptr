@@ -2005,7 +2005,7 @@ function render(){
     <div class="header-inner">
       <div class="header-logo">
         <span style="font-size:22px">🦴</span>
-        <div><h1>Protocolo PTR</h1><p>Prótesis Total de Rodilla · v3.1</p></div>
+        <div><h1>Protocolo PTR</h1><p>${STATE.form&&STATE.form.nombre ? "Paciente: "+STATE.form.nombre : "Prótesis Total de Rodilla · v3.1"}</p></div>
       </div>
       <div class="header-nav">
         ${demo?`<span class="demo-badge">DEMO — Solo lectura</span>`:""}
