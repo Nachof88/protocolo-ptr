@@ -423,11 +423,11 @@ function emptyForm(){
     nombre:"",rut:"",fechaNac:"",edad:"",correo:"",sexo:"",lado:"",imc:"",asa:"",
     dm:"",hta:"",tabaco:"",anticoagulacion:"",indicacion:"",tiempoEvolucion:"",cirugiaPrevia:"",
     kellgren:"",morfotipo:"",varo_valgo_clinico:"",ejeMecanico:"",vca:"",mad:"",
-    aLDFA:"",mLDFA:"",mpta:"",jlca:"",tibialSlope:"",pco_pre:"",aco_pre:"",is_pre:"",alturaRotuliana:"",subluxRotuliana:"",extension_pre:"",flexion_pre:"",
+    aLDFA:"",mLDFA:"",mpta:"",jlca:"",tibialSlope:"",pco_pre:"",aco_pre:"",is_pre:"",cd_dist_pre:"",cd_sup_pre:"",subluxRotuliana:"",extension_pre:"",flexion_pre:"",
     kssKnee_pre:"",kssFuncion_pre:"",womac_pre:"",oxford_pre:"",vas_pre:"",tug_pre:"",
     cirujano:"",fechaCx:"",implante:"",tamFemur:"",tamTibia:"",tamInserto:"",tamRotula:"",
     tecnica:"",conservacionLca:"",liberaciones:"",patella_resurfacing:"",tourniquet:"",tiempoCirugia:"",sangrado:"",
-    ejeMecanico_post:"",mad_post:"",mLDFA_post:"",dffa:"",atfa:"",tibialSlope_post:"",pco_post:"",aco_post:"",is_post:"",altura_rotuliana_post:"",
+    ejeMecanico_post:"",mad_post:"",mLDFA_post:"",dffa:"",atfa:"",tibialSlope_post:"",pco_post:"",aco_post:"",is_post:"",cd_dist_post:"",cd_sup_post:"",
     // post-op scores now stored in controles system (not in patient form)
     infeccion:"",tvp_tep:"",rigidez:"",aflojamiento:"",fractura_periprotesica:"",
     revision:"",otras_complicaciones:"",notas:"",
@@ -575,10 +575,11 @@ function tabPreopRx(ro){
 
     <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Rótula</div>
     <div class="grid-3" style="margin-bottom:14px">
-      ${field("IS — Insall-Salvati", numInp("is_pre","VN 0.8-1.2","0.01","","",ro))}
+      ${field("Dist. P-PTA (mm)", numInp("cd_dist_pre","polo inf. → borde ant. platillo","0.1","","",ro))}
+      ${field("Sup. Articular Pat. (mm)", numInp("cd_sup_pre","longitud sup. articular patelar","0.1","","",ro))}
       ${field("PCO — Post. Condylar Offset (mm)", numInp("pco_pre","","0.5","","",ro))}
       ${field("ACO — Ant. Condylar Offset (mm)", numInp("aco_pre","","0.5","","",ro))}
-      ${field("Altura Rotuliana", selInp("alturaRotuliana",cfg.alturaRot,ro))}
+      ${(()=>{ const d=Number(STATE.form.cd_dist_pre||0),s=Number(STATE.form.cd_sup_pre||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'>${cd} <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
       ${field("Subluxación rotuliana", selInp("subluxRotuliana",cfg.subluxRot,ro))}
     </div>
 
@@ -673,10 +674,11 @@ function tabPostopRx(ro){
 
     <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Rótula Post-op</div>
     <div class="grid-3" style="margin-bottom:14px">
-      ${field("IS — Insall-Salvati Post-op", numInp("is_post","VN 0.8-1.2","0.01","","",ro))}
+      ${field("Dist. P-PTA Post-op (mm)", numInp("cd_dist_post","polo inf. → borde ant. platillo","0.1","","",ro))}
+      ${field("Sup. Articular Pat. Post-op (mm)", numInp("cd_sup_post","longitud sup. articular patelar","0.1","","",ro))}
       ${field("PCO Post-op (mm)", numInp("pco_post","","0.5","","",ro))}
       ${field("ACO Post-op (mm)", numInp("aco_post","","0.5","","",ro))}
-      ${field("Altura Rotuliana Post-op", selInp("altura_rotuliana_post",cfg.alturaRot,ro))}
+      ${(()=>{ const d=Number(STATE.form.cd_dist_post||0),s=Number(STATE.form.cd_sup_post||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps Post-op',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'>${cd} <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
     </div>
 
     ${customFieldsHTML('postop_rx',ro)}</div>`;
