@@ -423,11 +423,14 @@ function emptyForm(){
     nombre:"",rut:"",fechaNac:"",edad:"",correo:"",sexo:"",lado:"",imc:"",asa:"",
     dm:"",hta:"",tabaco:"",anticoagulacion:"",indicacion:"",tiempoEvolucion:"",cirugiaPrevia:"",
     kellgren:"",morfotipo:"",varo_valgo_clinico:"",ejeMecanico:"",vca:"",mad:"",
-    aLDFA:"",mLDFA:"",mpta:"",jlca:"",tibialSlope:"",pco_pre:"",aco_pre:"",is_pre:"",cd_dist_pre:"",cd_sup_pre:"",subluxRotuliana:"",extension_pre:"",flexion_pre:"",
+    aLDFA:"",mLDFA:"",mpta:"",jlca:"",tibialSlope:"",pco_pre:"",aco_pre:"",
+cd_dist_pre:"",cd_sup_pre:"",subluxRotuliana:"",extension_pre:"",flexion_pre:"",
     kssKnee_pre:"",kssFuncion_pre:"",womac_pre:"",oxford_pre:"",vas_pre:"",tug_pre:"",
     cirujano:"",fechaCx:"",implante:"",tamFemur:"",tamTibia:"",tamInserto:"",tamRotula:"",
     tecnica:"",conservacionLca:"",liberaciones:"",patella_resurfacing:"",tourniquet:"",tiempoCirugia:"",sangrado:"",
-    ejeMecanico_post:"",mad_post:"",mLDFA_post:"",aLDFA_post:"",mpta_post:"",dffa:"",atfa:"",tibialSlope_post:"",pco_post:"",aco_post:"",is_post:"",cd_dist_post:"",cd_sup_post:"",
+    ejeMecanico_post:"",mad_post:"",mLDFA_post:"",aLDFA_post:"",mpta_post:"",dffa:"",
+tibialSlope_post:"",pco_post:"",aco_post:"",
+cd_dist_post:"",cd_sup_post:"",
     // post-op scores now stored in controles system (not in patient form)
     infeccion:"",tvp_tep:"",rigidez:"",aflojamiento:"",fractura_periprotesica:"",
     revision:"",otras_complicaciones:"",notas:"",
@@ -2686,8 +2689,9 @@ function doExport(){
   const BASE_GROUPS = [
     { label:"Identificación",   keys:["fechaRegistro","nombre","rut","fechaNac","edad","correo"] },
     { label:"Datos paciente",   keys:["sexo","lado","imc","asa","dm","hta","tabaco","anticoagulacion","indicacion","tiempoEvolucion","cirugiaPrevia"] },
-    { label:"RX Pre-op",        keys:["kellgren","morfotipo","varo_valgo_clinico","ejeMecanico","vca","mad","aLDFA","mLDFA","mpta","jlca","tibialSlope","pco_pre","aco_pre","cd_dist_pre","cd_sup_pre","subluxRotuliana"] },
-    { label:"Quirúrgico",       keys:["cirujano","implante","tamFemur","tamTibia","tamInserto","tamRotula","tecnica","conservacionLca","liberaciones","patella_resurfacing","tourniquet","tiempoCirugia","sangrado"] },
+    { label:"RX Pre-op",        keys:["kellgren","morfotipo","varo_valgo_clinico","ejeMecanico","vca","mad","aLDFA","mLDFA","mpta","jlca","tibialSlope","pco_pre","aco_pre","cd_dist_pre","cd_sup_pre","subluxRotuliana","extension_pre","flexion_pre"] },
+    { label:"Scores Pre-op",    keys:["kssKnee_pre","kssFuncion_pre","oxford_pre","womac_pre","vas_pre","tug_pre"] },
+    { label:"Quirúrgico",       keys:["cirujano","fechaCx","implante","tamFemur","tamTibia","tamInserto","tamRotula","tecnica","conservacionLca","liberaciones","patella_resurfacing","tourniquet","tiempoCirugia","sangrado"] },
     { label:"RX Post-op",       keys:["ejeMecanico_post","mad_post","mLDFA_post","aLDFA_post","mpta_post","dffa","tibialSlope_post","pco_post","aco_post","cd_dist_post","cd_sup_post"] },
     { label:"Mako",             keys:["mako_usado","mako_hka_plan","mako_hka_real","mako_dffa_plan","mako_dffa_real","mako_atfa_plan","mako_atfa_real","mako_slope_plan","mako_slope_real","mako_flex_gap","mako_ext_gap","mako_balance_flex","mako_balance_ext","mako_reseccion_femoral","mako_reseccion_tibial","mako_notas"] },
     { label:"Complicaciones",   keys:["infeccion","tvp_tep","rigidez","aflojamiento","fractura_periprotesica","revision","otras_complicaciones","notas"] },
@@ -2721,16 +2725,38 @@ function doExport(){
     mako_slope_plan:"Slope Plan", mako_slope_real:"Slope Real",
     mako_flex_gap:"Flex Gap", mako_ext_gap:"Ext Gap",
     mako_balance_flex:"Balance Flex", mako_balance_ext:"Balance Ext",
-    mako_reseccion_femoral:"Resección Femoral", mako_reseccion_tibial:"Resección Tibial",
-    mako_notas:"Notas",
+    mako_reseccion_femoral:"Resec. Femoral", mako_reseccion_tibial:"Resec. Tibial",
+    mako_notas:"Notas Mako",
     cd_dist_pre:"Dist. P-PTA Pre (cm)", cd_sup_pre:"Sup. Art. Pat. Pre (cm)",
     cd_dist_post:"Dist. P-PTA Post (cm)", cd_sup_post:"Sup. Art. Pat. Post (cm)",
     aLDFA_post:"aLDFA Post (°)", mpta_post:"MPTA Post (°)",
     pco_pre:"PCO Pre (cm)", aco_pre:"ACO Pre (cm)",
     pco_post:"PCO Post (cm)", aco_post:"ACO Post (cm)",
+    kssKnee_pre:"KSS Knee Pre", kssFuncion_pre:"KSS Func. Pre",
+    oxford_pre:"Oxford Pre", womac_pre:"WOMAC Pre",
+    vas_pre:"VAS Pre", tug_pre:"TUG Pre",
+    extension_pre:"Extensión Pre (°)", flexion_pre:"Flexión Pre (°)",
+    fechaCx:"Fecha Cx", varo_valgo_clinico:"Varo/Valgo Clínico",
+    ejeMecanico:"HKA Pre (°)", mad:"MAD Pre (mm)",
+    ejeMecanico_post:"HKA Post (°)", mad_post:"MAD Post (mm)",
+    tibialSlope:"TS Pre (°)", tibialSlope_post:"TS Post (°)",
+    subluxRotuliana:"Sublux. Rotuliana",
+    conservacionLca:"Conserv. LCA", patella_resurfacing:"Resurfacing Rótula",
+    tiempoCirugia:"Tiempo Cx (min)", tamFemur:"Tam. Fémur",
+    tamTibia:"Tam. Tibia", tamInserto:"Tam. Inserto", tamRotula:"Tam. Rótula",
+    fractura_periprotesica:"Fract. Periprotésica", otras_complicaciones:"Otras Complic.",
   };
   baseGroups.forEach(g=>{
     g.keys.forEach(k=>colList.push({group:g.label, h2:COL_LABEL_MAP[k]||k, baseKey:k}));
+    // Add calculated columns after RX Pre-op
+    if(g.label==="RX Pre-op"){
+      colList.push({group:"RX Pre-op", h2:"CD Pre", calcKey:"cd_pre"});
+      colList.push({group:"RX Pre-op", h2:"PCO Ratio", calcKey:"pco_ratio"});
+      colList.push({group:"RX Pre-op", h2:"ACO Ratio", calcKey:"aco_ratio"});
+    }
+    if(g.label==="RX Post-op"){
+      colList.push({group:"RX Post-op", h2:"CD Post", calcKey:"cd_post"});
+    }
   });
   periodGroups.forEach(pg=>{
     SCORE_FIELDS.forEach((sf,si)=>{
@@ -2776,6 +2802,14 @@ function doExport(){
     };
     return colList.map(col_def=>{
       if(col_def.caseNum) return String(pi+1).padStart(3,"0");
+      if(col_def.calcKey!==undefined){
+        const ck=col_def.calcKey;
+        if(ck==="cd_pre"){ const d=Number(p.cd_dist_pre||0),s=Number(p.cd_sup_pre||0); return (d>0&&s>0)?(d/s).toFixed(2):""; }
+        if(ck==="cd_post"){ const d=Number(p.cd_dist_post||0),s=Number(p.cd_sup_post||0); return (d>0&&s>0)?(d/s).toFixed(2):""; }
+        if(ck==="pco_ratio"){ const a=Number(p.pco_pre||0),b=Number(p.pco_post||0); return (a>0&&b>0)?(b/a).toFixed(2):""; }
+        if(ck==="aco_ratio"){ const a=Number(p.aco_pre||0),b=Number(p.aco_post||0); return (a>0&&b>0)?(b/a).toFixed(2):""; }
+        return "";
+      }
       if(col_def.baseKey!==undefined){
         const v=p[col_def.baseKey];
         return (v===null||v===undefined||v==="")?"":v;
