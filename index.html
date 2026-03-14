@@ -575,11 +575,11 @@ function tabPreopRx(ro){
 
     <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Rótula</div>
     <div class="grid-3" style="margin-bottom:14px">
-      ${field("Dist. P-PTA (mm)", numInp("cd_dist_pre","polo inf. → borde ant. platillo","0.1","","",ro))}
-      ${field("Sup. Articular Pat. (mm)", numInp("cd_sup_pre","longitud sup. articular patelar","0.1","","",ro))}
+      ${field("Dist. P-PTA (mm)", `<input type="number" step="0.1" placeholder="polo inf. → borde ant. platillo" ${ro?"disabled":""} value="${STATE.form.cd_dist_pre||""}" oninput="setFormField('cd_dist_pre',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${field("Sup. Articular Pat. (mm)", `<input type="number" step="0.1" placeholder="longitud sup. articular patelar" ${ro?"disabled":""} value="${STATE.form.cd_sup_pre||""}" oninput="setFormField('cd_sup_pre',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
       ${field("PCO — Post. Condylar Offset (mm)", numInp("pco_pre","","0.5","","",ro))}
       ${field("ACO — Ant. Condylar Offset (mm)", numInp("aco_pre","","0.5","","",ro))}
-      ${(()=>{ const d=Number(STATE.form.cd_dist_pre||0),s=Number(STATE.form.cd_sup_pre||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'>${cd} <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
+      ${(()=>{ const d=Number(STATE.form.cd_dist_pre||0),s=Number(STATE.form.cd_sup_pre||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'><span id='cd-display-pre'>${cd}</span> <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
       ${field("Subluxación rotuliana", selInp("subluxRotuliana",cfg.subluxRot,ro))}
     </div>
 
@@ -674,11 +674,11 @@ function tabPostopRx(ro){
 
     <div style="font-size:11px;font-weight:700;color:#0f4c81;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Rótula Post-op</div>
     <div class="grid-3" style="margin-bottom:14px">
-      ${field("Dist. P-PTA Post-op (mm)", numInp("cd_dist_post","polo inf. → borde ant. platillo","0.1","","",ro))}
-      ${field("Sup. Articular Pat. Post-op (mm)", numInp("cd_sup_post","longitud sup. articular patelar","0.1","","",ro))}
+      ${field("Dist. P-PTA Post-op (mm)", `<input type="number" step="0.1" placeholder="polo inf. → borde ant. platillo" ${ro?"disabled":""} value="${STATE.form.cd_dist_post||""}" oninput="setFormField('cd_dist_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
+      ${field("Sup. Articular Pat. Post-op (mm)", `<input type="number" step="0.1" placeholder="longitud sup. articular patelar" ${ro?"disabled":""} value="${STATE.form.cd_sup_post||""}" oninput="setFormField('cd_sup_post',this.value);setTimeout(renderCD,0)" style="width:100%;padding:8px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none">`)}
       ${field("PCO Post-op (mm)", numInp("pco_post","","0.5","","",ro))}
       ${field("ACO Post-op (mm)", numInp("aco_post","","0.5","","",ro))}
-      ${(()=>{ const d=Number(STATE.form.cd_dist_post||0),s=Number(STATE.form.cd_sup_post||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps Post-op',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'>${cd} <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
+      ${(()=>{ const d=Number(STATE.form.cd_dist_post||0),s=Number(STATE.form.cd_sup_post||0); const cd=(d>0&&s>0)?(d/s).toFixed(2):'—'; const ok=cd!=='—'&&Number(cd)>=0.8&&Number(cd)<=1.2; const col=cd==='—'?'#94a3b8':ok?'#15803d':'#dc2626'; return field('CD — Catón-Deschamps Post-op',`<div style='padding:8px 12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:7px;font-size:15px;font-weight:700;color:${col}'><span id='cd-display-post'>${cd}</span> <span style='font-size:11px;font-weight:400;color:#94a3b8'>VN 0.8–1.2</span></div>`); })()}
     </div>
 
     ${customFieldsHTML('postop_rx',ro)}</div>`;
@@ -1959,6 +1959,21 @@ function renderDashboard(){
 
 function setCustomChart(k,v){ STATE.customChart[k]=v; render(); }
 
+
+function renderCD(){
+  // Update CD pre
+  const d1=Number(STATE.form.cd_dist_pre||0), s1=Number(STATE.form.cd_sup_pre||0);
+  const cd1=(d1>0&&s1>0)?(d1/s1).toFixed(2):"—";
+  const ok1=cd1!=="—"&&Number(cd1)>=0.8&&Number(cd1)<=1.2;
+  const el1=document.getElementById("cd-display-pre");
+  if(el1){ el1.textContent=cd1; el1.style.color=cd1==="—"?"#94a3b8":ok1?"#15803d":"#dc2626"; }
+  // Update CD post
+  const d2=Number(STATE.form.cd_dist_post||0), s2=Number(STATE.form.cd_sup_post||0);
+  const cd2=(d2>0&&s2>0)?(d2/s2).toFixed(2):"—";
+  const ok2=cd2!=="—"&&Number(cd2)>=0.8&&Number(cd2)<=1.2;
+  const el2=document.getElementById("cd-display-post");
+  if(el2){ el2.textContent=cd2; el2.style.color=cd2==="—"?"#94a3b8":ok2?"#15803d":"#dc2626"; }
+}
 
 function render(){
   const app = document.getElementById("app");
